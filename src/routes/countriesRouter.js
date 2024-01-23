@@ -5,5 +5,6 @@ const { getCountriesHandler } = require('../handlers/countriesHandlers');
 
 //Endpoints
 //countriesRouter.get("/", getCountries)
+countriesRouter.get('/', getCountriesHandler);
 
 module.exports = countriesRouter
