@@ -1,5 +1,5 @@
-const { Router } = require('express')
-const hotelsRouter = Router()
+const { Router } = require('express');
+const hotelsRouter = Router();
 //Handlers para cada endpoint
 
 //Endpoints
