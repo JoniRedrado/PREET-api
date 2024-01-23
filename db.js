@@ -5,7 +5,7 @@ const path = require('path');
 const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
 
 const sequelize = new Sequelize(
-   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/PREET`,
+   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/preet`,
    {
       logging: false,
       native: false,
@@ -44,6 +44,7 @@ const { Country, Hotel } = sequelize.models;
 
 
 // Aca vendrian las relaciones
+Hotel.belongsTo(Country);
 Country.hasMany(Hotel)
 
 module.exports = {
