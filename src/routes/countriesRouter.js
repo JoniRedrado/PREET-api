@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const countriesRouter = Router();
-const { getCountriesHandler } = require('../handlers/countriesHandlers');
 //Handlers para cada endpoint
+const { getCountriesHandler } = require('../handlers/countriesHandlers');
 
 //Endpoints
 //countriesRouter.get("/", getCountries)
