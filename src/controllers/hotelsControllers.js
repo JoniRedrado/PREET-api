@@ -14,6 +14,19 @@ const postHotel = async (hotel)=>{
     return newHotel/*hotel creado*/
 }
 
-module.exports = {
-    postHotel
+const getHotelById  = async(id) => {
+    const hotel = await Hotel.findByPk(id, {
+        include: [{
+            model: Country,
+            as: 'country',
+            attributes: ['name'],
+        }]
+    });
+    return hotel;
 }
+
+module.exports = {
+    postHotel,
+    getHotelById
+}
+
