@@ -44,6 +44,7 @@ const { Country, Hotel } = sequelize.models;
 
 
 // Aca vendrian las relaciones
+Hotel.belongsTo(Country);
 Country.hasMany(Hotel)
 
 module.exports = {
