@@ -1,5 +1,13 @@
 const { Hotel, Country } = require('../../db.js')
 
+const getHotels = async () => {
+    const hotels = await Hotel.findAll({
+        include: Country
+    })
+
+    return hotels
+}
+
 const postHotel = async (hotel)=>{
 
     const { name, address, address_url, price, email, image, countryId } = hotel
@@ -61,9 +69,9 @@ const deleteHotel = async (id) => {
 }
 
 module.exports = {
+    getHotels,
     postHotel,
     getHotelById,
     putHotel,
     deleteHotel
 }
-

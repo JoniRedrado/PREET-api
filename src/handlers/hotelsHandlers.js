@@ -1,5 +1,13 @@
-const { getHotelById, postHotel, putHotel,deleteHotel } = require('../controllers/hotelsControllers.js');
+const { getHotels, getHotelById, postHotel, putHotel, deleteHotel} = require('../controllers/hotelsControllers.js');
 
+const getHotelsHandler = async (req,res) => {
+    try{
+        const hotels = await getHotels()
+        res.status(200).json(hotels)
+    } catch (error){
+        res.status(500).json(error.message)
+    }
+}
 const getHotelIdHandler = async (req, res) => {
     const { id } = req.params;
 
@@ -22,6 +30,7 @@ const postHotelHandler = async (req, res)=>{
         res.status(500).json({error: error.message})
     }
 }
+
 const putHotelHandler = async (req, res) => {
     const { id } = req.params;
     const updatedHotelData = req.body;
@@ -47,6 +56,7 @@ const deleteHotelHandler = async (req, res) => {
 module.exports = {
     getHotelIdHandler,
     postHotelHandler,
+    getHotelsHandler,
     putHotelHandler,
     deleteHotelHandler
 };
