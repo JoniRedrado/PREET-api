@@ -1,13 +1,34 @@
 const { Hotel, Country } = require('../../db.js')
+const  {Op} = require ("sequelize")
 
 const getHotels = async () => {
     const hotels = await Hotel.findAll({
-        include: Country
+        include: [{
+            model: Country,
+            as: 'country',
+            attributes: ['name'],
+        }]
     })
 
     return hotels
 }
 
+const getHotelByName = async (name) => {
+    const hotelByName = await Hotel.findAll({
+        where: {
+            name: {
+                [Op.iLike]: `%${name}%`
+            }
+        },
+        include: [{
+            model: Country,
+            as: 'country',
+            attributes: ['name'],
+        }]
+    });
+    const allName = hotelByName.filter(hotel => hotel.name.toLowerCase().includes(name.toLowerCase()));
+    return allName;
+}
 const postHotel = async (hotel)=>{
 
     const { name, address, address_url, price, email, image, countryId } = hotel
@@ -70,6 +91,7 @@ const deleteHotel = async (id) => {
 
 module.exports = {
     getHotels,
+    getHotelByName,
     postHotel,
     getHotelById,
     putHotel,

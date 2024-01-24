@@ -10,7 +10,7 @@ hotelsRouter.post('/', validate, postHotelHandler)
 
 hotelsRouter.get('/:id', getHotelIdHandler);
 
-hotelsRouter.put("/:id", putHotelHandler)
+hotelsRouter.put("/:id", validate, putHotelHandler)
 
 hotelsRouter.delete("/:id", deleteHotelHandler)
 
