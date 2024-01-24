@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
+const { hotelsData } = require('./hotels')
 
 // Configura tu conexión a la base de datos
 const sequelize = new Sequelize('PREET', 'postgres', 'admin', {
@@ -63,35 +64,12 @@ const seedData = async () => {
     // Sincroniza los modelos con la base de datos
     await sequelize.sync({ force: true });
 
-    // Inserta países
-    const countries = await Country.bulkCreate([
-      { name: 'Argentina' },
-      { name: 'Brazil' },
-      // Agrega más países según sea necesario
-    ]);
+    // Inserta países de América Latina
+    const latinAmericanCountries = ['Argentina', 'Brazil', 'Chile', 'Colombia', 'Ecuador', 'Mexico', 'Peru', 'Uruguay', 'Venezuela', 'Paraguay'];
+    const countries = await Country.bulkCreate(latinAmericanCountries.map(country => ({ name: country })));
+    
+    const hotels = await Hotel.bulkCreate(hotelsData);
 
-    // Inserta hoteles asociados a los países
-    await Hotel.bulkCreate([
-      {
-        name: 'Hotel Buenos Aires',
-        address: '123 Main St, Buenos Aires',
-        address_url: 'https://www.example.com/hotel-buenos-aires',
-        price: 150.00,
-        email: 'info@hotelbuenosaires.com',
-        image: 'hotel_buenos_aires.jpg',
-        countryId: countries[0].id, // Asocia el hotel con Argentina
-      },
-      {
-        name: 'Hotel Rio de Janeiro',
-        address: '456 Beach Ave, Rio de Janeiro',
-        address_url: 'https://www.example.com/hotel-rio-de-janeiro',
-        price: 200.00,
-        email: 'info@hotelriodejaneiro.com',
-        image: 'hotel_rio_de_janeiro.jpg',
-        countryId: countries[1].id, // Asocia el hotel con Brazil
-      },
-      // Agrega más hoteles según sea necesario
-    ]);
 
     console.log('Datos insertados correctamente.');
   } catch (error) {
