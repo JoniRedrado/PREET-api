@@ -5,6 +5,9 @@ const morgan = require('morgan');
 const routes = require('./src/routes/index.js');
 const cors = require('cors')
 
+//SWAGGER
+const { swaggerDocs } = require('./swagger.js')
+
 require('./db.js');
 
 const server = express();

@@ -8,7 +8,7 @@ const { getHotelIdHandler, postHotelHandler, getHotelsHandler } = require('../ha
 hotelsRouter.post('/', validate, postHotelHandler)
 
 hotelsRouter.get('/:id', getHotelIdHandler);
+hotelsRouter.get('/', getHotelsHandler)
 
-hotelsRouter.get('/hotels', getHotelsHandler)
 
 module.exports = hotelsRouter
