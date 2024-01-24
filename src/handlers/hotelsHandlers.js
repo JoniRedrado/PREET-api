@@ -1,4 +1,4 @@
-const { getHotelById, postHotel } = require('../controllers/hotelsControllers.js');
+const { getHotelById, postHotel, getHotels } = require('../controllers/hotelsControllers.js');
 
 const getHotelIdHandler = async (req, res) => {
     const { id } = req.params;
@@ -23,7 +23,17 @@ const postHotelHandler = async (req, res)=>{
     }
 }
 
+const getHotelsHandler = async (req,res) => {
+    try{
+        const hotels = await getHotels()
+        res.status(200).json(hotels)
+    } catch (error){
+        res.status(500).json(error.message)
+    }
+}
+
 module.exports = {
     getHotelIdHandler,
-    postHotelHandler
+    postHotelHandler,
+    getHotelsHandler,
 }

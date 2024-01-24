@@ -25,8 +25,17 @@ const getHotelById  = async(id) => {
     return hotel;
 }
 
+const getHotels = async () => {
+    const hotels = await Hotel.findAll({
+        include: Country
+    })
+
+    return hotels
+}
+
 module.exports = {
     postHotel,
-    getHotelById
+    getHotelById,
+    getHotels
 }
 
