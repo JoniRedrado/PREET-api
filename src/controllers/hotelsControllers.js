@@ -1,5 +1,34 @@
 const { Hotel, Country } = require('../../db.js')
+const  {Op} = require ("sequelize")
 
+const getHotels = async () => {
+    const hotels = await Hotel.findAll({
+        include: [{
+            model: Country,
+            as: 'country',
+            attributes: ['name'],
+        }]
+    })
+
+    return hotels
+}
+
+const getHotelByName = async (name) => {
+    const hotelByName = await Hotel.findAll({
+        where: {
+            name: {
+                [Op.iLike]: `%${name}%`
+            }
+        },
+        include: [{
+            model: Country,
+            as: 'country',
+            attributes: ['name'],
+        }]
+    });
+    const allName = hotelByName.filter(hotel => hotel.name.toLowerCase().includes(name.toLowerCase()));
+    return allName;
+}
 const postHotel = async (hotel)=>{
 
     const { name, address, address_url, price, email, image, countryId } = hotel
@@ -24,18 +53,47 @@ const getHotelById  = async(id) => {
     });
     return hotel;
 }
+const putHotel = async (id, updatedHotelData) => {
+        const hotelToUpdate = await Hotel.findByPk(id);
 
-const getHotels = async () => {
-    const hotels = await Hotel.findAll({
-        include: Country
-    })
+        if (!hotelToUpdate) {
+            throw new Error('Hotel not found');
+        }
 
-    return hotels
+        const { name, address, address_url, price, email, image, countryId } = updatedHotelData;
+
+        let updatedCountryId = hotelToUpdate.countryId;
+        if (countryId) {
+            const updatedCountry = await Country.findOne({ where: { name: countryId } });
+            updatedCountryId = updatedCountry ? updatedCountry.dataValues.id : updatedCountryId;
+        }
+
+        const updatedHotel = await hotelToUpdate.update({
+            name,
+            address,
+            address_url,
+            price,
+            email,
+            image,
+            countryId: updatedCountryId,
+        });
+
+        return updatedHotel;
+};
+
+const deleteHotel = async (id) => {
+    const hotelToDelete = await Hotel.findByPk(id);
+
+    const deletedHotel = await hotelToDelete.destroy()
+
+    return deletedHotel;
 }
 
 module.exports = {
+    getHotels,
+    getHotelByName,
     postHotel,
     getHotelById,
-    getHotels
+    putHotel,
+    deleteHotel
 }
-

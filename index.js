@@ -6,7 +6,7 @@ const arrayCountries = require('./src/utils/countries.js');
 const { swaggerDocs } = require('./swagger.js')
 
 
-conn.sync({ force: false }).then(() => {
+conn.sync({ force: true }).then(() => {
   Country.findAll().
   then(response => {
     if(response.length === 0) 
