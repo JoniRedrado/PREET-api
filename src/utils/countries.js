@@ -10,7 +10,7 @@ const countries = [
     {name: 'Guyana'},
     {name: 'Islas Malvinas'},
     {name: 'Paraguay'},
-    {name: 'Perú'},
+    {name: 'Peru'},
     {name: 'Surinam'},
     {name: 'Uruguay'},
     {name: 'Venezuela'}
