@@ -2,94 +2,96 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 // Configura tu conexión a la base de datos
 const sequelize = new Sequelize('PREET', 'postgres', 'admin', {
-		host: 'localhost',
-		dialect: 'postgres',
+  host: 'localhost',
+  dialect: 'postgres',
 });
 
 // Define los modelos Hotel y Country
 const Hotel = sequelize.define('hotel', {
-	id: {
-			type: DataTypes.INTEGER,
-			primaryKey: true,
-			autoIncrement: true
-		},
-	name: {
-			type: DataTypes.STRING,
-			allowNull: false
-	},
-	address: {
-			type: DataTypes.STRING,
-			allowNull: false
-	},
-	address_url: {
-			type: DataTypes.STRING,
-			allowNull: false
-	},
-	price: {
-			type: DataTypes.DECIMAL(10, 2),
-			allowNull: false
-	}, 
-	email: {
-			type: DataTypes.STRING,
-			allowNull: false
-	},
-	image: {
-		type: DataTypes.STRING,
-		allowNull: false
-	},
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  address: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  address_url: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  price: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  image: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
 },
-{timestamps: false,}
-);
+{ timestamps: false });
 
 const Country = sequelize.define('country', {
-	id_name: {
-			type: DataTypes.STRING,
-			primaryKey: true,
-			unique: true
-		},
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
 },
-{timestamps: false,}
-);
+{ timestamps: false });
 
-// Define las relaciones entre Hotel y Country
+// Define la relación entre Hotel y Country
 Hotel.belongsTo(Country);
 Country.hasMany(Hotel);
 
-// Función para insertar países y hoteles
+// Función para insertar registros de ejemplo
 const seedData = async () => {
   try {
     // Sincroniza los modelos con la base de datos
-    await sequelize.sync();
+    await sequelize.sync({ force: true });
 
-    // Inserta 10 países de América Latina
-    const latinAmericanCountries = ['Argentina', 'Brazil', 'Chile', 'Colombia', 'Ecuador', 'Mexico', 'Peru', 'Uruguay', 'Venezuela', 'Paraguay'];
-    //await Country.bulkCreate(latinAmericanCountries.map(country => ({ id_name: country })));
+    // Inserta países
+    const countries = await Country.bulkCreate([
+      { name: 'Argentina' },
+      { name: 'Brazil' },
+      // Agrega más países según sea necesario
+    ]);
 
-    // Inserta 2 hoteles por cada país
-    for (const countryName of latinAmericanCountries) {
-      const country = await Country.findOne({ where: { id_name: countryName } });
-			console.log(country.dataValues.id_name);
-      await Hotel.bulkCreate([
-        {
-          name: `Hotel ${countryName} 1`,
-          address: `Address 1, ${countryName}`,
-          address_url: `URL 1, ${countryName}`,
-          price: 100,
-          email: `hotel1@${countryName.toLowerCase()}.com`,
-          image: `image1_${countryName.toLowerCase()}.jpg`,
-          country: country.dataValues.id_name,
-        },
-        {
-          name: `Hotel ${countryName} 2`,
-          address: `Address 2, ${countryName}`,
-          address_url: `URL 2, ${countryName}`,
-          price: 150,
-          email: `hotel2@${countryName.toLowerCase()}.com`,
-          image: `image2_${countryName.toLowerCase()}.jpg`,
-          country: country.dataValues.id_name,
-        },
-      ]);
-    }
+    // Inserta hoteles asociados a los países
+    await Hotel.bulkCreate([
+      {
+        name: 'Hotel Buenos Aires',
+        address: '123 Main St, Buenos Aires',
+        address_url: 'https://www.example.com/hotel-buenos-aires',
+        price: 150.00,
+        email: 'info@hotelbuenosaires.com',
+        image: 'hotel_buenos_aires.jpg',
+        countryId: countries[0].id, // Asocia el hotel con Argentina
+      },
+      {
+        name: 'Hotel Rio de Janeiro',
+        address: '456 Beach Ave, Rio de Janeiro',
+        address_url: 'https://www.example.com/hotel-rio-de-janeiro',
+        price: 200.00,
+        email: 'info@hotelriodejaneiro.com',
+        image: 'hotel_rio_de_janeiro.jpg',
+        countryId: countries[1].id, // Asocia el hotel con Brazil
+      },
+      // Agrega más hoteles según sea necesario
+    ]);
 
     console.log('Datos insertados correctamente.');
   } catch (error) {
