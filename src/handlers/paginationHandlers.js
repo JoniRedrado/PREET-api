@@ -1,4 +1,4 @@
-const { getItems } = require('../controllers/itemsControllers');
+const { getItems } = require('../controllers/paginationControllers');
 
 const getItemsHandler = async (req, res) => {
     
