@@ -15,7 +15,7 @@ const getItems = async (req, res) => {
             Hotel: rows,
         });
 
-};
+}; 
 
 module.exports = {
     getItems
