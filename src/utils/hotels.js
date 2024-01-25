@@ -26,6 +26,7 @@ const hotels = [
     {
         name: "Hotel San Pedro Del Fuerte",
         address: "Cl. 46 #80-23, La Floresta, Medell¡n, La Am‚rica, Medell¡n, Antioquia",
+        stars: 4,
         address_url: "https://hotelsanpedrodelfuerte.com",
         price: 50,
         email: "reservas@hotelsanpedrodelfuerte.com",
@@ -35,6 +36,7 @@ const hotels = [
     {
         name: "Hotel Estelar La Fontana",
         address: "Avenida 127, Nº 15A – 10 / Bogotá",
+        stars: 4,
         address_url: "https://www.estelarlafontana.com",
         price: 120,
         email: "reservas@hotelestelarlafontana.com",
@@ -44,6 +46,7 @@ const hotels = [
     {
         name: "Hotel Irotama Resort",
         address: "Calle 115 No. 2-60, Bello Horizonte, Santa Marta, Magdalena",
+        stars: 4,
         address_url: "https://www.irotama.com",
         price: 260,
         email: "reservas@irotama.com",
@@ -53,6 +56,7 @@ const hotels = [
     {
         name: "Regente Palace Hotel",
         address: "Suipacha 964, C1008 CABA, Buenos Aires",
+        stars: 4,
         address_url: "https://www.regente.com",
         price: 60,
         email: "reservas@regentepalace.com",
@@ -62,6 +66,7 @@ const hotels = [
     {
         name: "Holiday Inn Lima Airport",
         address: "Centro Aereo Comercial, Ave. Tomas Valle S/N Esq, Av. Elmer Faucett, Callao 07041",
+        stars: 4,
         address_url: "https://www.ihg.com/holidayinn/hotels/us/es/lima/limap/hoteldetail",
         price: 100,
         email: "reservas@otphoteles.com",
@@ -71,6 +76,7 @@ const hotels = [
     {
         name: "Hotel Atlantico Tower",
         address: "Rua Visconde de Inhauma, 95 - Centro, Rio de Janeiro",
+        stars: 4,
         address_url: "https://atlanticotower.com.br",
         price: 80,
         email: "reservas@otphoteles.com",
@@ -80,13 +86,57 @@ const hotels = [
     {
         name: "Hotel Uruguay Brasil",
         address: "Sarandí 440, Rivera, Uruguay. CP 40000.",
+        stars: 4,
         address_url: "https://hoteluruguaybrasil.com",
         price: 120,
         email: "recepcion@hoteluruguaybrasil.com",
         image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/90/d2/88/hotel-uruguay-brasil.jpg?w=700&h=-1&s=1",
         countryId: 13
     }
-
+    ,
+    {
+        name: "Los Silos Hotel ",
+        address: "Dique I Puerto de Santa Fe, 3000 Santa Fe, Argentina",
+        stars: 4,
+        address_url: "https://www.google.com/maps/place/Los+Silos+Hotel/",
+        price: 130,
+        email: "recepcion.ls@hotellossilos.com.ar",
+        image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/417842792.jpg?k=4ebd03d854fe8a5d8798bd278b56d6e75332888dfcba96b3660a7ca1a61172a9&o=&hp=1",
+        countryId: 1
+    }
+    ,
+    {
+        name: "Gran Lourdes Hotel",
+        address: "CASSAFFOUSTH 63, 5152 Villa Carlos Paz, Argentina",
+        stars: 3,
+        address_url: "https://www.google.com/maps/place/Hotel+Gran+Lourdes/",
+        price: 60,
+        email: "recepcion@granlourdeshotel.com",
+        image: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/285522052.jpg?k=e2e16e1d809a909efd8ac046ca16dab25f14b227b57d2a4c1ae84f114460571e&o=&hp=1",
+        countryId: 1
+    }
+    ,
+    {
+        name: "Sofitel La Reserva Cardales",
+        address: "Ruta Panamericana Nr. 9 Km 61, A9999AAA Río Luján, Argentina",
+        stars: 5,
+        address_url: "https://www.google.com/maps/place/Sofitel+La+Reserva+Cardales/",
+        price: 200,
+        email: "sofitellareservacardales@sofitel.com",
+        image: "https://www.ahstatic.com/photos/6519_ho_00_p_1024x768.jpg",
+        countryId: 1
+    }
+    ,
+    {
+        name: "Hotel Patagonia",
+        address: "Fagnano Nº 54, Z9405CBC Río Gallegos, Argentina",
+        stars: 4,
+        address_url: "https://www.google.com/maps/place/Hotel+Patagonia/",
+        price: 140,
+        email: "info@hotel-patagonia.com",
+        image: "https://hotel-patagonia.com/wp-content/uploads/2023/05/SUITE-4.jpg",
+        countryId: 1
+    }
 ];
 
 module.exports = hotels;

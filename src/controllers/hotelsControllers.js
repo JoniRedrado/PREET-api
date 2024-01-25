@@ -31,12 +31,13 @@ const getHotelByName = async (name) => {
 }
 const postHotel = async (hotel)=>{
 
-    const { name, address, address_url, price, email, image, countryId } = hotel
+    const { name, address, stars, address_url, price, email, image, countryId } = hotel
+
     //Buscar por nombre el pais del hotel
     const hotelCountry = await Country.findOne({ where: { name: countryId} })
     
     //Formatear los datos para que cumpla con el modelo de la DB
-    const hotelData = { name, address, address_url, price, email, image, countryId: hotelCountry.dataValues.id }
+    const hotelData = { name, address, stars, address_url, price, email, image, countryId: hotelCountry.dataValues.id }
     
     //crear el hotel
     const newHotel = await Hotel.create(hotelData)
@@ -83,7 +84,6 @@ const putHotel = async (id, updatedHotelData) => {
 
 const deleteHotel = async (id) => {
     const hotelToDelete = await Hotel.findByPk(id);
-
     const deletedHotel = await hotelToDelete.destroy()
 
     return deletedHotel;
