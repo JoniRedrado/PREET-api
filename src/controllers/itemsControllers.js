@@ -1,10 +1,21 @@
-const { Country } = require('../../db.js');
+const { Item } = require('../../db.js');
 
-const getCountries = async () => {
-    let countries = await Country.findAll();
-    return countries.map(country => country.name);
+const getItems = async (req, res) => {
+    
+    const { page = 1, limit = 8 } = req.query;
+
+        const { count, rows } = await Item.findAndCountAll({
+          offset: (page - 1) * limit,
+        });
+    
+        res.json({
+          data: rows,
+          totalItems: count,
+          currentPage: parseInt(page),
+          pageSize: parseInt(limit),
+        });
 }
 
 module.exports = {
-    getCountries
+    getItems
 }
