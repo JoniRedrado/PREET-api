@@ -3,7 +3,6 @@ const { Hotel, Country, conn } = require('./db.js');
 const arrayHotels = require('./src/utils/hotels.js');
 const arrayCountries = require('./src/utils/countries.js');
 
-const { swaggerDocs } = require('./swagger.js')
 
 
 conn.sync({ force: true }).then(() => {
@@ -24,6 +23,5 @@ conn.sync({ force: true }).then(() => {
 
   server.listen(3001, () => {
     console.log('%s listening at 3001');
-    swaggerDocs(server, 3001)
   });
 });
