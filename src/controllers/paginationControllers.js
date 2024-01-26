@@ -1,7 +1,7 @@
 const { Hotel } = require('../../db.js');
 
 const getItems = async (req, res) => {
-    const { page, size } = req.query;
+    const { page = 1, size = 2 } = req.query;
 
     const options = {
         limit: Number(size),

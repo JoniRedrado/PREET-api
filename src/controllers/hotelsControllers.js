@@ -4,7 +4,7 @@ const  {Op} = require ("sequelize")
 const getHotels = async (query) => {
 
     const { page = 1, 
-            size = 2,
+            size = 5,
             stars,
             minPrice = 0,
             maxPrice = 10000,
