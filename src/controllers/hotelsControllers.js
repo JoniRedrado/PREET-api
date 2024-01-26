@@ -24,17 +24,33 @@ const getHotels = async (query) => {
         ...(country && {countryId: country}),
     }
 
+    let order = [];
+    let orderItem = [];
+
+    if(orderBy){
+        if(orderBy === 'country'){
+            orderItem.push(Country);
+            orderItem.push('name');
+        }else orderItem.push(orderBy)
+    }else if(direction) orderItem.push('name');
+
+    if(direction) orderItem.push(direction);  
+    else if(orderBy) orderItem.push('ASC'); 
+
+    if(orderItem.length > 0) order.push(orderItem);
+
     const options = {
         limit: Number(size),
         offset: ( page - 1 ) * Number(size),
-        order: [[orderBy, direction]],
+        order,
         include: [{
             model: Country,
             as: 'country',
-            attributes: ['name'],
+            attributes: ['name']
         }],
         where
     }
+
     const { count, rows } = await Hotel.findAndCountAll(options)
     const hotels = {
         total: count,
