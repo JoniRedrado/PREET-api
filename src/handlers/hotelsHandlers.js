@@ -1,14 +1,14 @@
 const { getHotels, getHotelById, postHotel, putHotel, deleteHotel, getHotelByName} = require('../controllers/hotelsControllers.js');
 
 const getHotelsHandler = async (req,res) => {
-    const {name, page=1, size=6} = req.query
+    const { name } = req.query
 
     try{
         if(name){
-            const hotelName = await getHotelByName(name, page, size)
+            const hotelName = await getHotelByName(name, req.query)
             res.status(200).json(hotelName)    
         }else{
-            const hotelsAll = await getHotels(page, size)
+            const hotelsAll = await getHotels(req.query)
             res.status(200).json(hotelsAll)    
         }
     } catch (error){
