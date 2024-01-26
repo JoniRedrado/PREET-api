@@ -1,20 +1,32 @@
 const { Hotel, Country } = require('../../db.js')
 const  {Op} = require ("sequelize")
 
-const getHotels = async () => {
-    const hotels = await Hotel.findAll({
+const getHotels = async (page, size) => {
+
+    const options = {
+        limit: Number(size),
+        offset: ( page - 1 ) * Number(size),
+        order: [['id', 'ASC']],
         include: [{
             model: Country,
             as: 'country',
             attributes: ['name'],
         }]
-    })
+    }
+    const { count, rows } = await Hotel.findAndCountAll(options)
+    const hotels = {
+        total: count,
+        Hotel: rows
+    }
 
     return hotels
 }
 
-const getHotelByName = async (name) => {
-    const hotelByName = await Hotel.findAll({
+const getHotelByName = async (name, page, size) => {
+    const options = {
+        limit: Number(size),
+        offset: ( page - 1 ) * Number(size),
+        order: [['id', 'ASC']],
         where: {
             name: {
                 [Op.iLike]: `%${name}%`
@@ -24,11 +36,18 @@ const getHotelByName = async (name) => {
             model: Country,
             as: 'country',
             attributes: ['name'],
-        }]
-    });
-    const allName = hotelByName.filter(hotel => hotel.name.toLowerCase().includes(name.toLowerCase()));
-    return allName;
+        }],
+        
+    }
+    const { count, rows } = await Hotel.findAndCountAll(options)
+    const hotels = {
+        total: count,
+        Hotel: rows
+    }
+
+    return hotels
 }
+
 const postHotel = async (hotel)=>{
 
     const { name, address, stars, address_url, price, email, image, countryId } = hotel
@@ -54,32 +73,33 @@ const getHotelById  = async(id) => {
     });
     return hotel;
 }
+
 const putHotel = async (id, updatedHotelData) => {
-        const hotelToUpdate = await Hotel.findByPk(id);
+    const hotelToUpdate = await Hotel.findByPk(id);
 
-        if (!hotelToUpdate) {
-            throw new Error('Hotel not found');
-        }
+    if (!hotelToUpdate) {
+        throw new Error('Hotel not found');
+    }
 
-        const { name, address, address_url, price, email, image, countryId } = updatedHotelData;
+    const { name, address, address_url, price, email, image, countryId } = updatedHotelData;
 
-        let updatedCountryId = hotelToUpdate.countryId;
-        if (countryId) {
-            const updatedCountry = await Country.findOne({ where: { name: countryId } });
-            updatedCountryId = updatedCountry ? updatedCountry.dataValues.id : updatedCountryId;
-        }
+    let updatedCountryId = hotelToUpdate.countryId;
+    if (countryId) {
+        const updatedCountry = await Country.findOne({ where: { name: countryId } });
+        updatedCountryId = updatedCountry ? updatedCountry.dataValues.id : updatedCountryId;
+    }
 
-        const updatedHotel = await hotelToUpdate.update({
-            name,
-            address,
-            address_url,
-            price,
-            email,
-            image,
-            countryId: updatedCountryId,
-        });
+    const updatedHotel = await hotelToUpdate.update({
+        name,
+        address,
+        address_url,
+        price,
+        email,
+        image,
+        countryId: updatedCountryId,
+    });
 
-        return updatedHotel;
+    return updatedHotel;
 };
 
 const deleteHotel = async (id) => {

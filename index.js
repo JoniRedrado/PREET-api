@@ -4,7 +4,6 @@ const arrayHotels = require('./src/utils/hotels.js');
 const arrayCountries = require('./src/utils/countries.js');
 
 
-
 conn.sync({ force: false }).then(() => {
   Country.findAll().
   then(response => {
