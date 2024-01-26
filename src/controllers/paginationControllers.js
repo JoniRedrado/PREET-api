@@ -8,7 +8,6 @@ const getItems = async (req, res) => {
         offset: (page - 1) * Number(size)
     };
         const { count, rows } = await Hotel.findAndCountAll(options);
-
         res.json({
             status: "success",
             total: count,
