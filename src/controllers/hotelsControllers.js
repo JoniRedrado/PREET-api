@@ -52,6 +52,8 @@ const getHotelByName = async (name, query) => {
         minPrice = 0,
         maxPrice = 10000,
         price,
+        orderBy,
+        direction,
         country 
     } = query
 
@@ -71,7 +73,7 @@ const getHotelByName = async (name, query) => {
     const options = {
         limit: Number(size),
         offset: ( page - 1 ) * Number(size),
-        order: [['id', 'ASC']],
+        order: [[orderBy, direction]],
         where,
         include: [{
             model: Country,
