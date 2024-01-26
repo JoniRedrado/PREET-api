@@ -1,7 +1,26 @@
 const { Hotel, Country } = require('../../db.js')
 const  {Op} = require ("sequelize")
 
-const getHotels = async (page, size) => {
+const getHotels = async (query) => {
+
+    const { page = 1, 
+            size = 5,
+            stars,
+            minPrice = 0,
+            maxPrice = 10000,
+            price,
+            country 
+        } = query
+    
+    let where = {}
+    where = {
+        ...(stars && {stars}),
+        ...(minPrice && {price: { [Op.gte]: minPrice } }),
+        ...(maxPrice && {price: { [Op.lte]: maxPrice } }),
+        ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] } }),
+        ...(price && {price}),
+        ...(country && {countryId: country}),
+    }
 
     const options = {
         limit: Number(size),
@@ -11,7 +30,8 @@ const getHotels = async (page, size) => {
             model: Country,
             as: 'country',
             attributes: ['name'],
-        }]
+        }],
+        where
     }
     const { count, rows } = await Hotel.findAndCountAll(options)
     const hotels = {
@@ -22,16 +42,35 @@ const getHotels = async (page, size) => {
     return hotels
 }
 
-const getHotelByName = async (name, page, size) => {
+const getHotelByName = async (name, query) => {
+
+    const { page = 1, 
+        size = 5,
+        stars,
+        minPrice = 0,
+        maxPrice = 10000,
+        price,
+        country 
+    } = query
+
+    let where = {}
+    where = {
+        name: {
+            [Op.iLike]: `%${name}%`
+        },
+        ...(stars && {stars}),
+        ...(minPrice && {price: { [Op.gte]: minPrice } }),
+        ...(maxPrice && {price: { [Op.lte]: maxPrice } }),
+        ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] } }),
+        ...(price && {price}),
+        ...(country && {countryId: country}),
+}
+
     const options = {
         limit: Number(size),
         offset: ( page - 1 ) * Number(size),
         order: [['id', 'ASC']],
-        where: {
-            name: {
-                [Op.iLike]: `%${name}%`
-            }
-        },
+        where,
         include: [{
             model: Country,
             as: 'country',
