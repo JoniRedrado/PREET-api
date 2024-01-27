@@ -4,14 +4,14 @@ const  {Op} = require ("sequelize")
 const getHotels = async (query) => {
 
     const { page = 1, 
-            size = 5,
+            size = 6,
             stars,
             minPrice = 0,
             maxPrice = 10000,
             price,
             country,
-            orderBy,
-            direction
+            orderBy = 'name',
+            direction = 'ASC',
         } = query
 
     let where = {}
@@ -24,7 +24,7 @@ const getHotels = async (query) => {
         ...(country && {countryId: country}),
     }
 
-    let order = [];
+    /*let order = [];
     let orderItem = [];
 
     if(orderBy){
@@ -38,11 +38,11 @@ const getHotels = async (query) => {
     else if(orderBy) orderItem.push('ASC'); 
 
     if(orderItem.length > 0) order.push(orderItem);
-
+    */
     const options = {
         limit: Number(size),
         offset: ( page - 1 ) * Number(size),
-        order,
+        order: [[orderBy, direction]],
         include: [{
             model: Country,
             as: 'country',
@@ -63,14 +63,14 @@ const getHotels = async (query) => {
 const getHotelByName = async (name, query) => {
 
     const { page = 1, 
-        size = 5,
-        stars,
-        minPrice = 0,
-        maxPrice = 10000,
-        price,
-        orderBy,
-        direction,
-        country 
+      size = 6,
+      stars,
+      minPrice = 0,
+      maxPrice = 10000,
+      price,
+      orderBy = 'name',
+      direction = 'ASC',
+      country 
     } = query
 
     let where = {}
@@ -96,8 +96,12 @@ const getHotelByName = async (name, query) => {
             as: 'country',
             attributes: ['name'],
         }],
-        
-    }
+  }
+  
+ /* if (orderBy && direction) {
+    options.order = [[orderBy, direction]]
+  }*/
+
     const { count, rows } = await Hotel.findAndCountAll(options)
     const hotels = {
         total: count,

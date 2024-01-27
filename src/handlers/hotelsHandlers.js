@@ -11,8 +11,9 @@ const getHotelsHandler = async (req,res) => {
             const hotelsAll = await getHotels(req.query)
             res.status(200).json(hotelsAll)    
         }
-    } catch (error){
-        res.status(500).json({error: error.message})
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({error: error.message})
     }
 }
 
