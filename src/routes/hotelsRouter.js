@@ -7,7 +7,7 @@ const { getHotelIdHandler, postHotelHandler, getHotelsHandler, putHotelHandler, 
 
 hotelsRouter.post('/', validate, postHotelHandler)
 
-hotelsRouter.get('/:id', getHotelIdHandler);
+hotelsRouter.get('/detail/:id', getHotelIdHandler);
 hotelsRouter.get('/', getHotelsHandler)
 
 hotelsRouter.put("/:id", validate, putHotelHandler)
