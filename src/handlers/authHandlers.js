@@ -5,7 +5,7 @@ const { SECRET_KEY } = process.env
 
 const loginHandler = async (req, res) => {
     const { email, password } = req.body;
-
+try {
     const user = await User.findOne({ where: { email } })
     const comparePasswords = await bcrypt.compare(password, user.password)
 
@@ -18,6 +18,10 @@ const loginHandler = async (req, res) => {
 
         res.status(500).send({message: "Email or password incorrect."})
     }
+    
+} catch (error) {
+    res.status(400).send ("User not found")
+}
 }
 
 const registerHandler = async (req, res) => {
