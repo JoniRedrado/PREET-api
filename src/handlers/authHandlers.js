@@ -13,7 +13,7 @@ try {
         delete user.dataValues.password
         const token = jwt.sign(user.dataValues, SECRET_KEY, { expiresIn: '2h' })
 
-        res.status(200).send(token)
+        res.status(200).json({token, user: user.dataValues})
     } else {
 
         res.status(500).send({message: "Email or password incorrect."})
