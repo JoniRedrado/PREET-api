@@ -146,10 +146,11 @@ const putHotel = async (id, updatedHotelData) => {
 
     const { name, address, address_url, price, email, image, countryId } = updatedHotelData;
 
-    let updatedCountryId = hotelToUpdate.countryId;
-    if (countryId) {
+    let updatedCountryId = countryId;
+    if (countryId && typeof countryId !== 'number') {
+        // Si countryId es un nombre de país, busca el ID correspondiente
         const updatedCountry = await Country.findOne({ where: { name: countryId } });
-        updatedCountryId = updatedCountry ? updatedCountry.dataValues.id : updatedCountryId;
+        updatedCountryId = updatedCountry ? updatedCountry.id : countryId;
     }
 
     const updatedHotel = await hotelToUpdate.update({
