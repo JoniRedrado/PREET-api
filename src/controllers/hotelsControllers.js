@@ -42,7 +42,7 @@ const getHotels = async (query) => {
     const options = {
         limit: Number(size),
         offset: ( page - 1 ) * Number(size),
-        order: [[orderBy, direction]],
+        order: [[orderBy === '' ? 'name' : orderBy, direction === '' ? 'ASC' : direction]],
         include: [{
             model: Country,
             as: 'country',
@@ -97,10 +97,6 @@ const getHotelByName = async (name, query) => {
             attributes: ['name'],
         }],
   }
-  
- /* if (orderBy && direction) {
-    options.order = [[orderBy, direction]]
-  }*/
 
     const { count, rows } = await Hotel.findAndCountAll(options)
     const hotels = {

@@ -4,7 +4,7 @@ const { SECRET_KEY } = process.env;
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
-    console.log(token);
+    //console.log(token);
 
     if (token === null) return res.status(401).send({ error: 'No token provided' })
 
