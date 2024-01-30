@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { registerHandler, loginHandler } = require('../handlers/authHandlers');
 const authRouter = Router()
 
-//Endpoint
+//Endpoints
 authRouter.post('/register', registerHandler)
 
 authRouter.post('/login', loginHandler)
