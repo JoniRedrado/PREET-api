@@ -1,5 +1,7 @@
 const { getItems } = require('../controllers/paginationControllers');
-
+/*
+Este no se usa!
+*/
 const getItemsHandler = async (req, res) => {
     
     try{

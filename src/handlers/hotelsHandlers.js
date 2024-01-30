@@ -29,7 +29,7 @@ const getHotelIdHandler = async (req, res) => {
 }
 
 const postHotelHandler = async (req, res)=>{
-    //Debe recibir en el body todas las propiedades del hotel, junto con el id del pais
+    //Debe recibir en el body todas las propiedades del hotel, junto con el nombre del pais
     const hotelData = req.body
     try{
         const createdHotel = await postHotel(hotelData)
