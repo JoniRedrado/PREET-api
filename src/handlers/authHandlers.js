@@ -6,13 +6,13 @@ const loginHandler = async (req, res) => {
     const { email, password } = req.body;
     try {
         const login = await validateCredentials(email, password)
-        if (login){
+        if (login.token){
             res.status(200).json({token: login.token, user: login.user})
         } else {
-            res.status(500).send({message: "Email or password incorrect."})
+            res.status(200).send({message: "Email or password incorrect."})
         }
     } catch (error) {
-        res.status(400).send ("User not found")
+        res.status(400).send("User not found")
     }
 }
 
