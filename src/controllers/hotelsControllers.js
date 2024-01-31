@@ -140,7 +140,7 @@ const putHotel = async (id, updatedHotelData) => {
         throw new Error('Hotel not found');
     }
 
-    const { name, address, address_url, price, email, image, countryId } = updatedHotelData;
+    const { name, address, address_url, price, email, stars,  image, countryId } = updatedHotelData;
 
     let updatedCountryId = countryId;
     if (countryId && typeof countryId !== 'number') {
@@ -155,6 +155,7 @@ const putHotel = async (id, updatedHotelData) => {
         address_url,
         price,
         email,
+        stars,
         image,
         countryId: updatedCountryId,
     });

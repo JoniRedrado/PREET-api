@@ -9,9 +9,9 @@ const verifyToken = require('../utils/verifyToken');
 hotelsRouter.post('/', validate, verifyToken, postHotelHandler)
 
 hotelsRouter.get('/detail/:id', verifyToken, getHotelIdHandler);
-hotelsRouter.get('/', verifyToken, getHotelsHandler)
+hotelsRouter.get('/', getHotelsHandler)
 
-hotelsRouter.put("/:id", validate, verifyToken, putHotelHandler)
+hotelsRouter.put("/:id", validate, putHotelHandler)
 
 hotelsRouter.delete("/:id", verifyToken, deleteHotelHandler)
 
