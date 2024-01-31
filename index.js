@@ -2,7 +2,7 @@ const server = require('./app.js');
 const { Hotel, Country, conn } = require('./db.js');
 const arrayHotels = require('./src/utils/hotels.js');
 const arrayCountries = require('./src/utils/countries.js');
-
+const { PORT } = process.env
 
 conn.sync({ force: false }).then(() => {
   Country.findAll().
@@ -20,7 +20,7 @@ conn.sync({ force: false }).then(() => {
       })
   })
 
-  server.listen(3001, () => {
-    console.log('%s listening at 3001');
+  server.listen(PORT, () => {
+    console.log('%s listening at', PORT);
   });
 });
