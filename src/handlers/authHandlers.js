@@ -9,10 +9,10 @@ const loginHandler = async (req, res) => {
         if (login.token){
             res.status(200).json({token: login.token, user: login.user})
         } else {
-            res.status(400).send({message: "Email or password incorrect."})
+            res.status(200).send({message: "Email or password incorrect."})
         }
     } catch (error) {
-        res.status(400).send ("User not found")
+        res.status(400).send("User not found")
     }
 }
 
