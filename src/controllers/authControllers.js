@@ -18,7 +18,7 @@ const validateCredentials = async (email, password)=>{
         //Devuelve token y datos del usuario
         return {token, user: user.dataValues}
     } else {
-        return false
+        return {message: "Email or password incorrect."}
     }
 }
 
