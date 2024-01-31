@@ -4,6 +4,7 @@ const hotelsRouter = require("./hotelsRouter")
 const countriesRouter = require("./countriesRouter")
 const itemsRouter = require("./paginationRouter");
 const authRouter = require('./authRouter');
+const usersRouter = require('./usersRouter');
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use("/hotels", hotelsRouter)
 router.use("/countries", countriesRouter)
 router.use("/pagination", itemsRouter)
 router.use("/auth", authRouter)
+router.use("/users", usersRouter)
 
 module.exports = router;
