@@ -1,7 +1,6 @@
 const sgMail = require('@sendgrid/mail');
 
 module.exports = welcomeEmail = (apiKey, to, html) => {
-    
     sgMail.setApiKey(apiKey);
     const msg = {
         to,
@@ -12,7 +11,7 @@ module.exports = welcomeEmail = (apiKey, to, html) => {
 
     sgMail
         .send(msg)
-        .then(() => {}, error => {
+        .then(() => {console.log('enviado')}, error => {
             console.error(error);
     
             if (error.response) {
