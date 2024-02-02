@@ -4,9 +4,10 @@ const { validateCredentials } = require('../controllers/authControllers.js')
 const welcomeEmail  = require('../utils/welcomeEmail.js')
 const { SENDGRID_API_KEY } = process.env
 const loginHandler = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, fireBaseAuth = false } = req.body;
+
     try {
-        const login = await validateCredentials(email, password)
+        const login = await validateCredentials(email, password, fireBaseAuth)
         if (login.token){
             res.status(200).json({token: login.token, user: login.user})
         } else {
