@@ -8,7 +8,7 @@ const verifyToken = require('../utils/verifyToken');
 
 hotelsRouter.post('/', validate, verifyToken, postHotelHandler)
 
-hotelsRouter.get('/detail/:id', verifyToken, getHotelIdHandler);
+hotelsRouter.get('/detail/:id', getHotelIdHandler);
 hotelsRouter.get('/', getHotelsHandler)
 
 hotelsRouter.put("/:id", validate, putHotelHandler)
