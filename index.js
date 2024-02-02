@@ -4,7 +4,7 @@ const arrayHotels = require('./src/utils/hotels.js');
 const arrayCountries = require('./src/utils/countries.js');
 const { PORT } = process.env
 
-conn.sync({ force: true }).then(() => {
+conn.sync({ force: false }).then(() => {
   Country.findAll().
   then(response => {
     if(response.length === 0) 
