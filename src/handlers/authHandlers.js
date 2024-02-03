@@ -26,7 +26,7 @@ const registerHandler = async (req, res) => {
         //Se crea el usuario con la contraseña encriptada, se responde con la info del usuario sin la password
         const user = await User.create({ name, last_name, email, password: passwordHash });
         delete user.password
-        welcomeEmail(`${SENDGRID_API_KEY}`, email, `<h1>¡Hi ${name} ${last_name}! Welcome to PREET</h1>`)
+        welcomeEmail(`${SENDGRID_API_KEY}`, email, name)
         res.status(200).json(user);
     } catch (error) {
         res.status(400).json({ error: error.message });

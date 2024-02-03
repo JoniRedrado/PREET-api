@@ -1,23 +1,45 @@
 const sgMail = require('@sendgrid/mail');
+const ejs = require('ejs')
+const fs = require('fs').promises
 
-module.exports = welcomeEmail = (apiKey, to, html) => {
-    sgMail.setApiKey(apiKey);
+const renderEJSFile = async (filePath, data) => {
+  try {
+    const ejsContent = await fs.readFile(filePath, 'utf-8')
+    return ejs.render(ejsContent, {name:data})
+  } catch (error) {
+    throw new Error(`Error loading or rendering EJS file: ${error.message}`);
+  }
+}
+
+module.exports = welcomeEmail = async (apiKey, to, name) => {
+  sgMail.setApiKey(apiKey);
+  
+  try {
+    const html = await renderEJSFile(__dirname + '/../emails/welcome.ejs', name)
+    
     const msg = {
         to,
-        from: 'contacto.preet@gmail.com', // Use the email address or domain you verified above
+        from: 'contacto.preet@gmail.com',
         subject: 'Welcome to PREET',
         html,
     };
 
-    sgMail
-        .send(msg)
-        .then(() => {console.log('enviado')}, error => {
-            console.error(error);
+    await sgMail.send(msg)
+
+  } catch (error) {
+    console.error(error)
     
-            if (error.response) {
-            console.error(error.response.body)
-            }
-        });
+  }
+
+    // sgMail
+    //     .send(msg)
+    //     .then(() => {console.log('enviado')}, error => {
+    //         console.error(error);
+    
+    //         if (error.response) {
+    //         console.error(error.response.body)
+    //         }
+    //     });
 }
 
 //module.exports = welcomeEmail
