@@ -6,6 +6,7 @@ const itemsRouter = require("./paginationRouter");
 const authRouter = require('./authRouter');
 const usersRouter = require('./usersRouter');
 const softRouters = require('./softRouter')
+const paymentRouter = require('./paymentRouter')
 const router = Router();
 
 // Configurar los routers
@@ -15,5 +16,6 @@ router.use("/pagination", itemsRouter)
 router.use("/auth", authRouter)
 router.use("/users", usersRouter)
 router.use("/soft", softRouters)
+router.use("/payment", require('./paymentRouter'))
 
 module.exports = router;
