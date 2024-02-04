@@ -1,4 +1,4 @@
-const { getUsers, deleteUsers} = require('../controllers/usersControllers');
+const { getUsers, deleteUsers, getUserInfo, updateUserInfo} = require('../controllers/usersControllers');
 
 const getUsersHandler = async (req, res) => {
 
@@ -20,8 +20,33 @@ const deleteUsersHandler = async (req, res) => {
     }
 };
 
+const getUserProfileHandler = async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+        const userInfo = await getUserInfo(userId);
+        res.status(200).json(userInfo);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+
+const updateUserProfileHandler = async (req, res) => {
+    const userId = req.user.id;
+    const updatedUserInfo = req.body; 
+  
+    try {
+      const updatedUser = await updateUserInfo(userId, updatedUserInfo);
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
 
 module.exports = {
     getUsersHandler,
-    deleteUsersHandler
+    deleteUsersHandler,
+    getUserProfileHandler,
+    updateUserProfileHandler
 }
