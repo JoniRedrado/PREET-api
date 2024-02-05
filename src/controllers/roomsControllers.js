@@ -23,18 +23,6 @@ const getRooms = async () => {
   });
     return rooms
   }
-//   include: {
-//     model: Booking,
-//     where: {
-//       dateInit: {
-//         [Op.lte]: currentDate
-//       },
-//       dateFinal: {
-//         [Op.gte]: currentDate
-//       }
-//     }
-// }
-// });
   //get habitaciones disponibles
   //get habitaciones por tipo
   //get habitaciones por id

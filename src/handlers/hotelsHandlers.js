@@ -1,4 +1,9 @@
-const { getHotels, getHotelById, postHotel, putHotel, deleteHotel, getHotelByName} = require('../controllers/hotelsControllers.js');
+const { getHotels, 
+    getHotelById, 
+    postHotel, 
+    putHotel, 
+    deleteHotel, 
+    getHotelByName} = require('../controllers/hotelsControllers.js');
 
 const getHotelsHandler = async (req,res) => {
     const { name } = req.query
