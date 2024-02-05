@@ -16,8 +16,18 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false
     },
+    rol: {
+      type: DataTypes.STRING,
+      defaultValue: 'client',
+      validate: {
+        isIn: {
+          args: [['admin', 'client']],
+        }
+      }
+    },  
     email: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false
     },
     password: {

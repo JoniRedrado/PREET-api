@@ -19,12 +19,12 @@ const loginHandler = async (req, res) => {
 }
 
 const registerHandler = async (req, res) => {
-    const { name, last_name, email, password } = req.body;
+    const { name, last_name, rol, email, password, countryId } = req.body;
     //Mediante la libreria bcrypt, encripta la contraseña ingresada por el cliente
     const passwordHash = await bcrypt.hash(password, 10);
     try {
         //Se crea el usuario con la contraseña encriptada, se responde con la info del usuario sin la password
-        const user = await User.create({ name, last_name, email, password: passwordHash });
+        const user = await User.create({ name, last_name, rol, email, password: passwordHash, countryId });
         delete user.password
         welcomeEmail(`${SENDGRID_API_KEY}`, email, name)
         res.status(200).json(user);

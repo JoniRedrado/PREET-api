@@ -3,8 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const { SECRET_KEY } = process.env
 
-
-
 const validateCredentials = async (email, password, fireBaseAuth)=>{
     //Busca al usuario por email
     let user = await User.findOne({ where: { email } })

@@ -6,9 +6,9 @@ const getHotels = async (query) => {
     const { page = 1, 
             size = 6,
             stars,
-            minPrice = 0,
-            maxPrice = 10000,
-            price,
+            // minPrice = 0,
+            // maxPrice = 10000,
+            // price,
             country,
             orderBy = 'name',
             direction = 'ASC',
@@ -17,10 +17,10 @@ const getHotels = async (query) => {
     let where = {}
     where = {
         ...(stars && {stars}),
-        ...(minPrice && {price: { [Op.gte]: minPrice } }),
-        ...(maxPrice && {price: { [Op.lte]: maxPrice } }),
-        ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] } }),
-        ...(price && {price}),
+        // ...(minPrice && {price: { [Op.gte]: minPrice } }),
+        // ...(maxPrice && {price: { [Op.lte]: maxPrice } }),
+        // ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] } }),
+        // ...(price && {price}),
         ...(country && {countryId: country}),
     }
 
@@ -65,9 +65,9 @@ const getHotelByName = async (name, query) => {
     const { page = 1, 
       size = 6,
       stars,
-      minPrice = 0,
-      maxPrice = 10000,
-      price,
+    //   minPrice = 0,
+    //   maxPrice = 10000,
+    //   price,
       orderBy = 'name',
       direction = 'ASC',
       country 
@@ -79,10 +79,10 @@ const getHotelByName = async (name, query) => {
             [Op.iLike]: `%${name}%`
         },
         ...(stars && {stars}),
-        ...(minPrice && {price: { [Op.gte]: minPrice } }),
-        ...(maxPrice && {price: { [Op.lte]: maxPrice } }),
-        ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] } }),
-        ...(price && {price}),
+        // ...(minPrice && {price: { [Op.gte]: minPrice } }),
+        // ...(maxPrice && {price: { [Op.lte]: maxPrice } }),
+        // ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] } }),
+        // ...(price && {price}),
         ...(country && {countryId: country}),
 }
 
@@ -109,13 +109,13 @@ const getHotelByName = async (name, query) => {
 
 const postHotel = async (hotel)=>{
 
-    const { name, address, stars, address_url, price, email, image, countryId } = hotel
+    const { name, address, address_url, stars, email, image, countryId } = hotel
 
     //Buscar por nombre el pais del hotel
     const hotelCountry = await Country.findOne({ where: { name: countryId} })
     
     //Formatear los datos para que cumpla con el modelo de la DB
-    const hotelData = { name, address, stars, address_url, price, email, image, countryId: hotelCountry.dataValues.id }
+    const hotelData = { name, address, address_url, stars, email, image, countryId: hotelCountry.dataValues.id }
     
     //crear el hotel
     const newHotel = await Hotel.create(hotelData)
@@ -140,7 +140,7 @@ const putHotel = async (id, updatedHotelData) => {
         throw new Error('Hotel not found');
     }
 
-    const { name, address, address_url, price, email, stars,  image, countryId } = updatedHotelData;
+    const { name, address, address_url, stars, email, image, countryId } = updatedHotelData;
 
     let updatedCountryId = countryId;
     if (countryId && typeof countryId !== 'number') {
@@ -153,9 +153,8 @@ const putHotel = async (id, updatedHotelData) => {
         name,
         address,
         address_url,
-        price,
-        email,
         stars,
+        email,
         image,
         countryId: updatedCountryId,
     });
