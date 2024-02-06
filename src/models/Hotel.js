@@ -16,18 +16,14 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false
     },
-    stars: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
     address_url: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    price: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
-    }, 
+    stars: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false
@@ -36,6 +32,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    ranting: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    }
   },
   {paranoid: true,}
   );
