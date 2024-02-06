@@ -115,7 +115,7 @@ const getHotelById  = async(id) => {
         },
         {
             model: Room,
-            attributes: ['type', 'numeration', 'price', 'description'],
+            attributes: ['id', 'type', 'numeration', 'price', 'description'],
         }
     ]
     });
