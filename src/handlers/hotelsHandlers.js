@@ -1,9 +1,10 @@
-const { getHotels, 
-    getHotelById, 
+const { getHotels,
+    getHotelByName,
+    getHotelById,
+    getHotelRanging,
     postHotel, 
     putHotel, 
-    deleteHotel, 
-    getHotelByName} = require('../controllers/hotelsControllers.js');
+    deleteHotel } = require('../controllers/hotelsControllers.js');
 
 const getHotelsHandler = async (req,res) => {
     const { name } = req.query
@@ -32,7 +33,14 @@ const getHotelIdHandler = async (req, res) => {
         res.status(400).json({error: error.message});
     }
 }
-
+const getHotelRangingHandler = async (req, res) => {
+    try{
+        const hotels = await getHotelRanging();
+        res.status(200).json(hotels);
+    }catch(error){
+        res.status(400).json({error: error.message});
+    }
+}
 const postHotelHandler = async (req, res)=>{
     //Debe recibir en el body todas las propiedades del hotel, junto con el nombre del pais
     const hotelData = req.body
@@ -71,5 +79,6 @@ module.exports = {
     postHotelHandler,
     getHotelsHandler,
     putHotelHandler,
-    deleteHotelHandler
+    deleteHotelHandler,
+    getHotelRangingHandler
 };

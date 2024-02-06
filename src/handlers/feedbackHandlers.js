@@ -10,8 +10,11 @@ const getFeedbacksHandler = async (req, res) => {
 }
 const postFeedbackHandler = async (req, res) => {
     const feedbackData = req.body;
+    const { id } = req.body
+    // const {id} =  req.user
+    // feedbackData.userId = id
     try{
-        const feedback = await postFeedback(feedbackData);
+        const feedback = await postFeedback(feedbackData,id);
         res.status(200).json(feedback);
     }catch(error){
         res.status(400).json({error: error.message});

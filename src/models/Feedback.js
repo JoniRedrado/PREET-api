@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
         },
         like: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
+            allowNull: true
         },
         comment: {
             type: DataTypes.STRING,
