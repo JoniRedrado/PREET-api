@@ -40,14 +40,21 @@ const getHotels = async (query) => {
     if(orderItem.length > 0) order.push(orderItem);
     */
    const options = {
-       limit: Number(size),
-       offset: ( page - 1 ) * Number(size),
-       order: [[orderBy === '' ? 'name' : orderBy, direction === '' ? 'ASC' : direction]],
-       include: [{
-           model: Country,
-           as: 'country',
-           attributes: ['name']
+        limit: Number(size),
+        offset: ( page - 1 ) * Number(size),
+        //order: [[orderBy === '' ? 'name' : orderBy, direction === '' ? 'ASC' : direction]],
+        include: [{
+            model: Country,
+            as: 'country',
+            attributes: ['name']
+            },
+            {
+            model: Room,
+            as: 'rooms',
+            attributes: ['price'],
+            
         }],
+        order: [[orderBy === '' ? 'name' : orderBy, direction === '' ? 'ASC' : direction],[ Room ,'price', 'ASC']],
         where
     }
     
@@ -89,13 +96,19 @@ const getHotelByName = async (name, query) => {
     const options = {
         limit: Number(size),
         offset: ( page - 1 ) * Number(size),
-        order: [[orderBy, direction]],
         where,
         include: [{
             model: Country,
             as: 'country',
             attributes: ['name'],
+        },
+        {
+            model: Room,
+            as: 'rooms',
+            attributes: ['price'],
+            
         }],
+        order: [[orderBy === '' ? 'name' : orderBy, direction === '' ? 'ASC' : direction],[ Room ,'price', 'ASC']],
     }
     
     const { count, rows } = await Hotel.findAndCountAll(options)
@@ -115,7 +128,7 @@ const getHotelById  = async(id) => {
         },
         {
             model: Room,
-            attributes: ['type', 'numeration', 'price', 'description'],
+            attributes: ['id', 'type', 'numeration', 'price', 'description'],
         }
     ]
     });

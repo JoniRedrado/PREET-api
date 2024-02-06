@@ -1,12 +1,16 @@
 const axios = require('axios')
+const jwt = require('jsonwebtoken')
 const {config} = require('dotenv')
 config()
-const { PAYPAL_CLIENT_ID, PAYPAL_SECRET_KEY, PAYPAL_API } = process.env
+const { PAYPAL_CLIENT_ID, PAYPAL_SECRET_KEY, PAYPAL_API, SECRET_KEY } = process.env
+const { Booking } = require('../../db.js')
 
 const createOrder = async (req, res) => {
 
     console.log(req.body);
-    const {price} = req.body
+    const {price, dateInit, dateFinal, user, roomId} = req.body
+    const userData = jwt.verify(user, SECRET_KEY)
+
     //Orden a generar, deben venir datos desde el front
     const order = {
         intent: "CAPTURE",
@@ -15,7 +19,9 @@ const createOrder = async (req, res) => {
                 amount: {
                     currency_code: "USD",
                     value: price,
-                }
+                },
+                //Se puede agregar toda la info de la reserva
+                description: "Reserva de una habitacion (info de la habitacion)"
             }
         ],
         application_context: {
@@ -23,6 +29,7 @@ const createOrder = async (req, res) => {
             landing_page: "NO_PREFERENCE",
             user_action: "PAY_NOW",
             return_url: "http://localhost:5173/booked",
+            //Cambiar para volver al detalle del hotel
             cancel_url: "http://localhost:5173/"
         }
     }
@@ -45,6 +52,9 @@ const createOrder = async (req, res) => {
             'Content-Type': 'application/json'     
         }
     })
+
+    //Create booking
+    const newBooking = await Booking.create({dateInit, dateFinal, pay: response.data.id, roomId, userId:userData.id})
 
     //Devolver la orden
     res.json(response.data)
