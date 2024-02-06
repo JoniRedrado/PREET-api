@@ -9,6 +9,7 @@ const roomsRouter = require('./roomsRouter');
 const bookingsRouter = require('./bookingsRouter');
 const softRouters = require('./softRouter')
 const paymentRouter = require('./paymentRouter')
+const feedbackRouter = require('./feedbackRouter')
 
 // Configurar los routers
 router.use("/hotels", hotelsRouter)
@@ -17,8 +18,8 @@ router.use("/auth", authRouter)
 router.use("/users", usersRouter)
 router.use("/rooms", roomsRouter)
 router.use("/bookings", bookingsRouter)
-router.use("/feedback", require('./feedbackRouter'))
+router.use("/feedback", feedbackRouter)
 router.use("/soft", softRouters)
-router.use("/payment", require('./paymentRouter'))
+router.use("/payment", paymentRouter)
 
 module.exports = router;

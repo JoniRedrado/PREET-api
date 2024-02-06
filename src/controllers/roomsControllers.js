@@ -1,7 +1,8 @@
 const { Room, Booking } = require('../../db.js');
 const { Op } = require("sequelize");
-const getRooms = async () => {
-  currentDate = new Date();
+const getRooms = async (date) => {
+  currentDate = date || new Date();
+  console.log(currentDate);
   let bookedRooms = await Booking.findAll({
     attributes: ['roomId'],
     where: {
