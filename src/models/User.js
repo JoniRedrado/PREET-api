@@ -34,6 +34,26 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false
     },
+    birth_date:{
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    gender:{
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    profile_picture:{
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    phone_number:{
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    nationality:{
+      type: DataTypes.STRING,
+      allowNull: true
+    },
   },
   {paranoid: true,}
   );

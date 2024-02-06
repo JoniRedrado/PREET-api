@@ -14,7 +14,7 @@ const deleteUsers = async (id) => {
 const getUserInfo = async (id) => {
     try {
         const user = await User.findByPk(id, {
-            attributes: {exclude:["password"]}
+            attributes: {exclude:["id", "password", "createdAt", "updatedAt", "deletedAt"]}
         });
         if (!user) {
             throw new Error("User not found.");
