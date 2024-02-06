@@ -1,4 +1,4 @@
-const { Hotel, Country } = require('../../db.js')
+const { Hotel, Country, Room} = require('../../db.js')
 const  {Op} = require ("sequelize")
 
 const getHotels = async (query) => {
@@ -112,7 +112,12 @@ const getHotelById  = async(id) => {
             model: Country,
             as: 'country',
             attributes: ['name'],
-        }]
+        },
+        {
+            model: Room,
+            attributes: ['type', 'numeration', 'price', 'description'],
+        }
+    ]
     });
     return hotel;
 }
