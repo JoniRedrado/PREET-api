@@ -6,10 +6,12 @@ const { getRoomsHandler,
     putRoomsHandler,
     deleteRoomsHandler,
     getRoomsDeletedHandler,
-    restoreRoomsHandler} = require('../handlers/roomsHandlers');
+    restoreRoomsHandler,
+    getTypeRooms} = require('../handlers/roomsHandlers');
 
 //Endpoints
 roomsRouter.get('/', getRoomsHandler);
+roomsRouter.get('/types', getTypeRooms);
 roomsRouter.get('/detail/:id', getRoomIdHandler);
 roomsRouter.post('/', postRoomsHandler);
 roomsRouter.put('/update/:id', putRoomsHandler);
