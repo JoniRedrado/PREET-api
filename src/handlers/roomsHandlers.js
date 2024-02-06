@@ -1,8 +1,8 @@
-const { getRooms, postRoom} = require('../controllers/roomsControllers');
+const { getAvalableRooms, postRoom} = require('../controllers/roomsControllers');
 
 const getRoomsHandler = async (req, res) => {
     try{
-        const rooms = await getRooms();
+        const rooms = await getAvalableRooms();
         res.status(200).json(rooms);
     }catch(error){
         res.status(400).json({error: error.message});
