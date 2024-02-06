@@ -116,7 +116,13 @@ const getHotelById  = async(id) => {
     });
     return hotel;
 }
-
+const getHotelRanging = async () => {
+    const rankingHotels = await Hotel.findAll({
+        order: [['ranking', 'DESC']],
+        limit: 5
+    })
+    return rankingHotels
+}
 const postHotel = async (hotel)=>{
     
     const { name, address, address_url, stars, email, image, countryId } = hotel
@@ -172,8 +178,9 @@ const deleteHotel = async (id) => {
 module.exports = {
     getHotels,
     getHotelByName,
-    postHotel,
     getHotelById,
+    getHotelRanging,
+    postHotel,
     putHotel,
     deleteHotel
 }

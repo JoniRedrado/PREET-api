@@ -46,7 +46,7 @@ const { Country, Hotel, User, Feedback, Booking, Room } = sequelize.models;
 // Aca vendrian las relaciones
 Hotel.belongsTo(Country);
 Country.hasMany(Hotel);
-Hotel.hasMany(Feedback);
+Hotel.hasMany(Feedback) ;
 Feedback.belongsTo(Hotel);
 Hotel.hasMany(Room);
 Room.belongsTo(Hotel);
