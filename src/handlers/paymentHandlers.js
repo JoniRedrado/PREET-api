@@ -6,6 +6,7 @@ const { PAYPAL_CLIENT_ID, PAYPAL_SECRET_KEY, PAYPAL_API } = process.env
 const createOrder = async (req, res) => {
 
     console.log(req.body);
+    const {price} = req.body
     //Orden a generar, deben venir datos desde el front
     const order = {
         intent: "CAPTURE",
@@ -13,7 +14,7 @@ const createOrder = async (req, res) => {
             {
                 amount: {
                     currency_code: "USD",
-                    value: "100.00",
+                    value: price,
                 }
             }
         ],

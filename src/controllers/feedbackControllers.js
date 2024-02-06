@@ -20,32 +20,11 @@ const postFeedback = async (feedback) => {
   return newFeedback;
 };
 const putFeedback = async (id, updatedFeedbackData) => {
-  const feedbackToUpdate = await Feedback.findByPk(id);
-
-  if (!feedbackToUpdate) {
+  const feedback = await Feedback.findByPk(id);
+  if (!feedback) {
     throw new Error('Feedback not found');
   }
-
-  const { like, comment } = updatedFeedbackData;
-
-  const updatedFeedback = await feedbackToUpdate.update({
-    like,
-    comment
-  });
-
-  if (like !== feedbackToUpdate.like) {
-    const hotelId = updatedFeedback.hotelId; 
-    const hotel = await Hotel.findByPk(hotelId);
-    if (hotel) {
-      if (like) {
-        hotel.ranking += 1;
-      } else {
-        hotel.ranking -= 1;
-      }
-      await hotel.save();
-    }
-  }
-
+  const updatedFeedback = await feedback.update(updatedFeedbackData);
   return updatedFeedback;
 };
 

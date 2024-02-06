@@ -1,4 +1,4 @@
-const { Hotel, Country } = require('../../db.js')
+const { Hotel, Country, Room} = require('../../db.js')
 const  {Op} = require ("sequelize")
 
 const getHotels = async (query) => {
@@ -112,11 +112,22 @@ const getHotelById  = async(id) => {
             model: Country,
             as: 'country',
             attributes: ['name'],
-        }]
+        },
+        {
+            model: Room,
+            attributes: ['type', 'numeration', 'price', 'description'],
+        }
+    ]
     });
     return hotel;
 }
-
+const getHotelRanging = async () => {
+    const rankingHotels = await Hotel.findAll({
+        order: [['ranking', 'DESC']],
+        limit: 5
+    })
+    return rankingHotels
+}
 const postHotel = async (hotel)=>{
     
     const { name, address, address_url, stars, email, image, countryId } = hotel
@@ -172,8 +183,9 @@ const deleteHotel = async (id) => {
 module.exports = {
     getHotels,
     getHotelByName,
-    postHotel,
     getHotelById,
+    getHotelRanging,
+    postHotel,
     putHotel,
     deleteHotel
 }

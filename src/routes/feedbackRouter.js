@@ -6,6 +6,6 @@ const { getFeedbacksHandler, postFeedbackHandler, putFeedbackHandler } = require
 //Endpoints
 feedbackRouter.get('/', getFeedbacksHandler);
 feedbackRouter.post('/', postFeedbackHandler);
-feedbackRouter.put('/:id', putFeedbackHandler);
+feedbackRouter.put('/update/:id', putFeedbackHandler);
 
 module.exports = feedbackRouter
