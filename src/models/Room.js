@@ -12,6 +12,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    numeration: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     price: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -20,10 +24,6 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    stock: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    }
   },
   {paranoid: true,}
   );

@@ -14,24 +14,13 @@ module.exports = (sequelize) => {
     dateFinal: {
       type: DataTypes.DATE,
       allowNull: false
+    },
+    pay: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   },
   { paranoid: true }
   );
-  Booking.beforeCreate(async (booking) => {
-    const room = await booking.getRoom();
-    if (room.stock > 0) {
-      room.stock--;
-      await room.save();
-    } else {
-      throw new Error('No hay disponibilidad de habitaciones');
-    }
-  });
-  
-  Booking.afterDestroy(async (booking) => {
-    const room = await booking.getRoom();
-    room.stock++;
-    await room.save();
-  });
   return Booking;
 };

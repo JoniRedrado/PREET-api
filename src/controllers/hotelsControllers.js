@@ -109,13 +109,13 @@ const getHotelByName = async (name, query) => {
 
 const postHotel = async (hotel)=>{
 
-    const { name, address, stars, address_url, email, image, countryId } = hotel
+    const { name, address, address_url, stars, email, image, countryId } = hotel
 
     //Buscar por nombre el pais del hotel
     const hotelCountry = await Country.findOne({ where: { name: countryId} })
     
     //Formatear los datos para que cumpla con el modelo de la DB
-    const hotelData = { name, address, stars, address_url, email, image, countryId: hotelCountry.dataValues.id }
+    const hotelData = { name, address, address_url, stars, email, image, countryId: hotelCountry.dataValues.id }
     
     //crear el hotel
     const newHotel = await Hotel.create(hotelData)
@@ -140,7 +140,7 @@ const putHotel = async (id, updatedHotelData) => {
         throw new Error('Hotel not found');
     }
 
-    const { name, address, address_url, price, email, stars,  image, countryId } = updatedHotelData;
+    const { name, address, address_url, stars, email, image, countryId } = updatedHotelData;
 
     let updatedCountryId = countryId;
     if (countryId && typeof countryId !== 'number') {
@@ -153,8 +153,8 @@ const putHotel = async (id, updatedHotelData) => {
         name,
         address,
         address_url,
-        email,
         stars,
+        email,
         image,
         countryId: updatedCountryId,
     });
