@@ -6,19 +6,17 @@ const getHotels = async (query) => {
     const { page = 1, 
         size = 6,
         stars,
+        type,
         minPrice = 1,
         maxPrice = 10000,
-        price,
         country,
         orderBy = 'name',
         direction = 'ASC',
     } = query
-    
+
     let where = {}
     where = {
-        ...(price && {price}),
-        ...(minPrice && {price: { [Op.gte]: minPrice } }),
-        ...(maxPrice && {price: { [Op.lte]: maxPrice } }),
+        ...(type && {type}),
         ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] } })
     }
     
@@ -46,14 +44,27 @@ const getHotels = async (query) => {
     const hotels = {
         total: count,
         Hotel: rows.map(hotel => {
-            const newRooms = {};
+            //const newRooms = {};
+            const minPrice = {price: hotel.rooms[0]?.price, type:hotel.rooms[0]?.type};
+            const maxPrice = {...minPrice};
+
             hotel.rooms.forEach(room => {
-                if(!newRooms[`${room.type}`]) newRooms[`${room.type}`] = {id:[], type:room.type, price:[]};
+                if(room.price < minPrice.price){
+                    minPrice.price = room.price;
+                    minPrice.type = room.type;
+                }
+
+                if(room.price > maxPrice.price){
+                    maxPrice.price = room.price;
+                    maxPrice.type = room.type;
+                }
+                /*if(!newRooms[`${room.type}`]) newRooms[`${room.type}`] = {id:[], type:room.type, price:[]};
                 newRooms[`${room.type}`].id.push(room.id);
-                newRooms[`${room.type}`].price.push(room.price);
+                newRooms[`${room.type}`].price.push(room.price);*/
             });
             
-            return { ...hotel.toJSON(), rooms: Object.values(newRooms)};
+            //return { ...hotel.toJSON(), rooms: Object.values(newRooms)};
+            return { ...hotel.toJSON(), rooms: [minPrice, maxPrice]};
         })
     }
     
@@ -89,13 +100,19 @@ const getHotelByName = async (name, query) => {
     const options = {
         limit: Number(size),
         offset: ( page - 1 ) * Number(size),
-        order: [[orderBy, direction]],
         where,
         include: [{
             model: Country,
             as: 'country',
             attributes: ['name'],
+        },
+        {
+            model: Room,
+            as: 'rooms',
+            attributes: ['price'],
+            
         }],
+        order: [[orderBy === '' ? 'name' : orderBy, direction === '' ? 'ASC' : direction],[ Room ,'price', 'ASC']],
     }
     
     const { count, rows } = await Hotel.findAndCountAll(options)
@@ -115,7 +132,7 @@ const getHotelById  = async(id) => {
             },
             {
                 model: Room,
-                attributes: ['type', 'numeration', 'price', 'description'],
+                attributes: ['id', 'type', 'numeration', 'price', 'description'],
             }
         ]
     });
