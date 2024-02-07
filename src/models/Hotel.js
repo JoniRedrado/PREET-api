@@ -32,7 +32,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    ranting: {
+    ranking: {
       type: DataTypes.INTEGER,
       defaultValue: 0
     }

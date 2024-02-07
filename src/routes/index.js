@@ -17,6 +17,7 @@ router.use("/auth", authRouter)
 router.use("/users", usersRouter)
 router.use("/rooms", roomsRouter)
 router.use("/bookings", bookingsRouter)
+router.use("/feedback", require('./feedbackRouter'))
 router.use("/soft", softRouters)
 router.use("/payment", require('./paymentRouter'))
 
