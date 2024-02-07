@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const typeRooms = require('../utils/constants/typeRooms.js');
 
 module.exports = (sequelize) => {
 
@@ -10,7 +11,12 @@ module.exports = (sequelize) => {
     },
     type: {
       type: DataTypes.STRING,
-      allowNull: false
+      defaultValue: typeRooms[0],
+      validate: {
+        isIn: {
+          args: [typeRooms],
+        }
+      }
     },
     numeration: {
       type: DataTypes.STRING,
