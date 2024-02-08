@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const { config } = require('dotenv');
+config()
 const { SECRET_KEY } = process.env;
 
 const verifyToken = (req, res, next) => {
@@ -9,6 +11,7 @@ const verifyToken = (req, res, next) => {
     if (!token) return res.status(401).send({ error: 'No token provided' })
     //jwt verifica que el token sea válido usando la SECRET KEY, si no es valido responde con error. Si esta ok, continua con el flujo del endpoint
     jwt.verify(token, SECRET_KEY, (err, user) => {
+        console.log(SECRET_KEY);
         if (err) return res.status(403).send({ error: 'Invalid token' })
         req.user = user
         next()
