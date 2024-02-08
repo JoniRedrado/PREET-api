@@ -2,7 +2,7 @@ const axios = require('axios')
 const jwt = require('jsonwebtoken')
 const {config} = require('dotenv')
 config()
-const { PAYPAL_CLIENT_ID, PAYPAL_SECRET_KEY, PAYPAL_API, SECRET_KEY } = process.env
+const { PAYPAL_CLIENT_ID, PAYPAL_SECRET_KEY, PAYPAL_API, SECRET_KEY, FRONT_URL } = process.env
 const { Booking } = require('../../db.js')
 
 const createOrder = async (req, res) => {
@@ -28,9 +28,9 @@ const createOrder = async (req, res) => {
             brand_name: "Preet",
             landing_page: "NO_PREFERENCE",
             user_action: "PAY_NOW",
-            return_url: "http://localhost:5173/booked",
+            return_url: `${FRONT_URL}/booked`,
             //Cambiar para volver al detalle del hotel
-            cancel_url: "http://localhost:5173/"
+            cancel_url: `${FRONT_URL}/`
         }
     }
 
@@ -71,7 +71,7 @@ const captureOrder = async (req, res) => {
         }
     })
 
-    //res.redirect(200, 'http://localhost:5173')
+    //res.redirect(200, '${FRONT_URL}')
     res.json(response.data)
 }
 
