@@ -4,7 +4,7 @@ const { PORT } = process.env
 
 const findOrCreateData = require('./src/utils/dataDefaultPostgres.js');
 
-conn.sync({ force: true }).then(() => {
+conn.sync({ force: false }).then(() => {
   findOrCreateData();
 
   server.listen(PORT, () => {
