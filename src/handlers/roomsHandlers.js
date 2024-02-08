@@ -8,6 +8,8 @@ const { getAvalableRooms,
     getRoomsDeleted, 
     restoreRoom} = require('../controllers/roomsControllers');
 
+const typeRooms = require('../utils/constants/typeRooms');
+
 const getRoomsHandler = async (req, res) => {
     const {type, numeration} = req.query;
 
@@ -82,6 +84,10 @@ const restoreRoomsHandler = async (req, res) => {
     }
 }
 
+const getTypeRooms = (req, res) => {
+    res.status(200).json(typeRooms);
+}
+
 module.exports = {
     getRoomsHandler,
     getRoomIdHandler,
@@ -90,4 +96,5 @@ module.exports = {
     deleteRoomsHandler,
     getRoomsDeletedHandler,
     restoreRoomsHandler,
+    getTypeRooms
 }

@@ -6,62 +6,66 @@ const getHotels = async (query) => {
     const { page = 1, 
         size = 6,
         stars,
-        // minPrice = 0,
-        // maxPrice = 10000,
-        // price,
+        type,
+        minPrice = 1,
+        maxPrice = 10000,
         country,
         orderBy = 'name',
         direction = 'ASC',
     } = query
-    
+
     let where = {}
     where = {
-        ...(stars && {stars}),
-        // ...(minPrice && {price: { [Op.gte]: minPrice } }),
-        // ...(maxPrice && {price: { [Op.lte]: maxPrice } }),
-        // ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] } }),
-        // ...(price && {price}),
-        ...(country && {countryId: country}),
+        ...(type && {type}),
+        ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] } })
     }
     
-    /*let order = [];
-    let orderItem = [];
-    
-    if(orderBy){
-        if(orderBy === 'country'){
-            orderItem.push(Country);
-            orderItem.push('name');
-        }else orderItem.push(orderBy)
-    }else if(direction) orderItem.push('name');
-    
-    if(direction) orderItem.push(direction);  
-    else if(orderBy) orderItem.push('ASC'); 
-    
-    if(orderItem.length > 0) order.push(orderItem);
-    */
    const options = {
-        limit: Number(size),
-        offset: ( page - 1 ) * Number(size),
-        //order: [[orderBy === '' ? 'name' : orderBy, direction === '' ? 'ASC' : direction]],
-        include: [{
-            model: Country,
-            as: 'country',
-            attributes: ['name']
-            },
-            {
-            model: Room,
-            as: 'rooms',
-            attributes: ['price'],
-            
-        }],
-        order: [[orderBy === '' ? 'name' : orderBy, direction === '' ? 'ASC' : direction],[ Room ,'price', 'ASC']],
-        where
+       limit: Number(size),
+       offset: ( page - 1 ) * Number(size),
+       order: [[orderBy === '' ? 'name' : orderBy, direction === '' ? 'ASC' : direction]],
+       include: [
+            {   model: Country,
+                as: 'country',
+                attributes: ['name'] },
+
+            {   model: Room,
+                attributes: ['id', 'type', 'price'],
+                order: [['type', 'ASC']],
+                where }
+        ],
+        distinct: true,
+        attributes: {exclude: ['createdAt', 'updatedAt', 'deletedAt', ]},
+        where: {...(stars && {stars}), ...(country && {countryId: country})}
     }
     
-    const { count, rows } = await Hotel.findAndCountAll(options)
+    const { count, rows } = await Hotel.findAndCountAll(options);
+
     const hotels = {
         total: count,
-        Hotel: rows
+        Hotel: rows.map(hotel => {
+            //const newRooms = {};
+            const minPrice = {price: hotel.rooms[0]?.price, type:hotel.rooms[0]?.type};
+            const maxPrice = {...minPrice};
+
+            hotel.rooms.forEach(room => {
+                if(room.price < minPrice.price){
+                    minPrice.price = room.price;
+                    minPrice.type = room.type;
+                }
+
+                if(room.price > maxPrice.price){
+                    maxPrice.price = room.price;
+                    maxPrice.type = room.type;
+                }
+                /*if(!newRooms[`${room.type}`]) newRooms[`${room.type}`] = {id:[], type:room.type, price:[]};
+                newRooms[`${room.type}`].id.push(room.id);
+                newRooms[`${room.type}`].price.push(room.price);*/
+            });
+            
+            //return { ...hotel.toJSON(), rooms: Object.values(newRooms)};
+            return { ...hotel.toJSON(), rooms: [minPrice, maxPrice]};
+        })
     }
     
     return hotels
@@ -125,12 +129,12 @@ const getHotelById  = async(id) => {
             model: Country,
             as: 'country',
             attributes: ['name'],
-        },
-        {
-            model: Room,
-            attributes: ['id', 'type', 'numeration', 'price', 'description'],
-        }
-    ]
+            },
+            {
+                model: Room,
+                attributes: ['id', 'type', 'numeration', 'price', 'description'],
+            }
+        ]
     });
     return hotel;
 }
