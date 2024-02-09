@@ -1,12 +1,12 @@
-const { Hotel, Country, Room} = require('../../db.js')
+const { Hotel, Country, Room, HotelImages} = require('../../db.js')
 const  {Op} = require ("sequelize")
 
 const getHotels = async (query) => {
-    
     const { page = 1, 
         size = 6,
         stars,
         type,
+        name,
         minPrice = 1,
         maxPrice = 10000,
         country,
@@ -14,10 +14,16 @@ const getHotels = async (query) => {
         direction = 'ASC',
     } = query
 
-    let where = {}
-    where = {
+    let where = {hotel:{}, room:{}};
+    where.hotel = {
+        ...(name && {name: {[Op.iLike]: `%${name}%`}}), 
+        ...(!name && country && {countryId: country}),
+        ...(!name && stars && {stars}),
+    }
+
+    where.room = {
         ...(type && {type}),
-        ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] } })
+        ...(!name && minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] }})
     }
     
    const options = {
@@ -28,15 +34,18 @@ const getHotels = async (query) => {
             {   model: Country,
                 as: 'country',
                 attributes: ['name'] },
-
+            {
+                model: HotelImages,
+                as: 'image',
+                attributes: ['image'] },
             {   model: Room,
                 attributes: ['id', 'type', 'price'],
                 order: [['type', 'ASC']],
-                where }
+                where: where.room }
         ],
         distinct: true,
         attributes: {exclude: ['createdAt', 'updatedAt', 'deletedAt', ]},
-        where: {...(stars && {stars}), ...(country && {countryId: country})}
+        where: where.hotel
     }
     
     const { count, rows } = await Hotel.findAndCountAll(options);
@@ -44,131 +53,92 @@ const getHotels = async (query) => {
     const hotels = {
         total: count,
         Hotel: rows.map(hotel => {
-            //const newRooms = {};
-            const minPrice = {price: hotel.rooms[0]?.price, type:hotel.rooms[0]?.type};
+            const idRooms = [];
+            const minPrice = {price: hotel?.rooms[0]?.price, type:hotel?.rooms[0]?.type};
             const maxPrice = {...minPrice};
 
             hotel.rooms.forEach(room => {
+                idRooms.push(room.id);
                 if(room.price < minPrice.price){
                     minPrice.price = room.price;
                     minPrice.type = room.type;
                 }
-
                 if(room.price > maxPrice.price){
                     maxPrice.price = room.price;
                     maxPrice.type = room.type;
                 }
-                /*if(!newRooms[`${room.type}`]) newRooms[`${room.type}`] = {id:[], type:room.type, price:[]};
-                newRooms[`${room.type}`].id.push(room.id);
-                newRooms[`${room.type}`].price.push(room.price);*/
             });
             
-            //return { ...hotel.toJSON(), rooms: Object.values(newRooms)};
-            return { ...hotel.toJSON(), rooms: [minPrice, maxPrice]};
+            return { ...hotel?.toJSON(), image: hotel?.image[0].image, rooms: [minPrice, maxPrice], idRooms};
         })
     }
     
     return hotels
 }
 
-const getHotelByName = async (name, query) => {
-    
-    const { page = 1, 
-        size = 6,
-        stars,
-        //   minPrice = 0,
-        //   maxPrice = 10000,
-        //   price,
-        orderBy = 'name',
-        direction = 'ASC',
-        country 
-    } = query
-    
-    let where = {}
-    where = {
-        name: {
-            [Op.iLike]: `%${name}%`
-        },
-        ...(stars && {stars}),
-        // ...(minPrice && {price: { [Op.gte]: minPrice } }),
-        // ...(maxPrice && {price: { [Op.lte]: maxPrice } }),
-        // ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] } }),
-        // ...(price && {price}),
-        ...(country && {countryId: country}),
-    }
-    
-    const options = {
-        limit: Number(size),
-        offset: ( page - 1 ) * Number(size),
-        where,
-        include: [{
-            model: Country,
-            as: 'country',
-            attributes: ['name'],
-        },
-        {
-            model: Room,
-            as: 'rooms',
-            attributes: ['price'],
-            
-        }],
-        order: [[orderBy === '' ? 'name' : orderBy, direction === '' ? 'ASC' : direction],[ Room ,'price', 'ASC']],
-    }
-    
-    const { count, rows } = await Hotel.findAndCountAll(options)
-    const hotels = {
-        total: count,
-        Hotel: rows
-    }
-    
-    return hotels
-}
 const getHotelById  = async(id) => {
     const hotel = await Hotel.findByPk(id, {
         include: [{
-            model: Country,
-            as: 'country',
-            attributes: ['name'],
+                model: Country,
+                as: 'country',
+                attributes: ['name'],
+            },
+            {
+                model: HotelImages,
+                as: 'image',
+                attributes:['image']
             },
             {
                 model: Room,
                 attributes: ['id', 'type', 'numeration', 'price', 'description'],
-            }
+            },
         ]
     });
-    return hotel;
+
+    return { ...hotel?.toJSON(), image: hotel?.image.map(img => img.image) };
 }
+
 const getHotelRanging = async () => {
     const rankingHotels = await Hotel.findAll({
         order: [['ranking', 'DESC']],
+        attributes:{exclude:['createdAt', 'updatedAt', 'deletedAt']},
+        include:[ 
+            {   model: HotelImages,
+                as: 'image',
+                attributes: ['image'],
+                order:[['createdAt', 'ASC']],
+                limit: 1 // solo trae la imagen mas antigua
+            }
+        ],
         limit: 5
     })
-    return rankingHotels
-}
-const postHotel = async (hotel)=>{
-    
-    const { name, address, address_url, stars, email, image, countryId } = hotel
-    
-    //Buscar por nombre el pais del hotel
-    const hotelCountry = await Country.findOne({ where: { name: countryId} })
-    
-    //Formatear los datos para que cumpla con el modelo de la DB
-    const hotelData = { name, address, address_url, stars, email, image, countryId: hotelCountry.dataValues.id }
-    
-    //crear el hotel
-    const newHotel = await Hotel.create(hotelData)
-    return newHotel/*hotel creado*/
+
+    return rankingHotels.map(hotel => ({...hotel?.toJSON(), image: hotel?.image[0]?.image}))
 }
 
+const postHotel = async (hotel)=>{
+    const { name, address, address_url, stars, email, image, countryId } = hotel
+
+    const images = Array.isArray(image) ? image : [image];
+    //Buscar por nombre el pais del hotel
+
+    const hotelCountry = await Country.findOne({ where: { name: countryId} })
+
+    //Formatear los datos para que cumpla con el modelo de la DB
+    const hotelData = { name, address, address_url, stars, email, countryId: hotelCountry.dataValues.id }
+    //crear el hotel
+    const newHotel = await Hotel.create(hotelData);
+    await HotelImages.bulkCreate(images.map(img => ({hotelId: newHotel.id, image: img})));
+
+    return { id: newHotel.id, name: newHotel.name }/*hotel creado*/
+}
 
 const putHotel = async (id, updatedHotelData) => {
     const hotelToUpdate = await Hotel.findByPk(id);
-
-    if (!hotelToUpdate) {
-        throw new Error('Hotel not found');
-    }
+    if (!hotelToUpdate) throw new Error('Hotel not found');
 
     const { name, address, address_url, stars, email, image, countryId } = updatedHotelData;
+    const images = Array.isArray(image) ? image : [image];
 
     let updatedCountryId = countryId;
     if (countryId && typeof countryId !== 'number') {
@@ -177,17 +147,36 @@ const putHotel = async (id, updatedHotelData) => {
         updatedCountryId = updatedCountry ? updatedCountry.id : countryId;
     }
 
+    const imagesHotel = (await HotelImages.findAll({
+        where: { hotelId: id }, 
+        attributes: ['image'], 
+        raw: true
+    })).map(img => img.image);
+
+    const imagesDelete = [ ...new Set(imagesHotel.filter(img => !images.includes(img))) ];
+    const imagesAdd = images.filter(img => !imagesHotel.includes(img));
+    
+    // Elimina las imagenes no incluidas en el arreglo
+    if(imagesDelete.length > 0) await HotelImages.destroy({
+        where: {
+            hotelId: id,
+            image:{ [Op.in]: imagesDelete }
+        }
+    });
+
+    // Crea las imagenes nuevas
+    if(images.length > 0) await HotelImages.bulkCreate(imagesAdd.map(img => ({hotelId: id, image:img})));
+
     const updatedHotel = await hotelToUpdate.update({
         name,
         address,
         address_url,
         stars,
         email,
-        image,
         countryId: updatedCountryId,
     });
 
-    return updatedHotel;
+    return { id: updatedHotel.id, name: updatedHotel.name };
 };
 
 const deleteHotel = async (id) => {
@@ -199,7 +188,6 @@ const deleteHotel = async (id) => {
 
 module.exports = {
     getHotels,
-    getHotelByName,
     getHotelById,
     getHotelRanging,
     postHotel,

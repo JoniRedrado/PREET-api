@@ -1,7 +1,7 @@
 const arrayHotels = require('./constants/hotels.js');
 const roomsType = require('./constants/typeRooms.js');
-const { Hotel, Country, Room } = require('../../db.js');
 const arrayCountries = require('./constants/countries.js');
+const { Hotel, Country, Room, HotelImages } = require('../../db.js');
 
 const createRooms = (idHotel) => {
     const descripciones = [];
@@ -64,10 +64,16 @@ const findOrCreateRooms = (hotelsId) => {
 const findOrCreateHotels = () => {
     Hotel.findAll()
     .then(response => {
-      if(response.length === 0) 
-        Hotel.bulkCreate(arrayHotels).
-        then(() => findOrCreateRooms(arrayHotels.map((_, id) => id+1)));
-      else findOrCreateRooms(response.map(hotel => hotel.dataValues.id));
+      if(response.length === 0){
+        Hotel.bulkCreate(arrayHotels)
+        .then((response) => {
+          const imageHotels = response.flatMap((hotel, index) => 
+            arrayHotels[index].image.map(img => ({hotelId: hotel.id, image: img})));
+          
+          HotelImages.bulkCreate(imageHotels)
+          .then(() => findOrCreateRooms(arrayHotels.map((_, id) => id+1)));
+        });
+      }else findOrCreateRooms(response.map(hotel => hotel.dataValues.id));
     })
     .catch(error => {
       console.log(error.message);
