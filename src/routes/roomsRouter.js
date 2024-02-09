@@ -12,7 +12,7 @@ const verifyToken = require('../utils/verifyToken');
 const verifyAdmin = require('../utils/verifyAdmin');
 
 //Endpoints
-roomsRouter.get('/', getRoomsHandler);
+roomsRouter.get('/:id', getRoomsHandler);
 roomsRouter.get('/types', getTypeRooms);
 roomsRouter.get('/detail/:id', getRoomIdHandler);
 roomsRouter.post('/:hotelId', verifyToken, verifyAdmin, postRoomsHandler);
