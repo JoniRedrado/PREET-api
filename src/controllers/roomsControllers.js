@@ -1,6 +1,6 @@
 const { Room, Booking } = require('../../db.js');
 const { Op } = require("sequelize");
-const getAvalableRooms = async () => {
+const getAvailableRooms = async () => {
   currentDate = new Date();
   let bookedRooms = await Booking.findAll({
     attributes: ['roomId'],
@@ -88,7 +88,7 @@ const restoreRoom = async (id) => {
 }
 
 module.exports = {
-    getAvalableRooms,
+    getAvailableRooms,
     getRoomByType,
     getRoomNumeration,
     getRoomId,
