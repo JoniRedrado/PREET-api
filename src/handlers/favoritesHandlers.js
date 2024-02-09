@@ -6,7 +6,7 @@ const { getFavorites,
     getFavoritesUser, 
     getFavoritesHotel, 
     postFavorite, 
-    deleteFavorite} = require('../controllers/favoritesControllers.js');
+    deleteFavorite} = require('../controllers/FavoritesControllers.js');
 
 const getFavoritesHandler = async (req, res) => {
 try {
