@@ -10,6 +10,7 @@ const bookingsRouter = require('./bookingsRouter');
 const softRouters = require('./softRouter')
 const paymentRouter = require('./paymentRouter')
 const feedbackRouter = require('./feedbackRouter')
+const favoritesRouter = require('./favoritesRouter')
 
 // Configurar los routers
 router.use("/hotels", hotelsRouter)
@@ -21,5 +22,6 @@ router.use("/bookings", bookingsRouter)
 router.use("/feedback", feedbackRouter)
 router.use("/soft", softRouters)
 router.use("/payment", paymentRouter)
+router.use("/favorites", favoritesRouter)
 
 module.exports = router;

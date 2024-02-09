@@ -1,4 +1,4 @@
-const { getAvalableRooms, 
+const { getAvailableRooms, 
     getRoomByType,
     getRoomNumeration,
     getRoomId,
@@ -22,7 +22,7 @@ const getRoomsHandler = async (req, res) => {
             res.status(200).json(roomNumeration);
         }
         else{
-            const roomsAll = await getAvalableRooms();
+            const roomsAll = await getAvailableRooms();
             res.status(200).json(roomsAll);
         }
     }catch(error){

@@ -13,8 +13,7 @@ const getBookings = async (query) => {
     }
     return bookings
 }
-const getBookingsUser = async () => {
-    const { id } = req.params
+const getBookingsUser = async (id, query) => {
     const { page = 1, size = 30 } = query
     const options = {
         limit: Number(size),
@@ -27,6 +26,15 @@ const getBookingsUser = async () => {
         bookings: rows
     }
     return bookings
+}
+const getBookingUserLast = async (id) => {
+    const options = {
+        where: {userId: id},
+        order: [['createdAt', 'DESC']], 
+        limit: 1
+    }
+    const lastBooking = await Booking.findOne(options); 
+    return lastBooking; 
 }
 const getBookingById = async (id) => {
     let booking = await Booking.findByPk(id,{
@@ -94,6 +102,7 @@ const restoreBooking = async (id) => {
 module.exports = {
     getBookings,
     getBookingsUser,
+    getBookingUserLast,
     getBookingById,
     postBooking,
     putBooking,

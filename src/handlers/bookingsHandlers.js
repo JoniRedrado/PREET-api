@@ -1,5 +1,6 @@
 const { getBookings,
     getBookingsUser,
+    getBookingUserLast,
     getBookingById, 
     postBooking, 
     putBooking,
@@ -16,10 +17,21 @@ const getBookingsHandler = async (req, res) => {
     }
 }
 const getBookingsUserHandler = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.user;
+    // const { id } = req.params;
     try{
         const bookings = await getBookingsUser(id, req.query);
         res.status(200).json(bookings);
+    }catch(error){
+        res.status(400).json({error: error.message});
+    }
+}
+const getBookingUserLastHandler = async (req, res) => {
+    const { id } = req.user;
+    // const { id } = req.params;
+    try{
+        const booking = await getBookingUserLast(id);
+        res.status(200).json(booking);
     }catch(error){
         res.status(400).json({error: error.message});
     }
@@ -83,6 +95,7 @@ const restoreBookingHandler = async (req, res) => {
 module.exports = {
     getBookingsHandler,
     getBookingsUserHandler,
+    getBookingUserLastHandler,
     getBookingIdHandler,
     postBookingsHandler,
     putBookingsHandler,

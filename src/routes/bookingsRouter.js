@@ -1,7 +1,8 @@
 const { Router } = require("express");
 const bookingsRouter = Router();
 const { getBookingsHandler,
-    getBookingsUserHandler, 
+    getBookingsUserHandler,
+    getBookingUserLastHandler, 
     getBookingIdHandler, 
     postBookingsHandler, 
     putBookingsHandler,
@@ -11,7 +12,8 @@ const { getBookingsHandler,
 
 //Endpoints
 bookingsRouter.get('/', getBookingsHandler);
-bookingsRouter.get('/user/:id', getBookingsUserHandler);
+bookingsRouter.get('/user', getBookingsUserHandler);
+bookingsRouter.get('/last', getBookingUserLastHandler);
 bookingsRouter.get('/by/:id', getBookingIdHandler);
 bookingsRouter.post('/', postBookingsHandler);
 bookingsRouter.put('/update/:id', putBookingsHandler);
