@@ -7,6 +7,7 @@ const { getBookings,
     deleteBooking,
     getBookingsDeleted,
     restoreBooking } = require('../controllers/bookingsControllers');
+const { param } = require('../routes/bookingsRouter');
 
 const getBookingsHandler = async (req, res) => {
     try{
@@ -47,8 +48,10 @@ const getBookingIdHandler = async (req, res) => {
 }
 const postBookingsHandler = async (req, res) => {
     const bookingData = req.body;
+    const userId = req.user.id;
+    const { roomId } = req.params;
     try{
-        const booking = await postBooking(bookingData);
+        const booking = await postBooking(bookingData, roomId, userId);
         res.status(200).json(booking);
     }catch(error){
         res.status(400).json({error: error.message});

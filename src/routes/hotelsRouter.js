@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const hotelsRouter = Router();
 const verifyToken = require('../utils/verifyToken');
+const verifyAdmin = require('../utils/verifyAdmin');
 const {validate} = require ("../utils/validatePost")
 const { getHotelsHandler, 
     getHotelIdHandler,
@@ -13,8 +14,8 @@ const { getHotelsHandler,
 hotelsRouter.get('/', getHotelsHandler)
 hotelsRouter.get('/detail/:id', getHotelIdHandler);
 hotelsRouter.get('/range', getHotelRangingHandler);
-hotelsRouter.post('/', validate, verifyToken, postHotelHandler)
-hotelsRouter.put("/:id", validate, putHotelHandler)
-hotelsRouter.delete("/:id", verifyToken, deleteHotelHandler)
+hotelsRouter.post('/', validate, verifyToken, verifyAdmin, postHotelHandler)
+hotelsRouter.put("/:id", validate, verifyToken, verifyAdmin, putHotelHandler)
+hotelsRouter.delete("/:id", verifyToken, verifyAdmin, deleteHotelHandler)
 
 module.exports = hotelsRouter

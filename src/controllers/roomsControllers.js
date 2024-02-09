@@ -1,6 +1,7 @@
 const { Room, Booking } = require('../../db.js');
 const { Op } = require("sequelize");
 const getAvailableRooms = async () => {
+  // obtener habitaciones disponibles de un hotel especifico
   currentDate = new Date();
   let bookedRooms = await Booking.findAll({
     attributes: ['roomId'],
@@ -47,8 +48,8 @@ const getRoomId = async (id) => {
     let room = await Room.findByPk(id);
     return room
 }
-const postRoom = async (rooms) => {
-    const { type, numeration, price, description, hotelId } = rooms
+const postRoom = async (rooms, hotelId) => {
+    const { type, numeration, price, description} = rooms
     const newRoom = await Room.create({type, numeration, price, description, hotelId})
     return newRoom
 }

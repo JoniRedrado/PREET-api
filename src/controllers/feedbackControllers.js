@@ -4,9 +4,9 @@ const getFeedbacks = async () => {
   const feedback = await Feedback.findAll();
   return feedback
 }
-const getFeedbacksUser = async (userId) => {
+const getFeedbacksUser = async (id) => {
   const feedback = await Feedback.findAll({
-     where: { userId }, 
+     where: { userId: id }, 
      include: {
       model: Hotel,
       attributes: ['name', "image"]
@@ -14,9 +14,9 @@ const getFeedbacksUser = async (userId) => {
     });
   return feedback
 }
-const getFeedbacksHotel = async (hotelId) => {
+const getFeedbacksHotel = async (id) => {
   const feedback = await Feedback.findAll({
-    where: { hotelId },
+    where: { hotelId: id },
     include: [{
       model: User,
       attributes: ['name', "last_name"]
@@ -24,8 +24,8 @@ const getFeedbacksHotel = async (hotelId) => {
   });
   return feedback
 }
-const postFeedback = async (feedback) => {
-  const { like, comment, userId, hotelId } = feedback;
+const postFeedback = async (feedback, userId, hotelId) => {
+  const { like, comment} = feedback;
 
   const existingFeedback = await Feedback.findOne({ where: { userId, hotelId } });
   if (existingFeedback) {

@@ -5,11 +5,12 @@ const {getFavoritesHandler,
     getFavoritesHotelHandler,    
     postFavoriteHandler, 
     deleteFavoriteHandler} = require('../handlers/favoritesHandlers')
+const verifyToken = require('../utils/verifyToken')
 
 userRouter.get('/', getFavoritesHandler)
-userRouter.get("/user", getFavoritesUserHandler)
+userRouter.get("/user", verifyToken, getFavoritesUserHandler)
 userRouter.get("/hotel/:id", getFavoritesHotelHandler)
-userRouter.post("/", postFavoriteHandler)
-userRouter.delete("/:id", deleteFavoriteHandler)
+userRouter.post("/:hotelId", verifyToken, postFavoriteHandler)
+userRouter.delete("/:id", verifyToken, deleteFavoriteHandler)
 
 module.exports = userRouter
