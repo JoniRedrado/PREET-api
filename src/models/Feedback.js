@@ -16,7 +16,6 @@ module.exports = (sequelize) => {
             allowNull: true
         }
     },
-    { paranoid: true }
     );
 
     Feedback.addHook('afterUpdate', async (feedback, options) => {

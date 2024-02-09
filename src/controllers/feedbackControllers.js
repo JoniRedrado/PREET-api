@@ -1,11 +1,36 @@
-const { Feedback, Hotel } = require('../../db.js');
+const { Feedback, Hotel, User } = require('../../db.js');
 
 const getFeedbacks = async () => {
   const feedback = await Feedback.findAll();
   return feedback
 }
+const getFeedbacksUser = async (userId) => {
+  const feedback = await Feedback.findAll({
+     where: { userId }, 
+     include: {
+      model: Hotel,
+      attributes: ['name', "image"]
+     }
+    });
+  return feedback
+}
+const getFeedbacksHotel = async (hotelId) => {
+  const feedback = await Feedback.findAll({
+    where: { hotelId },
+    include: [{
+      model: User,
+      attributes: ['name', "last_name"]
+    }]
+  });
+  return feedback
+}
 const postFeedback = async (feedback) => {
   const { like, comment, userId, hotelId } = feedback;
+
+  const existingFeedback = await Feedback.findOne({ where: { userId, hotelId } });
+  if (existingFeedback) {
+    throw new Error('Feedback already exists for this user and hotel');
+  }
 
   const newFeedback = await Feedback.create({ like, comment, userId, hotelId });
 
@@ -27,14 +52,26 @@ const putFeedback = async (id, updatedFeedbackData) => {
   const updatedFeedback = await feedback.update(updatedFeedbackData);
   return updatedFeedback;
 };
+const deleteFeedback = async (id) => {
+  const feedback = await Feedback.findByPk(id);
+  if (!feedback) {
+    throw new Error('Feedback not found');
+  }
+  feedback.like = false;
+  await feedback.save(); 
+
+  await feedback.destroy(); 
+}
 
 module.exports = {
 getFeedbacks,
+getFeedbacksUser,
+getFeedbacksHotel,
 postFeedback,
-putFeedback
+putFeedback,
+deleteFeedback
 }
-  //get feedback user
-  //get feedback por id
+
   //delete feedback
   //get feedback borradas
   //restore feedback
