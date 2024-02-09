@@ -55,10 +55,10 @@ const getBookingById = async (id) => {
     });
     return booking;
 }
-const postBooking = async (bookings) => {
+const postBooking = async (bookings, roomId, userId) => {
     //validacion habitacion disponible
-    const {dateInit, dateFinal, pay, roomId, userId} = bookings
-    const newBooking = await Booking.create({dateInit, dateFinal, pay, roomId, userId})
+    const {dateInit, dateFinal, pay} = bookings
+    const newBooking = await Booking.create({dateInit, dateFinal, pay, roomId, userId});
     return newBooking
 }
 const putBooking = async (id, updateBookingData) => {

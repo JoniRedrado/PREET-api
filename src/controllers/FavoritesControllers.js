@@ -47,12 +47,12 @@ const getFavoritesHotel = async (id, query) => {
         }
         return favorites
 }
-const postFavorite = async (hotelId, userId) => {
-    const existingFavorite = await Favorite.findOne({ where: { hotelId, userId } });
+const postFavorite = async (hotelId, id) => {
+    const existingFavorite = await Favorite.findOne({ where: { hotelId, userId: id } });
     if (existingFavorite) {
         throw new Error('Favorite already exists');
     } else {
-        const newFavorite = await Favorite.create({ hotelId, userId });
+        const newFavorite = await Favorite.create({ hotelId, userId: id });
         return newFavorite;
     }
 }

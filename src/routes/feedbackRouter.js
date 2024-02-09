@@ -1,19 +1,19 @@
 const { Router } = require("express");
 const feedbackRouter = Router();
-
 const { getFeedbacksHandler,
     getFeedbacksUserHandler,
     getFeedbacksHotelHandler,
     postFeedbackHandler, 
     putFeedbackHandler,
     deleteFeedbackHandler} = require('../handlers/feedbackHandlers');
+const verifyToken = require('../utils/verifyToken');
 
 //Endpoints
 feedbackRouter.get('/', getFeedbacksHandler);
-feedbackRouter.get('/user', getFeedbacksUserHandler);
-feedbackRouter.get('/hotel', getFeedbacksHotelHandler);
-feedbackRouter.post('/', postFeedbackHandler);
-feedbackRouter.put('/update/:id', putFeedbackHandler);
-feedbackRouter.delete('/', deleteFeedbackHandler);
+feedbackRouter.get('/user', verifyToken, getFeedbacksUserHandler);
+feedbackRouter.get('/hotel/:id', getFeedbacksHotelHandler);
+feedbackRouter.post('/:hotelId', verifyToken, postFeedbackHandler);
+feedbackRouter.put('/update/:id', verifyToken, putFeedbackHandler);
+feedbackRouter.delete('/delete/:id', verifyToken, deleteFeedbackHandler);
 
 module.exports = feedbackRouter

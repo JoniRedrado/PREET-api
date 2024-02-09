@@ -40,8 +40,9 @@ const getRoomIdHandler = async (req, res) => {
 }
 const postRoomsHandler = async (req, res) => {
     const roomData = req.body;
+    const {hotelId} = req.params;
     try{
-        const room = await postRoom(roomData);
+        const room = await postRoom(roomData, hotelId);
         res.status(200).json(room);
     }catch(error){
         res.status(400).json({error: error.message});
