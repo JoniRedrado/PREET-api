@@ -7,16 +7,9 @@ const { getHotels,
     deleteHotel } = require('../controllers/hotelsControllers.js');
 
 const getHotelsHandler = async (req,res) => {
-    const { name } = req.query
-
     try{
-        if(name){
-            const hotelName = await getHotelByName(name, req.query)
-            res.status(200).json(hotelName)    
-        }else{
-            const hotelsAll = await getHotels(req.query)
-            res.status(200).json(hotelsAll)    
-        }
+        const hotelName = await getHotels(req.query)
+        res.status(200).json(hotelName)    
     } catch (error) {
       console.error(error)
       res.status(500).json({error: error.message})
@@ -33,6 +26,7 @@ const getHotelIdHandler = async (req, res) => {
         res.status(400).json({error: error.message});
     }
 }
+
 const getHotelRangingHandler = async (req, res) => {
     try{
         const hotels = await getHotelRanging();
@@ -41,6 +35,7 @@ const getHotelRangingHandler = async (req, res) => {
         res.status(400).json({error: error.message});
     }
 }
+
 const postHotelHandler = async (req, res)=>{
     //Debe recibir en el body todas las propiedades del hotel, junto con el nombre del pais
     const hotelData = req.body
@@ -63,6 +58,7 @@ const putHotelHandler = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 const deleteHotelHandler = async (req, res) => {
     const { id } = req.params;
 
