@@ -58,8 +58,8 @@ const getRoomId = async (id) => {
     return room
 }
 const postRoom = async (rooms, hotelId) => {
-    const { type, numeration, price, description} = rooms
-    const newRoom = await Room.create({type, numeration, price, description, hotelId})
+    const { type, numeration, price, guest, description} = rooms
+    const newRoom = await Room.create({type, numeration, price, guest, description, hotelId})
     return newRoom
 }
 const putRoom = async (id, updatedRoomData) => {
@@ -68,7 +68,7 @@ const putRoom = async (id, updatedRoomData) => {
     throw new Error('Room not found');
   }  
   const { type, numeration, price, description } = updatedRoomData;
-  const updatedRoom = await roomToUpdate.update({type, numeration, price, description});
+  const updatedRoom = await roomToUpdate.update({type, numeration, price, guest, description});
   return updatedRoom;
 }
 const deleteRoom = async (id) => {
