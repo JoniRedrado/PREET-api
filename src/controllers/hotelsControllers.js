@@ -186,11 +186,41 @@ const deleteHotel = async (id) => {
     return deletedHotel;
 }
 
+const getHotelsDeleted = async (query) => {
+
+    const { page = 1, 
+        size = 20,
+    } = query
+
+const options = {
+    limit: Number(size),
+    offset: ( page - 1 ) * Number(size),
+    paranoid: false,
+    where: {deletedAt: { [Op.not]: null }},	
+}
+
+const { count, rows } = await Hotel.findAndCountAll(options)
+const deleteHotels = {
+    total: count,
+    hotels: rows
+}
+
+return deleteHotels
+}
+const restoreHotel = async (id) => {
+    const hotel = await Hotel.findByPk(id, { paranoid: false });
+      
+    const restoreH = await hotel.restore();
+
+    return restoreH;
+  };
 module.exports = {
     getHotels,
     getHotelById,
     getHotelRanging,
     postHotel,
     putHotel,
-    deleteHotel
+    deleteHotel,
+    getHotelsDeleted,
+    restoreHotel
 }

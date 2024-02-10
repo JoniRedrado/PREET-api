@@ -1,16 +1,24 @@
 const { Router } = require('express');
 const userRouter = Router();
-const { getUsersHandler, deleteUsersHandler, getUserProfileHandler, updateUserProfileHandler } = require('../handlers/usersHandlers');
-const verifyToken = require('../utils/verifyToken');
-const verifyAdmin = require('../utils/verifyAdmin');
+const { loginHandler,
+    getUsersHandler,
+    getUserProfileHandler,
+    postUserHandler,
+    putUserProfileHandler,
+    deleteUsersHandler,
+    getUsersDeletedHandler,
+    restoreUserHandler } = require('../handlers/usersHandlers');
+const verifyToken = require('../utils/verifications/verifyToken');
+const verifyAdmin = require('../utils/verifications/verifyAdmin');
 
 //Endpoints
+userRouter.post("/login", loginHandler)
 userRouter.get('/', verifyToken, verifyAdmin, getUsersHandler)
-
-userRouter.delete('/delete/:id', verifyToken, verifyAdmin, deleteUsersHandler)
-
 userRouter.get('/profile', verifyToken, getUserProfileHandler);
-userRouter.put('/profile', verifyToken, updateUserProfileHandler);
-
+userRouter.post("/register", postUserHandler) 
+userRouter.put('/profile', verifyToken, putUserProfileHandler);
+userRouter.delete('/:id', verifyToken, verifyAdmin, deleteUsersHandler)
+userRouter.get("/deleted", verifyToken, verifyAdmin, getUsersDeletedHandler)
+userRouter.get("/restore/:id", verifyToken, verifyAdmin, restoreUserHandler)
 
 module.exports = userRouter
