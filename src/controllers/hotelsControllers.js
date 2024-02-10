@@ -1,4 +1,4 @@
-const { Hotel, Country, Room, HotelImages} = require('../../db.js')
+const { Hotel, Country, Room, HotelImages, Booking} = require('../../db.js')
 const  {Op} = require ("sequelize")
 
 const getHotels = async (query) => {
@@ -12,7 +12,26 @@ const getHotels = async (query) => {
         country,
         orderBy = 'name',
         direction = 'ASC',
+        startDate = new Date(),
+        endDate = new Date()
     } = query
+
+    const entryDate = new Date(startDate)
+    const finishDate = new Date(endDate)
+
+    let bookedRooms = await Booking.findAll({
+        attributes: ['roomId'],
+        where: {
+            [Op.or]: {
+              dateFinal: { [Op.between]:[entryDate, finishDate] },
+              dateInit: { [Op.between]:[entryDate, finishDate] },
+              [Op.and]: {
+                dateInit: {[Op.lte]: entryDate},
+                dateFinal: {[Op.gte]: finishDate}
+              },
+            },
+        },
+      });
 
     let where = {hotel:{}, room:{}};
     where.hotel = {
@@ -23,7 +42,10 @@ const getHotels = async (query) => {
 
     where.room = {
         ...(type && {type}),
-        ...(!name && minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] }})
+        ...(!name && minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] }}),
+        ...({id: {
+            [Op.notIn]: bookedRooms.map(booking => booking.roomId)
+          }})
     }
     
    const options = {
