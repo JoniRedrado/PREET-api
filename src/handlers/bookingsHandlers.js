@@ -7,7 +7,7 @@ const { getBookings,
     deleteBooking,
     getBookingsDeleted,
     restoreBooking } = require('../controllers/bookingsControllers');
-const { param } = require('../routes/bookingsRouter');
+//const { param } = require('../routes/bookingsRouter');
 
 const getBookingsHandler = async (req, res) => {
     try{
