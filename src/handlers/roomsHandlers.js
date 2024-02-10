@@ -77,7 +77,7 @@ const getRoomsDeletedHandler = async (req, res) => {
     }
 }
 const restoreRoomsHandler = async (req, res) => {
-    const {id} = req.body;
+    const {id} = req.params;
     try{
         const room = await restoreRoom(id);
         res.status(200).json({message: "restore sucess"});

@@ -7,7 +7,6 @@ const { getBookings,
     deleteBooking,
     getBookingsDeleted,
     restoreBooking } = require('../controllers/bookingsControllers');
-//const { param } = require('../routes/bookingsRouter');
 
 const getBookingsHandler = async (req, res) => {
     try{
@@ -86,7 +85,7 @@ const getBookingsDeletedHandler = async (req, res) => {
     }
 }
 const restoreBookingHandler = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try{
         const bookingToRestore = await restoreBooking(id);
         res.status(200).json({message: "restore sucess"});
