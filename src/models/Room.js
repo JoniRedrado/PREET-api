@@ -26,6 +26,10 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    guest: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     description: {
       type: DataTypes.STRING,
       allowNull: false
