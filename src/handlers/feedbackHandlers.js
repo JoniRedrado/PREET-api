@@ -50,8 +50,9 @@ const postFeedbackHandler = async (req, res) => {
 const putFeedbackHandler = async (req, res) => {
     const { id } = req.params;
     const feedbackData = req.body;
+    const userId = req.user.id
     try{
-        const feedback = await putFeedback(id, feedbackData);
+        const feedback = await putFeedback(id, feedbackData, userId);
         res.status(200).json(feedback);
     }catch(error){
         res.status(400).json({error: error.message});

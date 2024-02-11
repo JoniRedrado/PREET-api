@@ -59,9 +59,10 @@ const postBookingsHandler = async (req, res) => {
 const putBookingsHandler = async (req, res) => {
     const { id } = req.params;
     const bookingData = req.body;
+    const userId = req.user.id
 
     try{
-        const booking = await putBooking(id, bookingData);
+        const booking = await putBooking(id, bookingData, userId);
         res.status(200).json(booking);
     }catch(error){
         res.status(400).json({error: error.message});

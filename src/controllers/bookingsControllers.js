@@ -56,19 +56,60 @@ const getBookingById = async (id) => {
     return booking;
 }
 const postBooking = async (bookings, roomId, userId) => {
-    //validacion habitacion disponible
     const {dateInit, dateFinal, pay} = bookings
+
+    const existingBooking = await Booking.findOne({ 
+        where: { 
+            roomId,
+            [Op.or]: [
+                {
+                    dateInit: { [Op.between]: [dateInit, dateFinal] }
+                },
+                {
+                    dateFinal: { [Op.between]: [dateInit, dateFinal] }
+                }
+            ]
+        }
+    });
+
+    if (existingBooking) {
+        throw new Error('The room is not available for the selected dates');
+    }
+
     const newBooking = await Booking.create({dateInit, dateFinal, pay, roomId, userId});
     return newBooking
 }
-const putBooking = async (id, updateBookingData) => {
+const putBooking = async (id, updateBookingData,userId) => {
     const bookingToUpdate = await Booking.findByPk(id);
-
+    const { dateInit, dateFinal, pay, roomId} = updateBookingData;
+    
     if (!bookingToUpdate) {
         throw new Error('Booking not found');
     }
 
-    const { dateInit, dateFinal, pay, roomId} = updateBookingData;
+    if (bookingToUpdate.userId !== userId ) {
+        throw new Error('User is not authorized to update this booking');
+    }
+    
+    const existingBooking = await Booking.findOne({ 
+        where: { 
+            roomId,
+            id: { [Op.not]: id }, // Excluir la reserva actual al verificar disponibilidad
+            [Op.or]: [
+                {
+                    dateInit: { [Op.between]: [dateInit, dateFinal] }
+                },
+                {
+                    dateFinal: { [Op.between]: [dateInit, dateFinal] }
+                }
+            ]
+        }
+    });
+    
+    if (existingBooking) {
+        throw new Error('The room is not available for the selected dates');
+    }
+    
     const updatedBooking = await bookingToUpdate.update({ dateInit, dateFinal, pay, roomId});
     
     return updatedBooking;
