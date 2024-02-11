@@ -14,8 +14,7 @@ const validatePostBooking = (req, res, next) =>{
 } 
 const validatePutBooking = (req, res, next) =>{
 
-    const { dateInit, dateFinal, pay} = req.body
-    const {roomId} = req.params
+    const { dateInit, dateFinal, pay, roomId} = req.body
 
     if(!dateInit) return res.status(400).json({error: "Missing dateInit"})
     if(!dateFinal) return res.status(400).json({error: "Missing dateFinal"})

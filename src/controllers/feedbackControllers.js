@@ -9,7 +9,7 @@ const getFeedbacksUser = async (id) => {
      where: { userId: id }, 
      include: {
       model: Hotel,
-      attributes: ['name', "image"]
+      attributes: ['name']
      }
     });
   return feedback

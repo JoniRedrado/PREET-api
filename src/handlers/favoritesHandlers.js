@@ -53,7 +53,7 @@ const deleteFavoriteHandler = async (req, res) => {
     try {
         const { id } = req.params
         const favorite = await deleteFavorite(id)
-        res.status(200).json(favorite)
+        res.status(200).json({message: "Delete sucess"})
     } catch (error) {
         res.status(400).json({message: error.message})
     }
