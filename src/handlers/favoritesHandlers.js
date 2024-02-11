@@ -40,11 +40,11 @@ const getFavoritesHotelHandler = async (req, res) => {
 const postFavoriteHandler = async (req, res) => {
     try {
     const { id } = req.user
-    const { hotelId } = req.params
+    const  hotelId  = req.params.id
     // const { hotelId} = req.body
 
     const favorite = await postFavorite(hotelId, id)
-    res.status(200).json(favorite)
+    res.status(200).json({message: "Favorite created"})
 } catch (error) {
     res.status(400).json({message: error.message})
 }

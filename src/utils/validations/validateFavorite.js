@@ -1,7 +1,7 @@
 const validatePostFavorite = (req, res, next) =>{
 
     const {id} = req.user
-    const {hotelId} = req.params
+    const hotelId = req.params.id
 
     if(!id) return res.status(400).json({error: "Missing user id "})
     if(!hotelId) return res.status(400).json({error: "Missing hotelId"})
