@@ -41,7 +41,7 @@ const postFeedbackHandler = async (req, res) => {
     // feedbackData.userId = id
 
     try{
-        const feedback = await postFeedback(feedbackData,userId, hotelId);
+        const feedback = await postFeedback(feedbackData, userId, hotelId);
         res.status(200).json(feedback);
     }catch(error){
         res.status(400).json({error: error.message});

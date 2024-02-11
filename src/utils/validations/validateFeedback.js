@@ -1,6 +1,6 @@
 const validateFeedback = (req, res, next) =>{
 
-    const {userId} = req.user.id
+    const userId = req.user.id
     const {hotelId} = req.params
 
     if(!userId) return res.status(400).json({error: "Missing userId "})
