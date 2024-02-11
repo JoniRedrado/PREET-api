@@ -1,4 +1,4 @@
-const { Favorite, Hotel, User } = require('../../db.js');
+const { Favorite, Hotel, User, HotelImages, Country} = require('../../db.js');
 
 const getFavorites = async (query) => {
     const { page = 1, size = 30} = query;
@@ -18,19 +18,27 @@ const getFavorites = async (query) => {
     return favorites;
 }
 const getFavoritesUser = async (id, query) => {
-    const { page = 1, size = 6,} = query   
-     const options = {
+    const { page = 1, size = 6 } = query;
+    const options = {
         limit: Number(size),
         offset: (page - 1) * Number(size),
-        where: {userId: id},
-        include: [{ model: Hotel, attributes: ['name', "stars", "countryId"] }]
-    }
+        where: { userId: id },
+        include: [
+            { 
+                model: Hotel, 
+                attributes: ['name', 'stars'],
+                include: [{ model: Country, attributes: ['name'] },
+                    { model: HotelImages, as: 'image', attributes: ['image'] }],
+            }
+        ]
+    };
+
     const { count, rows } = await Favorite.findAndCountAll(options);
-        const favorites = {
-            total: count,
-            Favorite: rows
-        }
-        return favorites
+    const favorites = {
+        total: count,
+        favorites: rows 
+    };
+    return favorites;
 }
 const getFavoritesHotel = async (id, query) => {
     const { page = 1, size = 6,} = query   
