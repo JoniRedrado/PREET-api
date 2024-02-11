@@ -23,7 +23,7 @@ const getFavoritesUser = async (id, query) => {
         limit: Number(size),
         offset: (page - 1) * Number(size),
         where: {userId: id},
-        include: [{ model: Hotel, attributes: ['name', "start", "image", "countryId"] }]
+        include: [{ model: Hotel, attributes: ['name', "stars", "countryId"] }]
     }
     const { count, rows } = await Favorite.findAndCountAll(options);
         const favorites = {

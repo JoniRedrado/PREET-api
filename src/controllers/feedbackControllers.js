@@ -1,4 +1,4 @@
-const { Feedback, Hotel, User } = require('../../db.js');
+const { Feedback, Hotel, User, Booking, Room} = require('../../db.js');
 
 const getFeedbacks = async () => {
   const feedback = await Feedback.findAll();
@@ -9,7 +9,7 @@ const getFeedbacksUser = async (id) => {
      where: { userId: id }, 
      include: {
       model: Hotel,
-      attributes: ['name', "image"]
+      attributes: ['name']
      }
     });
   return feedback
@@ -25,7 +25,18 @@ const getFeedbacksHotel = async (id) => {
   return feedback
 }
 const postFeedback = async (feedback, userId, hotelId) => {
-  const { like, comment} = feedback;
+  const { like, comment, roomId } = feedback;
+
+  const existingBooking = await Booking.findOne({ where: { userId, roomId } });
+  if (!existingBooking) {
+    throw new Error('User has not made a booking for this hotel');
+  }
+
+  const room = await Room.findByPk(roomId);
+
+  if (room.hotelId != hotelId) {
+    throw new Error('Room does not belong to the specified hotel');
+  }
 
   const existingFeedback = await Feedback.findOne({ where: { userId, hotelId } });
   if (existingFeedback) {

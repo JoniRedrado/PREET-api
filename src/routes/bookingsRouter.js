@@ -17,7 +17,7 @@ bookingsRouter.get('/', getBookingsHandler);
 bookingsRouter.get('/user', verifyToken, getBookingsUserHandler);
 bookingsRouter.get('/last', verifyToken, getBookingUserLastHandler);
 bookingsRouter.get('/by/:id', verifyToken, getBookingIdHandler);
-bookingsRouter.post('/:id', verifyToken, validatePostBooking, postBookingsHandler);
+bookingsRouter.post('/:roomId', verifyToken, validatePostBooking, postBookingsHandler);
 bookingsRouter.put('/update/:id', verifyToken, validatePutBooking, putBookingsHandler);
 bookingsRouter.delete('/:id', verifyToken, deleteBookingHandler);
 bookingsRouter.get('/deleted', verifyToken, getBookingsDeletedHandler);
