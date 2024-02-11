@@ -55,10 +55,13 @@ const postFeedback = async (feedback, userId, hotelId) => {
 
   return newFeedback;
 };
-const putFeedback = async (id, updatedFeedbackData) => {
+const putFeedback = async (id, updatedFeedbackData, userId) => {
   const feedback = await Feedback.findByPk(id);
   if (!feedback) {
     throw new Error('Feedback not found');
+  }
+  if (feedback.userId !== userId) {
+    throw new Error('User is not authorized to update this feedback');
   }
   const updatedFeedback = await feedback.update(updatedFeedbackData);
   return updatedFeedback;

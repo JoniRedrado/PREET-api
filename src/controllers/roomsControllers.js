@@ -59,6 +59,12 @@ const getRoomId = async (id) => {
 }
 const postRoom = async (rooms, hotelId) => {
     const { type, numeration, price, guest, description} = rooms
+
+    const existingRoomNumeration = await Room.findOne({ where: { numeration, hotelId } });
+    if (existingRoomNumeration) {
+        throw new Error('A room with the same numeration already exists in this hotel');
+    }
+    
     const newRoom = await Room.create({type, numeration, price, guest, description, hotelId})
     return newRoom
 }
