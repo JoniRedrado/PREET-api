@@ -6,7 +6,12 @@ const getFavorites = async (query) => {
         limit: Number(size),
         offset: (page - 1) * Number(size),
         include: [
-            { model: Hotel, attributes: ['name'] },
+            { 
+                model: Hotel, 
+                attributes: ['name', 'stars'],
+                include: [{ model: Country, attributes: ['name'] },
+                    { model: HotelImages, as: 'image', attributes: ['image'] }],
+            },
             { model: User, attributes: ['name', 'last_name', 'email'] }
         ]
     };

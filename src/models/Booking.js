@@ -18,6 +18,18 @@ module.exports = (sequelize) => {
     pay: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    commission: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
+    nights:{
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    amount:{
+      type: DataTypes.DOUBLE,
+      allowNull: true
     }
   },
   { paranoid: true }
