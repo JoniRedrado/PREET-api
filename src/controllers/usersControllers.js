@@ -46,11 +46,13 @@ const getUserProfile = async (id) => {
 };
 const postUser = async (user) => {
   
-  const {name, last_name, rol, email, password, countryId} = user
+  const {name, last_name, rol, email, password, birth_date, 
+    gender, profile_picture, phone_number, nationality, countryId} = user
     //Mediante la libreria bcrypt, encripta la contraseña ingresada por el cliente
   const passwordHash = await bcrypt.hash(password, 10)
     //Se crea el usuario con la contraseña encriptada, se responde con la info del usuario sin la password
-  const newUser = await User.create({name, last_name, rol, email, password: passwordHash, countryId})
+  const newUser = await User.create({name, last_name, rol, email, password: passwordHash,
+    birth_date, gender, profile_picture, phone_number, nationality, countryId})
   delete newUser.password
   welcomeEmail(`${SENDGRID_API_KEY}`, email, name)
   return newUser

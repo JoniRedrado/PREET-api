@@ -35,11 +35,16 @@ module.exports = (sequelize) => {
         allowNull: false
     },
     birth_date:{
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
       allowNull: true
     },
     gender:{
       type: DataTypes.STRING,
+      validate: {
+        isIn: {
+          args: [['male', 'female']],
+        }
+      },
       allowNull: true
     },
     profile_picture:{
