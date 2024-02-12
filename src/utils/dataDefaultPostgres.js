@@ -1,7 +1,24 @@
 const arrayHotels = require('./constants/hotels.js');
-const roomsType = require('./constants/typeRooms.js');
+const getRandomUsers = require('./constants/users.js');
 const arrayCountries = require('./constants/countries.js');
-const { Hotel, Country, Room, HotelImages } = require('../../db.js');
+const { roomsType, roomImages } = require('./constants/typeRooms.js');
+const { User, Hotel, Country, Room, HotelImages, RoomImages } = require('../../db.js');
+
+const findOrCreateUsers = () => {
+  User.findAll()
+  .then(response => {
+    if(response.length === 0){
+      Promise.all(getRandomUsers()).then(users => {
+        User.bulkCreate(users).then(createUser =>{
+
+        })
+      })
+    }
+  })
+  .catch(error => {
+    console.log(error.message);
+  })
+}
 
 const createRooms = (idHotel) => {
     const descripciones = [];
@@ -53,7 +70,18 @@ const findOrCreateRooms = (hotelsId) => {
   .then(response => {
     if(response.length === 0){
       const roomsCreate = hotelsId.map(id_hotel => Room.bulkCreate(createRooms(id_hotel)));
-      Promise.all(roomsCreate);
+      Promise.all(roomsCreate).then(() => { 
+        Room.max('id').then((max) => {
+          const imageRooms = Array.from({length: max}, (_, index) => ({
+            roomId: index + 1,
+            image: roomImages[Math.floor(Math.random() * roomImages.length)]
+          }))
+
+          RoomImages.bulkCreate(imageRooms).then(() => findOrCreateUsers());
+        });
+      });
+    }else{
+      findOrCreateUsers();
     }
   })
   .catch(error => {

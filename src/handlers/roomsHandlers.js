@@ -14,7 +14,7 @@ const getRoomsHandler = async (req, res) => {
     const {type, numeration, startDate, endDate} = req.query;
     const {id} = req.params
 
-    try{ 
+    try{
         if(type){
             const roomType = await getRoomByType(type);
             res.status(200).json(roomType);
@@ -30,6 +30,7 @@ const getRoomsHandler = async (req, res) => {
         res.status(400).json({error: error.message});
     }
 }
+
 const getRoomIdHandler = async (req, res) => {
     const {id} = req.params;
     try{

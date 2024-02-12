@@ -1,5 +1,6 @@
 const { Room, Booking, Hotel } = require('../../db.js');
 const { Op } = require("sequelize");
+
 const getAvailableRooms = async ( startDate = new Date(), endDate = new Date(), id) => {
   const entryDate = new Date(startDate)
   const finishDate = new Date(endDate)
@@ -32,31 +33,35 @@ const getAvailableRooms = async ( startDate = new Date(), endDate = new Date(), 
     }
   });
     return rooms
-  }
-  const getRoomByType = async (type) => {
-    let rooms = await Room.findAll({
+}
+
+const getRoomByType = async (type) => {
+  let rooms = await Room.findAll({
+    where: {
+      type: {
+        [Op.iLike]: `%${type}%`
+      }
+    }
+  });
+  return rooms
+}
+
+const getRoomNumeration = async (numeration) => {
+    let room = await Room.findAll({
       where: {
-        type: {
-          [Op.iLike]: `%${type}%`
+        numeration: {
+          [Op.iLike]: `%${numeration}%`
         }
       }
     });
-    return rooms
-  }
-  const getRoomNumeration = async (numeration) => {
-      let room = await Room.findAll({
-        where: {
-          numeration: {
-            [Op.iLike]: `%${numeration}%`
-          }
-        }
-      });
-      return room
-  }
+    return room
+}
+
 const getRoomId = async (id) => {
     let room = await Room.findByPk(id);
     return room
 }
+
 const postRoom = async (rooms, hotelId) => {
     const { type, numeration, price, guest, description} = rooms
 
@@ -68,6 +73,7 @@ const postRoom = async (rooms, hotelId) => {
     const newRoom = await Room.create({type, numeration, price, guest, description, hotelId})
     return newRoom
 }
+
 const putRoom = async (id, updatedRoomData) => {
   const roomToUpdate = await Room.findByPk(id);
   if (!roomToUpdate) {  
@@ -77,11 +83,13 @@ const putRoom = async (id, updatedRoomData) => {
   const updatedRoom = await roomToUpdate.update({type, numeration, price, guest, description});
   return updatedRoom;
 }
+
 const deleteRoom = async (id) => {
   const roomToDelete = await Room.findByPk(id);
   const deletedRoom = await roomToDelete.destroy();
   return deletedRoom
 }
+
 const getRoomsDeleted = async (query) => {
   const  {page = 1, size = 30} = query
   const options = {
@@ -97,6 +105,7 @@ const getRoomsDeleted = async (query) => {
   }
   return deletedRooms
 }
+
 const restoreRoom = async (id) => {
   const room = await Room.findByPk(id, { paranoid: false });
   const restoreR = await room.restore();
