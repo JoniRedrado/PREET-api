@@ -1,4 +1,4 @@
-const { Booking, User, Room, Hotel } = require('../../db.js');
+const { Booking, User, Room, Hotel, RoomImages} = require('../../db.js');
 const { Op } = require("sequelize");
 const getBookings = async (query) => {
     const { page = 1, size = 30 } = query
@@ -16,22 +16,46 @@ const getBookings = async (query) => {
 const getBookingsUser = async (id, query) => {
     const { page = 1, size = 30 } = query
     const options = {
-        limit: Number(size),
-        offset: (page - 1) * Number(size),
-        where: {userId: id},
+      limit: Number(size),
+      offset: (page - 1) * Number(size),
+      where: {userId: id},
+      include: [
+        {
+          model: Room, attributes: ['type'],
+          include: [
+            {model: Hotel, attributes: ['name'],
+            model: RoomImages, as: 'image', attributes: ['image'],
+        }]
+        }
+      ]
     }
     const {count, rows} = await Booking.findAndCountAll(options)
     let bookings = {
-        total: count,
-        bookings: rows
+      total: count,
+      bookings: rows
     }
     return bookings
-}
+  }
 const getBookingUserLast = async (id) => {
     const options = {
         where: {userId: id},
         order: [['createdAt', 'DESC']], 
-        limit: 1
+        limit: 1, 
+        include: [
+            {
+                model: User,
+                attributes: ['name', 'last_name', 'email']
+            },
+            {
+                model: Room,
+                attributes: ['type', 'numeration', 'price', 'guest', 'description'],
+                include: {
+                    model: Hotel,
+                    attributes: ['name'],
+                    model: RoomImages, as: 'image', attributes: ['image']
+                }
+            }
+        ]
     }
     const lastBooking = await Booking.findOne(options); 
     return lastBooking; 
@@ -45,10 +69,11 @@ const getBookingById = async (id) => {
             },
             {
                 model: Room,
-                attributes: ['type', 'numeration', 'price', 'description'],
+                attributes: ['type', 'numeration', 'price', 'guest', 'description'],
                 include: {
                     model: Hotel,
-                    attributes: ['name']
+                    attributes: ['name'],
+                    model: RoomImages, as: 'image', attributes: ['image']
                 }
             }
         ]
