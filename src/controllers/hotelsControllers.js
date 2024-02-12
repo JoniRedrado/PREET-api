@@ -13,7 +13,8 @@ const getHotels = async (query) => {
         orderBy = 'name',
         direction = 'ASC',
         startDate = new Date(),
-        endDate = new Date()
+        endDate = new Date(),
+        guest
     } = query
 
     const entryDate = new Date(startDate)
@@ -33,7 +34,7 @@ const getHotels = async (query) => {
         },
       });
 
-    let where = {hotel:{}, room:{}};
+    let where = {hotel:{}, room:{}, country:{}};
     where.hotel = {
         ...(name && {name: {[Op.iLike]: `%${name}%`}}), 
         ...(!name && country && {countryId: country}),
@@ -45,7 +46,8 @@ const getHotels = async (query) => {
         ...(!name && minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] }}),
         ...({id: {
             [Op.notIn]: bookedRooms.map(booking => booking.roomId)
-          }})
+          }}),
+        ...(guest && {guest})
     }
     
    const options = {
@@ -55,7 +57,8 @@ const getHotels = async (query) => {
        include: [
             {   model: Country,
                 as: 'country',
-                attributes: ['name'] },
+                attributes: ['name'],
+            },
             {
                 model: HotelImages,
                 as: 'image',
