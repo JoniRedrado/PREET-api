@@ -1,4 +1,4 @@
-const { Hotel, Country, Room, HotelImages, Booking} = require('../../db.js')
+const { Hotel, Country, Room, HotelImages, Booking, RoomImages} = require('../../db.js')
 const  {Op} = require ("sequelize")
 
 const getHotels = async (query) => {
@@ -99,7 +99,7 @@ const getHotels = async (query) => {
 }
 
 const getHotelById  = async(id) => {
-    const hotel = await Hotel.findByPk(id, {
+    const hotel = (await Hotel.findByPk(id, {
         include: [{
                 model: Country,
                 as: 'country',
@@ -113,11 +113,18 @@ const getHotelById  = async(id) => {
             {
                 model: Room,
                 attributes: ['id', 'type', 'numeration', 'price', 'description'],
+                include: [{
+                    model: RoomImages,
+                    as: 'image',
+                    attributes: ['image']
+                }]
             },
         ]
-    });
+    }))?.toJSON();
 
-    return { ...hotel?.toJSON(), image: hotel?.image.map(img => img.image) };
+    return { ...hotel, 
+            image: hotel?.image.map(img => img.image),
+            rooms: hotel?.rooms.map(room => ({...room, image: room.image.map(img => img.image)}))};
 }
 
 const getHotelRanging = async () => {
