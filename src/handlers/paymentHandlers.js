@@ -7,10 +7,11 @@ const { Booking } = require('../../db.js')
 
 const createOrder = async (req, res) => {
 
-    console.log(req.body);
     const {price, dateInit, dateFinal, user, roomId} = req.body
     const userData = jwt.verify(user, SECRET_KEY)
 
+    const diferenciaEnDias = Math.ceil(Math.abs(dateFinal, dateInit) / (1000 * 60 * 60 * 24))
+    console.log(diferenciaEnDias);
     //Orden a generar, deben venir datos desde el front
     const order = {
         intent: "CAPTURE",

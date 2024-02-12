@@ -101,7 +101,45 @@ const getHotels = async (query) => {
     return hotels
 }
 
-const getHotelById  = async(id) => {
+const getHotelById  = async(id, query) => {
+
+    const {        
+        type,
+        minPrice = 1,
+        maxPrice = 10000,
+        startDate = new Date(),
+        endDate = new Date(),
+        guest 
+        } = query
+
+    let where = {}
+    
+    const entryDate = new Date(startDate)
+    const finishDate = new Date(endDate)
+    
+    let bookedRooms = await Booking.findAll({
+        attributes: ['roomId'],
+        where: {
+            [Op.or]: {
+                dateFinal: { [Op.between]:[entryDate, finishDate] },
+                dateInit: { [Op.between]:[entryDate, finishDate] },
+                [Op.and]: {
+                    dateInit: {[Op.lte]: entryDate},
+                    dateFinal: {[Op.gte]: finishDate}
+                },
+            },
+        },
+    });
+
+    where = {
+        ...(type && {type}),
+        ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] }}),
+        ...(guest && {guest}),
+        ...({id: {
+            [Op.notIn]: bookedRooms.map(booking => booking.roomId)
+          }}),
+    }
+
     const hotel = (await Hotel.findByPk(id, {
         include: [{
                 model: Country,
@@ -120,7 +158,8 @@ const getHotelById  = async(id) => {
                     model: RoomImages,
                     as: 'image',
                     attributes: ['image']
-                }]
+                }],
+                where
             },
         ]
     }))?.toJSON();
