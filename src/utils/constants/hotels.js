@@ -25,7 +25,7 @@ preet=# SELECT * FROM countries;
 const hotels = [
     {
         name: "Hotel San Pedro Del Fuerte",
-        address: "Cl. 46 #80-23, La Floresta, Medell¡n, La Am‚rica, Medell¡n, Antioquia",
+        address: "Cl. 46 #80-23, La Floresta, Medellin",
         stars: 4,
         address_url: "https://hotelsanpedrodelfuerte.com",
         price: 50,
@@ -45,7 +45,7 @@ const hotels = [
     },
     {
         name: "Hotel Irotama Resort",
-        address: "Calle 115 No. 2-60, Bello Horizonte, Santa Marta, Magdalena",
+        address: "Calle 115 No. 2-60, Bello Horizonte",
         stars: 4,
         address_url: "https://www.irotama.com",
         price: 260,
@@ -85,7 +85,7 @@ const hotels = [
     },
     {
         name: "Hotel Uruguay Brasil",
-        address: "Sarandí 440, Rivera, Uruguay. CP 40000.",
+        address: "Sarandí 440, Rivera",
         stars: 4,
         address_url: "https://hoteluruguaybrasil.com",
         price: 120,
@@ -96,7 +96,7 @@ const hotels = [
     ,
     {
         name: "Los Silos Hotel ",
-        address: "Dique I Puerto de Santa Fe, 3000 Santa Fe, Argentina",
+        address: "Dique I Puerto de Santa Fe, Santa Fe",
         stars: 4,
         address_url: "https://www.google.com/maps/place/Los+Silos+Hotel/",
         price: 130,
@@ -107,7 +107,7 @@ const hotels = [
     ,
     {
         name: "Gran Lourdes Hotel",
-        address: "CASSAFFOUSTH 63, 5152 Villa Carlos Paz, Argentina",
+        address: "CASSAFFOUSTH 63, Villa Carlos Paz",
         stars: 3,
         address_url: "https://www.google.com/maps/place/Hotel+Gran+Lourdes/",
         price: 60,
@@ -118,7 +118,7 @@ const hotels = [
     ,
     {
         name: "Sofitel La Reserva Cardales",
-        address: "Ruta Panamericana Nr. 9 Km 61, A9999AAA Río Luján, Argentina",
+        address: "Ruta Panamericana Nr. 9 Km 61, Río Luján",
         stars: 5,
         address_url: "https://www.google.com/maps/place/Sofitel+La+Reserva+Cardales/",
         price: 200,
@@ -129,7 +129,7 @@ const hotels = [
     ,
     {
         name: "Hotel Patagonia",
-        address: "Fagnano Nº 54, Z9405CBC Río Gallegos, Argentina",
+        address: "Fagnano Nº 54, Z9405CBC Río Gallegos",
         stars: 4,
         address_url: "https://www.google.com/maps/place/Hotel+Patagonia/",
         price: 140,
@@ -229,7 +229,7 @@ const hotels = [
     },
     {
         name: "Hotel San Pedro Del Fuerte",
-        address: "Cl. 46 #80-23, La Floresta, Medellín, La América, Medellín, Antioquia",
+        address: "Cl. 46 #80-23, Medellín",
         stars: 4,
         address_url: "https://hotelsanpedrodelfuerte.com",
         price: 50,
@@ -239,7 +239,7 @@ const hotels = [
     },
     {
         name: "Santiago Skyline Suites",
-        address: "Calle Providencia #200, Santiago, Región Metropolitana",
+        address: "Calle Providencia #200, Región Metropolitana",
         stars: 4,
         address_url: "https://santiagoskylinesuites.com",
         price: 110,
@@ -289,7 +289,7 @@ const hotels = [
     },
     {
         name: "Cotopaxi Mountain Lodge",
-        address: "Av. Cotopaxi #200, Latacunga, Cotopaxi",
+        address: "Av. Cotopaxi #200, Latacunga",
         stars: 3,
         address_url: "https://cotopaximountainlodge.com",
         price: 80,
