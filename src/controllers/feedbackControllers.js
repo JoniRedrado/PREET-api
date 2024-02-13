@@ -19,7 +19,7 @@ const getFeedbacksHotel = async (id) => {
     where: { hotelId: id },
     include: [{
       model: User,
-      attributes: ['name', "last_name"]
+      attributes: ['name', "last_name", "nationality"]
     }]
   });
   return feedback
