@@ -2,15 +2,74 @@ const arrayHotels = require('./constants/hotels.js');
 const getRandomUsers = require('./constants/users.js');
 const arrayCountries = require('./constants/countries.js');
 const { roomsType, roomImages } = require('./constants/typeRooms.js');
-const { User, Hotel, Country, Room, HotelImages, RoomImages } = require('../../db.js');
+const { User, Hotel, Country, Room, HotelImages, RoomImages, Booking } = require('../../db.js');
+
+const createDataForRoom = (datesBooking, nights) => {
+  const mesActual = (new Date()).getMonth() + 1;
+  const typeTimeDate = Math.ceil(Math.random()*3);
+  const year = typeTimeDate < 2 ? 2023 : 2024;
+  const month = typeTimeDate < 2 ? Math.ceil(Math.random()*12) : 
+                  typeTimeDate === 2 ? mesActual : Math.floor(Math.random()*(12-mesActual)+mesActual);
+  const day = Math.ceil(Math.random()*28);
+
+  const dateInit = new Date(year, month, day);
+  const dateFinal = new Date(dateInit);
+
+  dateFinal.setDate(dateInit.getDate() + nights);
+
+  const repeatedDate = datesBooking?.some(date => {
+    return ((dateInit >= date.dateInit && dateInit < date.dateFinel) ||
+      (dateFinal > date.dateInit && dateFinal <= date.dateFinal))
+  });
+
+  if(repeatedDate) return createDataForRoom(datesBooking, nights);
+
+  return {
+    dateInit,
+    dateFinal
+  }
+}
+
+const createBookingForUser = (userIds, maxIdRoom) => {
+  const dataBokingRooms = [];
+
+  return userIds.flatMap(id => {
+    const totalBooking = Array.from({length: Math.floor(Math.random()*20 + 1)});
+
+    return totalBooking.map(async () => {
+      const nights = Math.ceil(Math.random()*10) + 1;
+      const roomId = Math.ceil(Math.random()*maxIdRoom);
+
+      const dataRoom = await Room.findByPk(roomId, {attributes: ['price']});
+     
+      const amount = nights*dataRoom.price;
+      const { dateInit, dateFinal } = createDataForRoom(dataBokingRooms?.filter(booking => booking.id === id), nights);
+
+      dataBokingRooms.push({id, dateInit, dateFinal});
+
+      return {
+        pay: "",
+        nights,
+        amount,
+        commission: amount*0.005,
+        userId: id,
+        roomId,
+        dateInit,
+        dateFinal
+      }
+    })
+  })
+}
 
 const findOrCreateUsers = () => {
-  User.findAll()
-  .then(response => {
+  User.findAll().then(response => {
     if(response.length === 0){
       Promise.all(getRandomUsers()).then(users => {
         User.bulkCreate(users).then(createUser =>{
-
+          Room.max('id').then(max => {
+            Promise.all(createBookingForUser(createUser.map(dataUser => dataUser.id), max))
+            .then(dataBookings => Booking.bulkCreate(dataBookings).then(() => console.log('Datos creados')))
+          })
         })
       })
     }
@@ -66,8 +125,7 @@ const createRooms = (idHotel) => {
 }
 
 const findOrCreateRooms = (hotelsId) => {
-  Room.findAll()
-  .then(response => {
+  Room.findAll().then(response => {
     if(response.length === 0){
       const roomsCreate = hotelsId.map(id_hotel => Room.bulkCreate(createRooms(id_hotel)));
       Promise.all(roomsCreate).then(() => { 
@@ -90,11 +148,9 @@ const findOrCreateRooms = (hotelsId) => {
 }
 
 const findOrCreateHotels = () => {
-    Hotel.findAll()
-    .then(response => {
+    Hotel.findAll().then(response => {
       if(response.length === 0){
-        Hotel.bulkCreate(arrayHotels)
-        .then((response) => {
+        Hotel.bulkCreate(arrayHotels).then((response) => {
           const imageHotels = response.flatMap((hotel, index) => 
             arrayHotels[index].image.map(img => ({hotelId: hotel.id, image: img})));
           
@@ -109,8 +165,7 @@ const findOrCreateHotels = () => {
 }
 
 const findOrCreateCountries = () => {
-    Country.findAll().
-    then(response => {
+    Country.findAll().then(response => {
       if(response.length === 0) Country.bulkCreate(arrayCountries).then(() => findOrCreateHotels())
       else findOrCreateHotels();
     })

@@ -1,5 +1,6 @@
-const { Hotel, Country, Room, HotelImages, Booking, RoomImages} = require('../../db.js')
-const  {Op} = require ("sequelize")
+const { Hotel, Country, Room, HotelImages, Booking, RoomImages} = require('../../db.js');
+const countries = require('../utils/constants/countries.js');
+const  {Op} = require ("sequelize");
 
 const getHotels = async (query) => {
     const { page = 1, 
@@ -17,6 +18,11 @@ const getHotels = async (query) => {
         guest
     } = query
 
+    const normalizedCountries = name ? countries.map(dataCountry => 
+        dataCountry.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")) : null;
+    const compareName = name ? name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
+    const isCountry = normalizedCountries?.findIndex(dataCountry => dataCountry === compareName);
+
     const entryDate = new Date(startDate)
     const finishDate = new Date(endDate)
 
@@ -33,10 +39,13 @@ const getHotels = async (query) => {
             },
         },
       });
-
+    
+    //console.log(bookedRooms);
+    
     let where = {hotel:{}, room:{}, country:{}};
     where.hotel = {
-        ...(name && {name: {[Op.iLike]: `%${name}%`}}), 
+        ...(name && isCountry < 0 && {name: {[Op.iLike]: `%${name}%`}}), 
+        ...(name && isCountry >= 0 && {countryId: isCountry+1}),
         ...(!name && country && {countryId: country}),
         ...(!name && stars && {stars}),
     }
