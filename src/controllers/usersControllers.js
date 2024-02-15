@@ -101,7 +101,7 @@ const deleteUsers = {
 return deleteUsers
 }
 const restoreUser = async (id) => {
-    const user = await User.findByPk({id, paranoid: false });
+    const user = await User.findByPk(id , { paranoid: false });
     const restoreU = await user.restore();
     return restoreU;
   };
