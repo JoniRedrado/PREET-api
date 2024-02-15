@@ -1,4 +1,4 @@
-const { getAvailableRooms, 
+const { getRooms, 
     getRoomByType,
     getRoomNumeration,
     getRoomId,
@@ -11,8 +11,7 @@ const { getAvailableRooms,
 const typeRooms = require('../utils/constants/typeRooms');
 
 const getRoomsHandler = async (req, res) => {
-    const {type, numeration, startDate, endDate} = req.query;
-    const {id} = req.params
+    const {type, numeration} = req.query;
 
     try{
         if(type){
@@ -23,7 +22,7 @@ const getRoomsHandler = async (req, res) => {
             res.status(200).json(roomNumeration);
         }
         else {
-            const roomsAll = await getAvailableRooms(startDate, endDate, id);
+            const roomsAll = await getRooms();
             res.status(200).json(roomsAll);
         }
     }catch(error){

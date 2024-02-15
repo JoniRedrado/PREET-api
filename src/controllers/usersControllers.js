@@ -3,6 +3,7 @@ const { SECRET_KEY, SENDGRID_API_KEY} = process.env
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const welcomeEmail  = require('../utils/welcomeEmail.js')
+const  {Op} = require ("sequelize");
 
 const validateUser = async (email, password, fireBaseAuth)=>{
   //Busca al usuario por email
