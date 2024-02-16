@@ -14,8 +14,8 @@ const io = socketIo(httpServer, {
 
 // Agregar eventos de conexión para Socket.io
 io.on('connection', (socket) => {
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+  socket.on('chat message', (data) => { // Recibir el mensaje con el nombre de usuario
+    io.emit('chat message', data); // Emitir el mensaje a todos los clientes
   });
 });
 

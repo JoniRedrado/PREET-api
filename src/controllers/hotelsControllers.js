@@ -276,6 +276,7 @@ const options = {
     limit: Number(size),
     offset: ( page - 1 ) * Number(size),
     paranoid: false,
+    include: [{ model: Country, attributes: ['name'] }],
     where: {deletedAt: { [Op.not]: null }},	
 }
 

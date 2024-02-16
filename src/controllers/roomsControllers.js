@@ -73,6 +73,7 @@ const getRoomsDeleted = async (query) => {
     limit: Number(size),
     offset: (page - 1) * Number(size),
     paranoid: false,
+    include: [{ model: Hotel, attributes: ['name'] }],
     where: {deletedAt: { [Op.not]: null}}
   }
   const {count, rows} = await Room.findAndCountAll(options)
