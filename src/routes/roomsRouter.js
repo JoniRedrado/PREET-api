@@ -13,7 +13,7 @@ const verifyAdmin = require('../utils/verifications/verifyAdmin');
 const {validatePostRoom, validatePutRoom} = require("../utils/validations/validateRoom")
 
 //Endpoints
-roomsRouter.get('/:id', getRoomsHandler);
+roomsRouter.get('/', getRoomsHandler);
 roomsRouter.get('/types', getTypeRooms);
 roomsRouter.get('/detail/:id', getRoomIdHandler);
 roomsRouter.post('/:hotelId', verifyToken, verifyAdmin, validatePostRoom, postRoomsHandler);

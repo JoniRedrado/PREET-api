@@ -20,6 +20,6 @@ userRouter.post("/register", validateUser, postUserHandler)
 userRouter.put('/profile', verifyToken, putUserProfileHandler);
 userRouter.delete('/:id', verifyToken, verifyAdmin, deleteUsersHandler)
 userRouter.get("/deleted", verifyToken, verifyAdmin, getUsersDeletedHandler)
-userRouter.get("/restore/:id", verifyToken, verifyAdmin, restoreUserHandler)
+userRouter.put("/restore/:id", verifyToken, verifyAdmin, restoreUserHandler)
 
 module.exports = userRouter

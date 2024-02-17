@@ -85,10 +85,10 @@ const getUsersDeletedHandler = async (req,res) => {
     }
 };
 const restoreUserHandler = async (req, res)=>{
-    const { email } = req.body;
+    const { id } = req.params;
 
     try {
-        const restoreU = await restoreUser(email);
+        const restoreU = await restoreUser(id);
         res.status(200).json({message: "restore sucess"});
     } catch (error) {
         res.status(500).json({ error: error.message });

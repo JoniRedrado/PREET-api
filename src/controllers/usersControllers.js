@@ -3,6 +3,7 @@ const { SECRET_KEY, SENDGRID_API_KEY} = process.env
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const welcomeEmail  = require('../utils/welcomeEmail.js')
+const  {Op} = require ("sequelize");
 
 const validateUser = async (email, password, fireBaseAuth)=>{
   //Busca al usuario por email
@@ -99,8 +100,8 @@ const deleteUsers = {
 }
 return deleteUsers
 }
-const restoreUser = async (email) => {
-    const user = await User.findOne({ where: { email }, paranoid: false });
+const restoreUser = async (id) => {
+    const user = await User.findByPk(id , { paranoid: false });
     const restoreU = await user.restore();
     return restoreU;
   };
