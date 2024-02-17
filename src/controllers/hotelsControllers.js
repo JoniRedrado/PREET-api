@@ -276,7 +276,9 @@ const options = {
     limit: Number(size),
     offset: ( page - 1 ) * Number(size),
     paranoid: false,
-    include: [{ model: Country, attributes: ['name'] }],
+    include: [{ model: Country, attributes: ['name'] },
+    { model: HotelImages, as: 'image', attributes: ['image']},
+],
     where: {deletedAt: { [Op.not]: null }},	
 }
 
