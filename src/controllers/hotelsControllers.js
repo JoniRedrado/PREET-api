@@ -269,7 +269,7 @@ const deleteHotel = async (id) => {
 const getHotelsDeleted = async (query) => {
 
     const { page = 1, 
-        size = 20,
+        size = 10,
     } = query
 
 const options = {

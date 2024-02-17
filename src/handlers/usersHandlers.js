@@ -24,7 +24,7 @@ const loginHandler = async (req, res) => {
 
 const getUsersHandler = async (req, res) => {
     try{
-        const users = await getUsers();
+        const users = await getUsers(req.query);
         res.status(200).json(users);
     }catch(error){
         res.status(400).json({error: error.message});

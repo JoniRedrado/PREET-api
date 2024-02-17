@@ -14,7 +14,7 @@ const getBookings = async (query) => {
     return bookings
 }
 const getBookingsUser = async (id, query) => {
-    const { page = 1, size = 30 } = query
+    const { page = 1, size = 10 } = query
     const options = {
       limit: Number(size),
       offset: (page - 1) * Number(size),

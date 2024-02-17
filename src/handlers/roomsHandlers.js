@@ -22,7 +22,7 @@ const getRoomsHandler = async (req, res) => {
             res.status(200).json(roomNumeration);
         }
         else {
-            const roomsAll = await getRooms();
+            const roomsAll = await getRooms(req.query);
             res.status(200).json(roomsAll);
         }
     }catch(error){

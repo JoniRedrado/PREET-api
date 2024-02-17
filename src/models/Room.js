@@ -28,7 +28,7 @@ module.exports = (sequelize) => {
     },
     guest: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: false
     },
     description: {
       type: DataTypes.STRING,
