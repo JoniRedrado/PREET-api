@@ -85,34 +85,39 @@ const createRooms = (idHotel) => {
       const numDescripciones = Math.floor(Math.random() * 3);
   
       for (let i = 0; i < numDescripciones; i++) {
-        let cama, bano, espacio, vista;
+        let cama, bano, espacio, vista, guest;
   
         if (tipo.includes("Estandar")) {
           cama = Math.random() < 0.5 ? "cama sencilla" : "cama doble";
           bano = Math.random() < 0.5 ? "baño estandar" : "baño doble";
           espacio = "incluye minibar";
           vista = Math.random() < 0.5 ? "con vista interna" : "con vista a la calle";
+          guest = Math.ceil(Math.random()*3);
         } else if (tipo.includes("Superior") || tipo.includes("Deluxe")) {
           const camasSuperiorDeluxe = ["cama doble", "cama queen", "cama king Size"];
           cama = camasSuperiorDeluxe[Math.floor(Math.random() * camasSuperiorDeluxe.length)];
           bano = ["baño doble", "baño con tina", "baño con tina de hidromasaje"][Math.floor(Math.random() * 3)];
           espacio = Math.random() < 0.5 ? "incluye minibar" : "incluye cocina pequeña";
           vista = Math.random() < 0.5 ? "con vista a la calle" : "con vista externa a la playa";
+          guest = Math.ceil(Math.random()*3);
         } else if (tipo.includes("Junior Suite") || tipo.includes("Suite Estandar")) {
           const camasJuniorSuiteSuiteEstandar = ["cama queen", "cama king Size"];
           cama = camasJuniorSuiteSuiteEstandar[Math.floor(Math.random() * camasJuniorSuiteSuiteEstandar.length)];
           bano = ["baño con tina", "baño con tina de hidromasaje", "baño con jacuzzi"][Math.floor(Math.random() * 3)];
           espacio = Math.random() < 0.5 ? "incluye cocina y sala" : "incluye cocina, sala y comedor";
           vista = Math.random() < 0.5 ? "con vista externa a la playa" : "con vista externa a la calle";
+          guest = Math.ceil(Math.random()*4);
         } else if (tipo.includes("Suite Presidencial")) {
           cama = Math.random() < 0.5 ? "cama queen" : "cama king Size";
           bano = Math.random() < 0.5 ? "baño con tina" : "baño con jacuzzi";
           espacio = "incluye cocina, sala y comedor";
           vista = Math.random() < 0.5 ? "con vista externa a la playa" : Math.random() < 0.5 ? "con vista a la calle" : "con vista a la calle y a la playa";
+          guest = Math.floor(Math.random()*3) + 4;
         }
   
         descripciones.push({
           type: tipo, 
+          guest: guest,
           hotelId: idHotel,
           numeration: Math.floor(Math.random() * 20) + (Math.floor(Math.random() * 9) + 1)*100,
           price: Math.floor(Math.random() * (index+1) * 50) + (index+1) * 20,
