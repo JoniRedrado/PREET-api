@@ -27,7 +27,7 @@ const getFeedbacksHotelHandler = async (req, res) => {
     // const { hotelId } = req.body;
     const { id } = req.params;
     try{
-        const feedbacks = await getFeedbacksHotel(id);
+        const feedbacks = await getFeedbacksHotel(req.query, id);
         res.status(200).json(feedbacks);
     }catch(error){
         res.status(400).json({error: error.message});
