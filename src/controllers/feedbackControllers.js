@@ -14,8 +14,14 @@ const getFeedbacksUser = async (id) => {
     });
   return feedback
 }
-const getFeedbacksHotel = async (id) => {
-  const feedback = await Feedback.findAll({
+const getFeedbacksHotel = async (query, id) => {
+
+  const {page, limit } = query;
+
+
+  const feedback = await Feedback.findAndCountAll({
+    limit: Number(limit),
+    offset: (page - 1) * Number(limit),
     where: { hotelId: id },
     include: [{
       model: User,
@@ -27,7 +33,7 @@ const getFeedbacksHotel = async (id) => {
 const postFeedback = async (feedback, userId, hotelId) => {
   const { like, comment, roomId } = feedback;
 
-  const existingBooking = await Booking.findOne({ where: { userId, roomId } });
+  /*const existingBooking = await Booking.findOne({ where: { userId, roomId } });
   if (!existingBooking) {
     throw new Error('User has not made a booking for this hotel');
   }
@@ -41,7 +47,7 @@ const postFeedback = async (feedback, userId, hotelId) => {
   const existingFeedback = await Feedback.findOne({ where: { userId, hotelId } });
   if (existingFeedback) {
     throw new Error('Feedback already exists for this user and hotel');
-  }
+  }*/
 
   const newFeedback = await Feedback.create({ like, comment, userId, hotelId });
 

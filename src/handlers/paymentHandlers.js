@@ -7,11 +7,14 @@ const { Booking } = require('../../db.js')
 
 const createOrder = async (req, res) => {
 
-    const {price, dateInit, dateFinal, user, roomId} = req.body
-    const userData = jwt.verify(user, SECRET_KEY)
+    const {price, dateInit, dateFinal, roomId} = req.body
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    const userData = jwt.verify(token, SECRET_KEY)
 
-    const diferenciaEnDias = Math.ceil(Math.abs(dateFinal, dateInit) / (1000 * 60 * 60 * 24))
-    console.log(diferenciaEnDias);
+    const nights = Math.ceil(Math.abs(new Date(dateFinal).getTime() - new Date(dateInit).getTime()) / (1000 * 60 * 60 * 24))
+    const amount = nights * price
+
     //Orden a generar, deben venir datos desde el front
     const order = {
         intent: "CAPTURE",
@@ -19,7 +22,7 @@ const createOrder = async (req, res) => {
             {
                 amount: {
                     currency_code: "USD",
-                    value: price,
+                    value: amount,
                 },
                 //Se puede agregar toda la info de la reserva
                 description: "Reserva de una habitacion (info de la habitacion)"
@@ -54,8 +57,9 @@ const createOrder = async (req, res) => {
         }
     })
 
-    //Create booking
-    const newBooking = await Booking.create({dateInit, dateFinal, pay: response.data.id, roomId, userId:userData.id})
+    //Create booking - modificar para que quede como pago pendiente y cambiarlo cuando se ejecute el pago
+    // o generar la booking recien cuando se complete el pago
+    const newBooking = await Booking.create({dateInit, dateFinal, pay: response.data.id, roomId, userId:userData.id, nights, amount})
 
     //Devolver la orden
     res.json(response.data)
