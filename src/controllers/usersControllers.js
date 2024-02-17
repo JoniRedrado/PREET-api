@@ -27,9 +27,20 @@ const validateUser = async (email, password, fireBaseAuth)=>{
       return {message: "Email or password incorrect."}
   }
 }
-const getUsers = async () => {
-    let users = await User.findAll();
-    return users
+const getUsers = async (query) => {
+  const { page = 1, 
+    size = 10,
+} = query
+const options = {
+  limit: Number(size),
+  offset: ( page - 1 ) * Number(size),
+}
+const { count, rows } = await User.findAndCountAll(options)
+const user = {
+  total: count,
+  users: rows
+}
+return user
   }
 const getUserProfile = async (id) => {
     try {
@@ -85,7 +96,7 @@ const deleteUsers = async (id) => {
 }
 const getUsersDeleted = async (query) => {
   const { page = 1, 
-      size = 20,
+      size = 10,
   } = query
 const options = {
     limit: Number(size),

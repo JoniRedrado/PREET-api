@@ -1,15 +1,20 @@
-const { Room, Hotel } = require('../../db.js');
+const { Room, Hotel, RoomImages} = require('../../db.js');
 const { Op } = require("sequelize");
 
-const getRooms = async () => {
-  let rooms = await Room.findAll({
-    include: 
-    [{
-      model: Hotel,
-      attributes: ['name']
-    }]
-  });
-  return rooms
+const getRooms = async (query) => {
+  const  {page = 1, size = 10} = query
+  const options = {
+    limit: Number(size),
+    offset: (page - 1) * Number(size),
+    include: [{ model: Hotel, attributes: ['name'] }, 
+   { model: RoomImages, as: 'image', attributes: ['image']},
+  ],}
+  const {count, rows} = await Room.findAndCountAll(options)
+  const room = {
+    total: count,
+    rooms: rows
+  }
+  return room
 }
 
 const getRoomByType = async (type) => {
@@ -68,12 +73,14 @@ const deleteRoom = async (id) => {
 }
 
 const getRoomsDeleted = async (query) => {
-  const  {page = 1, size = 30} = query
+  const  {page = 1, size = 10} = query
   const options = {
     limit: Number(size),
     offset: (page - 1) * Number(size),
     paranoid: false,
-    include: [{ model: Hotel, attributes: ['name'] }],
+    include: [{ model: Hotel, attributes: ['name'] }, 
+   { model: RoomImages, as: 'image', attributes: ['image']},
+  ],
     where: {deletedAt: { [Op.not]: null}}
   }
   const {count, rows} = await Room.findAndCountAll(options)

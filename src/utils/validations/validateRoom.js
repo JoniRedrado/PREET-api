@@ -6,7 +6,7 @@ const validatePostRoom = (req, res, next) =>{
     if(!type) return res.status(400).json({error: "Missing type"})
     if(!numeration) return res.status(400).json({error: "Missing numeration"})
     if(!price) return res.status(400).json({error: "Missing price"})
-    // if(!guest) return res.status(400).json({error: "Missing guest"})
+    if(!guest) return res.status(400).json({error: "Missing guest"})
     if(!description) return res.status(400).json({error: "Missing description"})
     if(!hotelId) return res.status(400).json({error: "Missing hotelId"})
 
@@ -19,7 +19,7 @@ const validatePutRoom = (req, res, next) =>{
     if(!type) return res.status(400).json({error: "Missing type"})
     if(!numeration) return res.status(400).json({error: "Missing numeration"})
     if(!price) return res.status(400).json({error: "Missing price"})
-    // if(!guest) return res.status(400).json({error: "Missing guest"})
+    if(!guest) return res.status(400).json({error: "Missing guest"})
     if(!description) return res.status(400).json({error: "Missing description"})
     
     next();
