@@ -1,5 +1,5 @@
 
-const roomsType = [
+/*const roomsType = [
     'Estandar Personal',
     'Estandar Doble',
     'Estandar Triple',
@@ -15,6 +15,15 @@ const roomsType = [
     'Suite Estandar Triple',
     'Suite Estandar Cuadruple',
     'Suite Presidencial Familiar'
+];*/
+
+const roomsType = [
+    'Estandar',
+    'Superior',
+    'Deluxe',
+    'Junior Suite',
+    'Suite Estandar',
+    'Suite Presidencial'
 ];
 
 const roomImages = [
