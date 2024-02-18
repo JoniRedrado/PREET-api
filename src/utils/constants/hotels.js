@@ -228,12 +228,12 @@ const hotels = [
         countryId: 3
     },
     {
-        name: "Hotel San Pedro Del Fuerte",
+        name: "Hotel Ayenda Estadio",
         address: "Cl. 46 #80-23, Medellín",
         stars: 4,
-        address_url: "https://hotelsanpedrodelfuerte.com",
+        address_url: "https://ayendaEstadio.com",
         price: 50,
-        email: "reservas@hotelsanpedrodelfuerte.com",
+        email: "reservas@ayendaEstadio.com",
         image: ["https://hotelsanpedrodelfuerte.com/wp-content/uploads/2022/02/Hotel_san_Pedro_del_fuerte_hoteles_en_medellin63.jpg"],
         countryId: 5
     },
