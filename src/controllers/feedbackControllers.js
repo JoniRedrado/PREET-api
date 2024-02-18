@@ -33,6 +33,22 @@ const getFeedbacksHotel = async (query, id) => {
 const postFeedback = async (feedback, userId, hotelId) => {
   const { score, comment, roomId } = feedback;
 
+  const existingBooking = await Booking.findOne({ where: { userId, roomId } });
+  if (!existingBooking) {
+    throw new Error('User has not made a booking for this hotel');
+  }
+
+  const room = await Room.findByPk(roomId);
+
+  if (room.hotelId != hotelId) {
+    throw new Error('Room does not belong to the specified hotel');
+  }
+
+  const existingFeedback = await Feedback.findOne({ where: { userId, hotelId } });
+  if (existingFeedback) {
+    throw new Error('Feedback already exists for this user and hotel');
+  }
+
   const newFeedback = await Feedback.create({ score, comment, userId, hotelId });
 
   if (score > 0) {
