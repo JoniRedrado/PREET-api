@@ -61,7 +61,7 @@ const putRoom = async (id, updatedRoomData) => {
   if (!roomToUpdate) {  
     throw new Error('Room not found');
   }  
-  const { type, numeration, price, description } = updatedRoomData;
+  const { type, numeration, price, guest, description } = updatedRoomData;
   const updatedRoom = await roomToUpdate.update({type, numeration, price, guest, description});
   return updatedRoom;
 }

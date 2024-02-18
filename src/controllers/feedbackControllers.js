@@ -61,21 +61,24 @@ const postFeedback = async (feedback, userId, hotelId) => {
 
   return newFeedback;
 };
-const putFeedback = async (id, updatedFeedbackData, userId) => {
+const putFeedback = async (id, updatedFeedbackData, userId, userRol) => {
   const feedback = await Feedback.findByPk(id);
   if (!feedback) {
     throw new Error('Feedback not found');
   }
-  if (feedback.userId !== userId) {
+  if (feedback.userId !== userId && userRol !== 'admin') {
     throw new Error('User is not authorized to update this feedback');
   }
   const updatedFeedback = await feedback.update(updatedFeedbackData);
   return updatedFeedback;
 };
-const deleteFeedback = async (id) => {
+const deleteFeedback = async (id, userId, userRol) => {
   const feedback = await Feedback.findByPk(id);
   if (!feedback) {
     throw new Error('Feedback not found');
+  } 
+  if (feedback.userId !== userId && userRol !== 'admin') {
+    throw new Error('User is not authorized to delete this feedback');
   }
   feedback.like = false;
   await feedback.save(); 

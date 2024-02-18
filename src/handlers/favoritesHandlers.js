@@ -52,7 +52,9 @@ const postFavoriteHandler = async (req, res) => {
 const deleteFavoriteHandler = async (req, res) => {
     try {
         const { id } = req.params
-        const favorite = await deleteFavorite(id)
+        const userId = req.user.id
+        const userRol = req.user.rol
+        const favorite = await deleteFavorite(id, userId, userRol)
         res.status(200).json({message: "Delete sucess"})
     } catch (error) {
         res.status(400).json({message: error.message})

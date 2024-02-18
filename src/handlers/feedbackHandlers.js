@@ -51,8 +51,9 @@ const putFeedbackHandler = async (req, res) => {
     const { id } = req.params;
     const feedbackData = req.body;
     const userId = req.user.id
+    const userRol = req.user.rol
     try{
-        const feedback = await putFeedback(id, feedbackData, userId);
+        const feedback = await putFeedback(id, feedbackData, userId, userRol);
         res.status(200).json(feedback);
     }catch(error){
         res.status(400).json({error: error.message});
@@ -60,9 +61,10 @@ const putFeedbackHandler = async (req, res) => {
 }
 const deleteFeedbackHandler = async (req, res) => {
     const { id } = req.params;
-    // const { id } = req.body;
+    const userId = req.user.id
+    const userRol = req.user.rol
     try{
-        const feedback = await deleteFeedback(id);
+        const feedback = await deleteFeedback(id, userId, userRol);
         res.status(200).json({message: "Delete sucess"});
     }catch(error){
         res.status(400).json({error: error.message});
