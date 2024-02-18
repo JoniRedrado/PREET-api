@@ -24,6 +24,9 @@ const getRoomByType = async (query, type) => {
   let {count, rows} = await Room.findAndCountAll({
     limit: Number(size),
     offset: (page - 1) * Number(size),
+    include: [{ model: Hotel, attributes: ['name'] }, 
+              { model: RoomImages, as: 'image', attributes: ['image']},
+    ],
     where: {
       type: type
     }
