@@ -69,8 +69,12 @@ const postFavorite = async (hotelId, id) => {
         return newFavorite;
     }
 }
-const deleteFavorite = async (id) => {
-    const deletedFavorite = await Favorite.destroy({where: {id}})
+const deleteFavorite = async (id, userId, userRol) => {
+    const favoriteToDelete = await Favorite.findByPk(id)
+    if (favoriteToDelete.userId !== userId && userRol !== 'admin') {
+        throw new Error('User is not authorized to delete this favorite');
+    }
+    const deletedFavorite = await favoriteToDelete.destroy()
     return deletedFavorite
 }
 module.exports = {

@@ -60,9 +60,10 @@ const putBookingsHandler = async (req, res) => {
     const { id } = req.params;
     const bookingData = req.body;
     const userId = req.user.id
+    const userRol = req.user.rol
 
     try{
-        const booking = await putBooking(id, bookingData, userId);
+        const booking = await putBooking(id, bookingData, userId, userRol);
         res.status(200).json(booking);
     }catch(error){
         res.status(400).json({error: error.message});
@@ -70,8 +71,10 @@ const putBookingsHandler = async (req, res) => {
 }
 const deleteBookingHandler = async (req, res) => {
     const { id } = req.params;
+    const userId = req.user.id
+    const userRol = req.user.rol
     try{
-        const deletedBooking = await deleteBooking(id);
+        const deletedBooking = await deleteBooking(id, userId, userRol);
         res.status(200).json({message: "Delete sucess"});
     }catch(error){
         res.status(400).json({error: error.message});

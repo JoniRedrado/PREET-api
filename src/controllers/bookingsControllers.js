@@ -104,7 +104,8 @@ const postBooking = async (bookings, roomId, userId) => {
     const newBooking = await Booking.create({dateInit, dateFinal, pay, roomId, userId});
     return newBooking
 }
-const putBooking = async (id, updateBookingData,userId) => {
+const putBooking = async (id, updateBookingData,userId, userRol) => {
+
     const bookingToUpdate = await Booking.findByPk(id);
     const { dateInit, dateFinal, pay, roomId} = updateBookingData;
     
@@ -112,7 +113,7 @@ const putBooking = async (id, updateBookingData,userId) => {
         throw new Error('Booking not found');
     }
 
-    if (bookingToUpdate.userId !== userId ) {
+    if (bookingToUpdate.userId !== userId && userRol !== 'admin') {
         throw new Error('User is not authorized to update this booking');
     }
     
@@ -139,11 +140,16 @@ const putBooking = async (id, updateBookingData,userId) => {
     
     return updatedBooking;
 }
-const deleteBooking = async (id) => {
+const deleteBooking = async (id, userId, userRol) => {
     const bookingToDelete = await Booking.findByPk(id);
-    const deletedBooking = await bookingToDelete.destroy();
-    return deletedBooking
-}
+
+    if (bookingToDelete.userId !== userId && userRol !== 'admin') {
+        throw new Error('User is not authorized to delete this booking');
+    }
+      const deletedBooking = await bookingToDelete.destroy();
+      
+      return deletedBooking;
+  }
 const getBookingsDeleted = async (query) => {
     const { page = 1, size = 30 } = query
     const options = {
