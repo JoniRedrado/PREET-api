@@ -23,9 +23,9 @@ const getBookingsUser = async (id, query) => {
         {
           model: Room, attributes: ['type'],
           include: [
-            {model: Hotel, attributes: ['name'],
-            model: RoomImages, as: 'image', attributes: ['image'],
-        }]
+            {model: Hotel, as: 'hotel', attributes: ['name']},
+            {model: RoomImages, as: 'image', attributes: ['image'],}
+    ]
         }
       ]
     }
@@ -49,11 +49,10 @@ const getBookingUserLast = async (id) => {
             {
                 model: Room,
                 attributes: ['type', 'numeration', 'price', 'guest', 'description'],
-                include: {
-                    model: Hotel,
-                    attributes: ['name'],
-                    model: RoomImages, as: 'image', attributes: ['image']
-                }
+                include: [
+                    {model: Hotel, as: 'hotel', attributes: ['name']},
+                    {model: RoomImages, as: 'image', attributes: ['image'],}
+                ]
             }
         ]
     }
@@ -70,11 +69,10 @@ const getBookingById = async (id) => {
             {
                 model: Room,
                 attributes: ['type', 'numeration', 'price', 'guest', 'description'],
-                include: {
-                    model: Hotel,
-                    attributes: ['name'],
-                    model: RoomImages, as: 'image', attributes: ['image']
-                }
+                include: [
+                    {model: Hotel, as: 'hotel', attributes: ['name']},
+                    {model: RoomImages, as: 'image', attributes: ['image'],}
+                ]
             }
         ]
     });
