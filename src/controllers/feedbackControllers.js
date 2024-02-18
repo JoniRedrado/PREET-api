@@ -31,60 +31,42 @@ const getFeedbacksHotel = async (query, id) => {
   return feedback
 }
 const postFeedback = async (feedback, userId, hotelId) => {
-  const { like, comment, roomId } = feedback;
+  const { score, comment, roomId } = feedback;
 
-  /*const existingBooking = await Booking.findOne({ where: { userId, roomId } });
-  if (!existingBooking) {
-    throw new Error('User has not made a booking for this hotel');
-  }
+  const newFeedback = await Feedback.create({ score, comment, userId, hotelId });
 
-  const room = await Room.findByPk(roomId);
-
-  if (room.hotelId != hotelId) {
-    throw new Error('Room does not belong to the specified hotel');
-  }
-
-  const existingFeedback = await Feedback.findOne({ where: { userId, hotelId } });
-  if (existingFeedback) {
-    throw new Error('Feedback already exists for this user and hotel');
-  }*/
-
-  const newFeedback = await Feedback.create({ like, comment, userId, hotelId });
-
-  if (like) {
+  if (score > 0) {
     const hotel = await Hotel.findByPk(hotelId);
     if (hotel) {
-      hotel.ranking += 1;
+      hotel.ranking += score;
       await hotel.save();
     }
   }
 
   return newFeedback;
 };
-const putFeedback = async (id, updatedFeedbackData, userId, userRol) => {
+const putFeedback = async (id, updatedFeedbackData, userId) => {
   const feedback = await Feedback.findByPk(id);
   if (!feedback) {
     throw new Error('Feedback not found');
   }
-  if (feedback.userId !== userId && userRol !== 'admin') {
+  if (feedback.userId !== userId) {
     throw new Error('User is not authorized to update this feedback');
   }
   const updatedFeedback = await feedback.update(updatedFeedbackData);
   return updatedFeedback;
 };
-const deleteFeedback = async (id, userId, userRol) => {
+const deleteFeedback = async (id) => {
   const feedback = await Feedback.findByPk(id);
   if (!feedback) {
     throw new Error('Feedback not found');
-  } 
-  if (feedback.userId !== userId && userRol !== 'admin') {
-    throw new Error('User is not authorized to delete this feedback');
   }
-  feedback.like = false;
-  await feedback.save(); 
 
-  await feedback.destroy(); 
-}
+  feedback.score = 0;
+  await feedback.save();
+
+  await feedback.destroy();
+};
 
 module.exports = {
 getFeedbacks,
@@ -94,7 +76,3 @@ postFeedback,
 putFeedback,
 deleteFeedback
 }
-
-  //delete feedback
-  //get feedback borradas
-  //restore feedback
