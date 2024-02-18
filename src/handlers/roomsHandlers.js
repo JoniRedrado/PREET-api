@@ -15,7 +15,7 @@ const getRoomsHandler = async (req, res) => {
 
     try{
         if(type){
-            const roomType = await getRoomByType(type);
+            const roomType = await getRoomByType(req.query, type);
             res.status(200).json(roomType);
         }else if(numeration){
             const roomNumeration = await getRoomNumeration(numeration);
