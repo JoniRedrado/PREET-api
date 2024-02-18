@@ -71,12 +71,15 @@ const postUser = async (user) => {
 }
 const putUserProfile = async (userId, updatedUserInfo) => {
     try {
-      const user = await User.findByPk(userId);
+      let user = await User.findByPk(userId);
   
       if (!user) {
         throw new Error('User not found.');
       }
 
+      const passwordHash = await bcrypt.hash(updatedUserInfo.password, 10);	
+
+      updatedUserInfo.password = passwordHash;
       await user.update(updatedUserInfo);
   
       const updatedUser = await User.findByPk(userId, {
