@@ -162,7 +162,7 @@ const getHotelById  = async(id, query) => {
             },
             {
                 model: Room,
-                attributes: ['id', 'type', 'numeration', 'price', 'description'],
+                attributes: ['id', 'type', 'numeration', 'price', 'guest', 'description'],
                 include: [{
                     model: RoomImages,
                     as: 'image',
