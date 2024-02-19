@@ -2,11 +2,11 @@ const arrayHotels = require('./constants/hotels.js');
 const getRandomUsers = require('./constants/users.js');
 const arrayCountries = require('./constants/countries.js');
 const { roomsType, roomImages } = require('./constants/typeRooms.js');
-const { User, Hotel, Country, Room, HotelImages, RoomImages, Booking } = require('../../db.js');
+const { User, Hotel, Country, Room, HotelImages, RoomImages, Booking, Feedback } = require('../../db.js');
 
 const createDataForRoom = (datesBooking, nights) => {
   const mesActual = (new Date()).getMonth() + 1;
-  const typeTimeDate = Math.ceil(Math.random()*3);
+  const typeTimeDate = Math.floor(Math.random()*4);
   const year = typeTimeDate < 2 ? 2023 : 2024;
   const month = typeTimeDate < 2 ? Math.ceil(Math.random()*12) : 
                   typeTimeDate === 2 ? mesActual : Math.floor(Math.random()*(12-mesActual)+mesActual);
@@ -30,6 +30,73 @@ const createDataForRoom = (datesBooking, nights) => {
   }
 }
 
+const getFeedbackBooking = (dateFinal, userId) => {
+  const feedbackCheck = dateFinal < (new Date());
+  const score = feedbackCheck ? Math.ceil(Math.random()*6) - 1 : -1;
+
+  let comment = "";
+
+  switch(score){
+    case 0: 
+      comment = "Muy mal servicio, ";
+      comment += ["la habitacion tenia humedad", "el tv no funcionaba", "el aire acodicionado estaba dañado",
+                  "las sabanas estaban manchadas", "la habitacion tenia mal olor"][Math.ceil(Math.random()*6)-1];
+      comment += [", mal servicio en recepcion", ", no limpiaron nunca la habitacion", ", el ascensor no servia",
+                  ", se escucha mucho ruido en los pasillos"][Math.ceil(Math.random()*5)-1];
+      comment += [", el internet no funcionaba", ", el baño era muy extrecho", ", la habitacion no era igual a la foto",
+                  ", el agua caliente no funcionaba"][Math.ceil(Math.random()*5)-1];
+    break;
+    case 1: 
+      comment = "Mal servicio, ";
+      comment += ["la habitacion tenia humedad", "el tv no funcionaba", "el aire acodicionado estaba dañado",
+                  "las sabanas estaban manchadas", "la habitacion tenia mal olor"][Math.ceil(Math.random()*5)-1];
+      comment += [", el internet no funcionaba", ", el baño era muy extrecho", ", la habitacion no era igual a la foto",
+                  ", el agua caliente no funcionaba"][Math.ceil(Math.random()*4)-1];
+    break;
+    case 2: 
+      comment = "El servicio fue regular, ";
+      comment += ["la cama era muy comoda y amplia", "el baño es muy grande y bonito", "el desayuno era muy bueno",
+                  "la atencion en recepcion fue excelente"][Math.ceil(Math.random()*5)-1];
+      comment += ", pero ";
+      comment += ["el internet no funcionaba", "el baño era muy extrecho", "la habitacion no era igual a la foto",
+                  "el agua caliente no funcionaba"][Math.ceil(Math.random()*5)-1];
+    break;
+    case 3: 
+      comment = "El servicio fue regular, ";
+      comment += ["la cama era muy comoda y amplia", "el baño es muy grande y bonito", "el desayuno era muy bueno",
+                  "la atencion en recepcion fue excelente"][Math.ceil(Math.random()*4)-1];
+      comment += ", pero ";
+      comment += ["el internet no funcionaba", "el baño era muy extrecho", "la habitacion no era igual a la foto",
+                  "el agua caliente no funcionaba"][Math.ceil(Math.random()*4)-1];
+    break;
+    case 4: 
+      comment = "El servicio fue bueno, ";
+      comment += ["la cama era muy comoda y amplia", "el baño es muy grande y bonito", "el desayuno era muy bueno",
+                  "la atencion en recepcion fue excelente"][Math.ceil(Math.random()*4)-1];
+      comment += [", me gusto mucho la decoracion", ", es una buena hibicacion cerca de restaurantes", 
+                  ", el recepcionista hablaba varios idiomas", ", nos recomendaron buenos sitios turisticos"]
+                  [Math.ceil(Math.random()*4)-1];
+    break;
+    case 5: 
+      comment = "El servicio fue excelente, ";
+      comment += ["la cama era muy comoda y amplia", "el baño es muy grande y bonito", "el desayuno era muy bueno",
+                  "la atencion en recepcion fue excelente"][Math.ceil(Math.random()*4)-1];
+      comment += [", me gusto mucho la decoracion", ", es una buena hibicacion cerca de restaurantes", 
+                  ", el recepcionista hablaba varios idiomas", ", nos recomendaron buenos sitios turisticos"]
+                  [Math.ceil(Math.random()*4)-1];
+      comment += [", El aseo de la habitacion era impecable", ", la habitacion siempre estaba aseada", 
+                  ", que buena experiencia, volveremos."]
+                  [Math.ceil(Math.random()*3)-1];
+    break;
+  }
+
+  return{
+    score,
+    comment,
+    userId
+  }
+}
+
 const createBookingForUser = (userIds, maxIdRoom) => {
   const dataBokingRooms = [];
 
@@ -40,24 +107,51 @@ const createBookingForUser = (userIds, maxIdRoom) => {
       const nights = Math.ceil(Math.random()*10) + 1;
       const roomId = Math.ceil(Math.random()*maxIdRoom);
 
-      const dataRoom = await Room.findByPk(roomId, {attributes: ['price']});
+      const dataRoom = await Room.findByPk(roomId, {attributes: ['price', 'hotelId']});
      
       const amount = nights*dataRoom.price;
       const { dateInit, dateFinal } = createDataForRoom(dataBokingRooms?.filter(booking => booking.id === id), nights);
 
       dataBokingRooms.push({id, dateInit, dateFinal});
 
+      const {score, comment, userId} = getFeedbackBooking(dateFinal, id);
+
       return {
-        pay: "",
-        nights,
-        amount,
-        commission: amount*0.005,
-        userId: id,
-        roomId,
-        dateInit,
-        dateFinal
+        dataBooking:{
+          pay: "",
+          nights,
+          amount,
+          commission: amount*0.005,
+          userId: id,
+          roomId,
+          dateInit,
+          dateFinal
+        },
+        dataFeedback:{
+          score,
+          comment,
+          userId,
+          hotelId: dataRoom.hotelId
+        }
       }
     })
+  })
+}
+
+const createRoomsAndFeedback = (createUser) => {
+  Room.max('id').then(max => {
+    Promise.all(createBookingForUser(createUser.map(dataUser => dataUser.id), max))
+    .then(dataBookings =>{
+      Booking.bulkCreate(dataBookings.map(data => data.dataBooking))
+      .then(() => {
+        const dataFeedback = dataBookings.map(data => data.dataFeedback);
+        Feedback.bulkCreate(dataFeedback.filter(feedback => feedback.score >= 0))
+        .then(() => console.log('Datos creados'));
+      })
+    })
+  })
+  .catch(error => {
+    console.log(error.message);
   })
 }
 
@@ -66,10 +160,7 @@ const findOrCreateUsers = () => {
     if(response.length === 0){
       Promise.all(getRandomUsers()).then(users => {
         User.bulkCreate(users).then(createUser =>{
-          Room.max('id').then(max => {
-            Promise.all(createBookingForUser(createUser.map(dataUser => dataUser.id), max))
-            .then(dataBookings => Booking.bulkCreate(dataBookings).then(() => console.log('Datos creados')))
-          })
+          createRoomsAndFeedback(createUser);
         })
       })
     }
