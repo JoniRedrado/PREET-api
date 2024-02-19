@@ -2,7 +2,7 @@
 const countries = [
     {name: 'Argentina'},
     {name: 'Bolivia'},
-    {name: 'Brasil'},
+    {name: 'Brazil'},
     {name: 'Chile'},
     {name: 'Colombia'},
     {name: 'Ecuador'},
