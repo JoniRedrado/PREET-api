@@ -40,11 +40,11 @@ const getFeedbackBooking = (dateFinal, userId) => {
     case 0: 
       comment = "Muy mal servicio, ";
       comment += ["la habitacion tenia humedad", "el tv no funcionaba", "el aire acodicionado estaba dañado",
-                  "las sabanas estaban manchadas", "la habitacion tenia mal olor"][Math.ceil(Math.random()*6)-1];
+                  "las sabanas estaban manchadas", "la habitacion tenia mal olor"][Math.ceil(Math.random()*5)-1];
       comment += [", mal servicio en recepcion", ", no limpiaron nunca la habitacion", ", el ascensor no servia",
-                  ", se escucha mucho ruido en los pasillos"][Math.ceil(Math.random()*5)-1];
+                  ", se escucha mucho ruido en los pasillos"][Math.ceil(Math.random()*4)-1];
       comment += [", el internet no funcionaba", ", el baño era muy extrecho", ", la habitacion no era igual a la foto",
-                  ", el agua caliente no funcionaba"][Math.ceil(Math.random()*5)-1];
+                  ", el agua caliente no funcionaba"][Math.ceil(Math.random()*4)-1];
     break;
     case 1: 
       comment = "Mal servicio, ";
@@ -56,10 +56,10 @@ const getFeedbackBooking = (dateFinal, userId) => {
     case 2: 
       comment = "El servicio fue regular, ";
       comment += ["la cama era muy comoda y amplia", "el baño es muy grande y bonito", "el desayuno era muy bueno",
-                  "la atencion en recepcion fue excelente"][Math.ceil(Math.random()*5)-1];
+                  "la atencion en recepcion fue excelente"][Math.ceil(Math.random()*4)-1];
       comment += ", pero ";
       comment += ["el internet no funcionaba", "el baño era muy extrecho", "la habitacion no era igual a la foto",
-                  "el agua caliente no funcionaba"][Math.ceil(Math.random()*5)-1];
+                  "el agua caliente no funcionaba"][Math.ceil(Math.random()*4)-1];
     break;
     case 3: 
       comment = "El servicio fue regular, ";
