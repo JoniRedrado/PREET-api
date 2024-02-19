@@ -46,9 +46,9 @@ const { Country, Hotel, User, Feedback, Booking, Room, HotelImages, Favorite, Ro
 // Aca vendrian las relaciones
 Hotel.belongsTo(Country);
 Country.hasMany(Hotel);
-Hotel.hasMany(Feedback) ;
-Feedback.belongsTo(Hotel);
-Hotel.hasMany(Room);
+Hotel.hasMany(Feedback, {as: 'feedbacks'}); ;
+Feedback.belongsTo(Hotel, {as: 'hotel'});
+Hotel.hasMany(Room, {as: 'rooms'});
 Room.belongsTo(Hotel);
 Hotel.hasMany(HotelImages, {as: 'image'});
 HotelImages.belongsTo(Hotel);
@@ -58,7 +58,7 @@ User.hasMany(Feedback)
 Feedback.belongsTo(User)
 User.hasMany(Booking)
 Booking.belongsTo(User)
-Room.hasMany(Booking)
+Room.hasMany(Booking, {as: 'bookings'})
 Booking.belongsTo(Room)
 User.hasMany(Favorite)
 Favorite.belongsTo(User)

@@ -73,6 +73,7 @@ const getHotels = async (query) => {
                 as: 'image',
                 attributes: ['image'] },
             {   model: Room,
+                as: 'rooms',
                 attributes: ['id', 'type', 'price'],
                 order: [['type', 'ASC']],
                 where: where.room }
@@ -110,8 +111,7 @@ const getHotels = async (query) => {
     return hotels
 }
 
-const getHotelById  = async(id, query) => {
-
+const getHotelById = async(id, query) => {
     const {        
         type,
         minPrice = 1,
@@ -119,12 +119,12 @@ const getHotelById  = async(id, query) => {
         startDate = new Date(),
         endDate = new Date(),
         guest 
-        } = query
+    } = query;
 
-    let where = {}
+    let where = {};
     
-    const entryDate = new Date(startDate)
-    const finishDate = new Date(endDate)
+    const entryDate = new Date(startDate);
+    const finishDate = new Date(endDate);
     
     let bookedRooms = await Booking.findAll({
         attributes: ['roomId'],
@@ -147,9 +147,9 @@ const getHotelById  = async(id, query) => {
         ...({id: {
             [Op.notIn]: bookedRooms.map(booking => booking.roomId)
           }}),
-    }
+    };
 
-    const hotel = (await Hotel.findByPk(id, {
+    const hotel = await Hotel.findByPk(id, {
         include: [{
                 model: Country,
                 as: 'country',
@@ -162,6 +162,7 @@ const getHotelById  = async(id, query) => {
             },
             {
                 model: Room,
+                as: 'rooms',
                 attributes: ['id', 'type', 'numeration', 'price', 'guest', 'description'],
                 include: [{
                     model: RoomImages,
@@ -171,12 +172,38 @@ const getHotelById  = async(id, query) => {
                 where
             },
         ]
-    }))?.toJSON();
+    });
 
-    return { ...hotel, 
-            image: hotel?.image.map(img => img.image),
-            rooms: hotel?.rooms.map(room => ({...room, image: room.image.map(img => img.image)}))};
-}
+    if (!hotel) {
+        const onlyHotel = await Hotel.findByPk(id, {
+            include: [{
+                model: Country,
+                as: 'country',
+                attributes: ['name'],
+            },
+            {
+                model: HotelImages,
+                as: 'image',
+                attributes:['image']
+            }
+        ],
+        });
+        return onlyHotel;
+    }
+
+    const hotelJSON = hotel.toJSON();
+    const hotelImages = hotelJSON.image.map(img => img.image);
+    const rooms = hotelJSON.rooms.map(room => ({
+        ...room,
+        image: room.image.map(img => img.image)
+    }));
+
+    return { 
+        ...hotelJSON,
+        image: hotelImages,
+        rooms: rooms
+    };
+};
 
 const getHotelRanging = async () => {
     const rankingHotels = await Hotel.findAll({
