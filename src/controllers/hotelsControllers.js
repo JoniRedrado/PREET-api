@@ -163,7 +163,7 @@ const getHotelById = async(id, query) => {
             {
                 model: Room,
                 as: 'rooms',
-                attributes: ['id', 'type', 'numeration', 'price', 'description'],
+                attributes: ['id', 'type', 'numeration', 'price', 'guest', 'description'],
                 include: [{
                     model: RoomImages,
                     as: 'image',
@@ -299,23 +299,29 @@ const getHotelsDeleted = async (query) => {
         size = 10,
     } = query
 
-const options = {
-    limit: Number(size),
-    offset: ( page - 1 ) * Number(size),
-    paranoid: false,
-    include: [{ model: Country, attributes: ['name'] },
-    { model: HotelImages, as: 'image', attributes: ['image']},
-],
-    where: {deletedAt: { [Op.not]: null }},	
-}
+    const options = {
+        limit: Number(size),
+        offset: ( page - 1 ) * Number(size),
+        paranoid: false,
+        include: [{ model: Country, attributes: ['name'] },
+        { model: HotelImages, as: 'image', attributes: ['image']},
+    ],
+        where: {deletedAt: { [Op.not]: null }},	
+    }
 
-const { count, rows } = await Hotel.findAndCountAll(options)
-const deleteHotels = {
-    total: count,
-    hotels: rows
-}
+    if(query.name) {
+        options.where.name = {
+            [Op.iLike]: `%${query.name}%`
+        }
+    }
 
-return deleteHotels
+    const { count, rows } = await Hotel.findAndCountAll(options)
+    const deleteHotels = {
+        total: count,
+        hotels: rows
+    }
+
+    return deleteHotels
 }
 const restoreHotel = async (id) => {
     const hotel = await Hotel.findByPk(id, { paranoid: false });

@@ -28,20 +28,37 @@ const validateUser = async (email, password, fireBaseAuth)=>{
   }
 }
 const getUsers = async (query) => {
-  const { page = 1, 
+  const { 
+    page = 1, 
     size = 10,
-} = query
-const options = {
-  limit: Number(size),
-  offset: ( page - 1 ) * Number(size),
-}
-const { count, rows } = await User.findAndCountAll(options)
-const user = {
-  total: count,
-  users: rows
-}
-return user
+  } = query
+  
+  let options = {
+    limit: Number(size),
+    offset: ( page - 1 ) * Number(size),
+    where: {
+      name: {
+        [Op.iLike]: `%${query.name || ''}%`
+      }
+    }
   }
+
+  if (query.name) {
+    options.where = {
+      name: {
+        [Op.iLike]: `%${query.name}%`
+      }
+    } 
+  }
+
+  const { count, rows } = await User.findAndCountAll(options)
+  const user = {
+    total: count,
+    users: rows
+  }
+  return user
+
+}
 const getUserProfile = async (id) => {
     try {
         const user = await User.findByPk(id, {
@@ -100,20 +117,31 @@ const deleteUsers = async (id) => {
 }
 const getUsersDeleted = async (query) => {
   const { page = 1, 
-      size = 10,
+    size = 10,
   } = query
-const options = {
+  
+  let options = {
     limit: Number(size),
     offset: ( page - 1 ) * Number(size),
     paranoid: false,
     where: {deletedAt: { [Op.not]: null }},	
-}
-const { count, rows } = await User.findAndCountAll(options)
-const deleteUsers = {
+  }
+
+  if (query.name) {
+    options.where = {
+      ...options.where,
+      name: {
+        [Op.iLike]: `%${query.name}%`
+      }
+    }
+  }
+
+  const { count, rows } = await User.findAndCountAll(options)
+  const deleteUsers = {
     total: count,
     users: rows
-}
-return deleteUsers
+  }
+  return deleteUsers
 }
 const restoreUser = async (id) => {
     const user = await User.findByPk(id , { paranoid: false });

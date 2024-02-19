@@ -23,7 +23,7 @@ const getBookingsUser = async (id, query) => {
         {
           model: Room, attributes: ['type'],
           include: [
-            {model: Hotel, as: 'hotel', attributes: ['name']},
+            {model: Hotel, as: 'hotel', attributes: ["id",'name']},
             {model: RoomImages, as: 'image', attributes: ['image'],}
     ]
         }
@@ -79,7 +79,7 @@ const getBookingById = async (id) => {
     return booking;
 }
 const postBooking = async (bookings, roomId, userId) => {
-    const {dateInit, dateFinal, pay} = bookings
+    const {dateInit, dateFinal, pay, amount} = bookings
 
     const existingBooking = await Booking.findOne({ 
         where: { 
@@ -99,7 +99,7 @@ const postBooking = async (bookings, roomId, userId) => {
         throw new Error('The room is not available for the selected dates');
     }
 
-    const newBooking = await Booking.create({dateInit, dateFinal, pay, roomId, userId});
+    const newBooking = await Booking.create({dateInit, dateFinal, pay, amount, roomId, userId});
     return newBooking
 }
 const putBooking = async (id, updateBookingData,userId, userRol) => {

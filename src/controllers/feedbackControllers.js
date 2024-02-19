@@ -9,6 +9,7 @@ const getFeedbacksUser = async (id) => {
      where: { userId: id }, 
      include: {
       model: Hotel,
+      as: 'hotel',
       attributes: ['name']
      }
     });
@@ -16,7 +17,7 @@ const getFeedbacksUser = async (id) => {
 }
 const getFeedbacksHotel = async (query, id) => {
 
-  const {page, limit } = query;
+  const {page = 1, limit = 10 } = query;
 
 
   const feedback = await Feedback.findAndCountAll({
