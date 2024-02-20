@@ -1,5 +1,5 @@
 const { Feedback, Hotel, User, Booking, Room} = require('../../db.js');
-
+const Sequelize = require('sequelize');
 const getFeedbacks = async () => {
   const feedback = await Feedback.findAll();
   return feedback
@@ -19,6 +19,15 @@ const getFeedbacksHotel = async (query, id) => {
 
   const {page = 1, limit = 10 } = query;
 
+  const avgScore = await Hotel.findByPk(id,{
+    attributes: [
+       [Sequelize.literal('ROUND(AVG(score), 2)'), 'avgScore'],
+    ],
+    include: [{
+      model: Feedback, as: 'feedbacks', attributes: [],
+    }],
+    group: ["hotel.id"],
+  })
 
   const feedback = await Feedback.findAndCountAll({
     limit: Number(limit),
@@ -29,7 +38,7 @@ const getFeedbacksHotel = async (query, id) => {
       attributes: ['name', "last_name", "nationality"]
     }]
   });
-  return feedback
+  return { avgScore, feedback };
 }
 const postFeedback = async (feedback, userId, hotelId) => {
   const { score, comment, roomId } = feedback;
