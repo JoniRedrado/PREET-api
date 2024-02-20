@@ -32,7 +32,7 @@ const createDataForRoom = (datesBooking, nights) => {
 
 const getFeedbackBooking = (dateFinal, userId) => {
   const feedbackCheck = dateFinal < (new Date());
-  const score = feedbackCheck ? Math.ceil(Math.random()*6) - 1 : -1;
+  const score = feedbackCheck ? Math.ceil(Math.random()*8) - 1 : -1;
 
   let comment = "";
 
@@ -91,7 +91,7 @@ const getFeedbackBooking = (dateFinal, userId) => {
   }
 
   return{
-    score,
+    score: score > 5 ? 5: score,
     comment,
     userId
   }
@@ -102,6 +102,7 @@ const createBookingForUser = (userIds, maxIdRoom) => {
 
   return userIds.flatMap(id => {
     const totalBooking = Array.from({length: Math.floor(Math.random()*20 + 1)});
+    let totalScore = 0;
 
     return totalBooking.map(async () => {
       const nights = Math.ceil(Math.random()*10) + 1;
@@ -115,6 +116,7 @@ const createBookingForUser = (userIds, maxIdRoom) => {
       dataBokingRooms.push({id, dateInit, dateFinal});
 
       const {score, comment, userId} = getFeedbackBooking(dateFinal, id);
+      totalScore += score >= 0 ? score : 0;
 
       return {
         dataBooking:{
@@ -132,9 +134,33 @@ const createBookingForUser = (userIds, maxIdRoom) => {
           comment,
           userId,
           hotelId: dataRoom.hotelId
+        },
+        ranking:{
+          id: dataRoom.hotelId,
+          ranking: totalScore
         }
       }
     })
+  })
+}
+
+const updateRankingHotels = (arrayRankingHotels) => {
+  const rankingObject = {};
+  const rankingHotels = [];
+
+  arrayRankingHotels.forEach(data => {
+    if(data.id in rankingObject) rankingObject[data.id] += data.ranking
+    else rankingObject[data.id] = data.ranking;
+  })
+
+  for(const id in rankingObject)
+    rankingHotels.push({id: parseInt(id), ranking: rankingObject[id]});
+  
+  Promise.all(rankingHotels.map(async (data) => 
+    await Hotel.update({ranking: data.ranking}, {where: {id: data.id}})
+  )).then(() => console.log('Datos creados'))
+  .catch(error => {
+    console.log(error.message);
   })
 }
 
@@ -146,7 +172,7 @@ const createRoomsAndFeedback = (createUser) => {
       .then(() => {
         const dataFeedback = dataBookings.map(data => data.dataFeedback);
         Feedback.bulkCreate(dataFeedback.filter(feedback => feedback.score >= 0))
-        .then(() => console.log('Datos creados'));
+        .then(() => updateRankingHotels(dataBookings.map(data => data.ranking)));
       })
     })
   })
