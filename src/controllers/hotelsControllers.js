@@ -1,6 +1,6 @@
-const { Hotel, Country, Room, HotelImages, Booking, RoomImages} = require('../../db.js');
+const { Hotel, Country, Room, HotelImages, Booking, RoomImages, Feedback} = require('../../db.js');
 const countries = require('../utils/constants/countries.js');
-const  {Op} = require ("sequelize");
+const  {Op, literal} = require ("sequelize");
 
 const getHotels = async (query) => {
     const { page = 1, 
@@ -170,8 +170,14 @@ const getHotelById = async(id, query) => {
                     attributes: ['image']
                 }],
                 where
-            },
+            }
         ]
+    });
+
+    const ranking = await Feedback.findAll({
+        attributes: [[literal('ROUND(AVG(score), 2)'), 'total']],
+        where:{hotelId: id},
+        raw: true
     });
 
     if (!hotel) {
@@ -200,6 +206,7 @@ const getHotelById = async(id, query) => {
 
     return { 
         ...hotelJSON,
+        ranking: ranking[0].total,
         image: hotelImages,
         rooms: rooms
     };
