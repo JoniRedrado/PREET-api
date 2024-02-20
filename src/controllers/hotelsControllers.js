@@ -111,7 +111,7 @@ const getHotels = async (query) => {
     return hotels
 }
 
-const getHotelById = async(id, query) => {
+const getHotelById = async(id, params) => {
     const {        
         type,
         minPrice = 1,
@@ -119,7 +119,7 @@ const getHotelById = async(id, query) => {
         startDate = new Date(),
         endDate = new Date(),
         guest 
-    } = query;
+    } = params;
 
     let where = {};
     
