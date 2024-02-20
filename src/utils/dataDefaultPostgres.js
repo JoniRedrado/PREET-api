@@ -121,7 +121,7 @@ const createBookingForUser = (userIds, maxIdRoom) => {
           pay: "",
           nights,
           amount,
-          commission: amount*0.005,
+          commission: (amount * 0.054) + 0.3,
           userId: id,
           roomId,
           dateInit,
