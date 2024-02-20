@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-//const countries = (require('./countries.js')).length;
+const countries = (require('./countries.js'));
 
 const names = [
     'Juan', 
@@ -72,6 +72,7 @@ const getRandomUser = () => {
                 last_name: data.last_name, 
                 rol: 'client',
                 email: data.email,
+                nationality: countries[Math.floor(Math.random()*countries.length)].name,
                 password: `${name}_${data.last_name}_123`,
             }
         });
