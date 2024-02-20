@@ -10,6 +10,7 @@ const paymentRouter = require('./paymentRouter')
 const feedbackRouter = require('./feedbackRouter')
 const favoritesRouter = require('./favoritesRouter')
 const metricsRouter = require('./metricsRouter')
+const excelRouter = require('./excelRouter')
 
 // Configurar los routers
 router.use("/hotels", hotelsRouter)
@@ -21,5 +22,6 @@ router.use("/feedback", feedbackRouter)
 router.use("/payment", paymentRouter)
 router.use("/favorites", favoritesRouter)
 router.use("/metrics", metricsRouter)
+router.use("/excel", excelRouter)
 
 module.exports = router;

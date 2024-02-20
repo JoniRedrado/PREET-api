@@ -23,7 +23,8 @@ const metricIncomesHotels = async (start_date, end_date) => {
     const incomes = await Hotel.findAll({
       attributes: [
         'id',"name",
-        [Sequelize.fn('SUM', Sequelize.col('amount')), 'incomes']
+        [Sequelize.fn('SUM', Sequelize.col('amount')), 'incomes'],
+        [Sequelize.literal('ROUND(SUM(amount) - SUM(commission) - SUM(price))'), 'net_incomes']
       ],
       include: [
         {
@@ -48,7 +49,7 @@ const metricNetIncome = async (start_date, end_date) => {
     const netIncomes = await Hotel.findAll({
         attributes: [
           'id',"name",
-          [Sequelize.literal('SUM(amount) - SUM(commission)'),  'net_incomes']
+          [Sequelize.literal('SUM(amount) - SUM(commission) - SUM(price)'),  'net_incomes']
         ],
         include: [
           {
