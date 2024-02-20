@@ -103,6 +103,7 @@ const createBookingForUser = (userIds, maxIdRoom) => {
   return userIds.flatMap(id => {
     const totalBooking = Array.from({length: Math.floor(Math.random()*20 + 1)});
     let totalScore = 0;
+    let total = 0;
 
     return totalBooking.map(async () => {
       const nights = Math.ceil(Math.random()*10) + 1;
@@ -116,7 +117,8 @@ const createBookingForUser = (userIds, maxIdRoom) => {
       dataBokingRooms.push({id, dateInit, dateFinal});
 
       const {score, comment, userId} = getFeedbackBooking(dateFinal, id);
-      totalScore += score >= 0 ? score : 0;
+      if(score > 0) totalScore += score;
+      if(score > 0) total++; 
 
       return {
         dataBooking:{
@@ -137,7 +139,7 @@ const createBookingForUser = (userIds, maxIdRoom) => {
         },
         ranking:{
           id: dataRoom.hotelId,
-          ranking: totalScore
+          ranking: total === 0 ? 0 : Math.floor(totalScore/total)
         }
       }
     })
