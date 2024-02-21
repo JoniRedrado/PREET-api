@@ -13,8 +13,8 @@ const getHotels = async (query) => {
         country,
         orderBy = 'name',
         direction = 'ASC',
-        startDate = new Date(),
-        endDate = new Date(),
+        startDate,
+        endDate,
         guest
     } = query
 
@@ -22,9 +22,23 @@ const getHotels = async (query) => {
         dataCountry.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")) : null;
     const compareName = name ? name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
     const isCountry = normalizedCountries?.findIndex(dataCountry => dataCountry === compareName);
+    
+    let entryDate
+    let finishDate
 
-    const entryDate = new Date(startDate)
-    const finishDate = new Date(endDate)
+    if (startDate === "" && endDate === ""){
+
+        entryDate = new Date()
+        finishDate = new Date()
+    } else if (startDate === "") {
+        entryDate = new Date()
+    } else if (endDate === "") {
+        finishDate = new Date()
+    } else {
+        entryDate = startDate
+        finishDate = endDate
+    }
+    
 
     let bookedRooms = await Booking.findAll({
         attributes: ['roomId'],
