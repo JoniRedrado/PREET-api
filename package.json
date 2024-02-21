@@ -31,7 +31,8 @@
     "pg": "^8.5.1",
     "sequelize": "^6.3.5",
     "socket.io": "^4.7.4",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "chai": "^4.2.0",
