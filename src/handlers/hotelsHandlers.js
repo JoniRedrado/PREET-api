@@ -6,7 +6,8 @@ const { getHotels,
     putHotel, 
     deleteHotel,
     getHotelsDeleted,
-    restoreHotel } = require('../controllers/hotelsControllers.js');
+    restoreHotel, 
+    getHotelsDashboard} = require('../controllers/hotelsControllers.js');
 
 const getHotelsHandler = async (req,res) => {
     try{
@@ -92,6 +93,17 @@ const restoreHotelHandler = async (req, res)=>{
         res.status(500).json({ error: error.message });
     }
 };
+
+const getAllHotels = async (req, res)=>{
+    const {name} = req.query
+    try {
+        const hotels = await getHotelsDashboard(name)
+        res.status(200).json(hotels)
+    } catch (error) {
+        res.status(500).json({error: error.message})
+    }
+    
+}
 module.exports = {
     getHotelIdHandler,
     postHotelHandler,
@@ -100,5 +112,6 @@ module.exports = {
     deleteHotelHandler,
     getHotelRangingHandler,
     getHotelsDeletedHandler,
-    restoreHotelHandler
+    restoreHotelHandler,
+    getAllHotels
 };
