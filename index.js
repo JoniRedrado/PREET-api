@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
   });
 });
 
-conn.sync({ force: false }).then(() => {
+conn.sync({ force: true }).then(() => {
   findOrCreateData();
 
   // Utilizar el servidor de Socket.io en lugar del servidor HTTP original
