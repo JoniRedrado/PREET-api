@@ -17,6 +17,8 @@ const createOrder = async (req, res) => {
     const amount = nights * price
     const commission = (amount * 0.054) + 0.30
 
+    console.log(amount);
+
     //Orden a generar, deben venir datos desde el front
     const order = {
         intent: "CAPTURE",
