@@ -36,9 +36,10 @@ const getFeedbacksHotel = async (query, id) => {
     include: [{
       model: User,
       attributes: ['name', "last_name", "nationality"]
-    }]
+    }],
+    order: [[Sequelize.literal('GREATEST("feedback"."updatedAt", "feedback"."createdAt")'), 'DESC']],
   });
-  return { avgScore, feedback };
+  return { avgScore, feedback};
 }
 const postFeedback = async (feedback, userId, hotelId) => {
   const { score, comment, roomId } = feedback;
