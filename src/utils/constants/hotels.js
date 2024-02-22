@@ -84,7 +84,7 @@ const hotels = [
         countryId: 3
     },
     {
-        name: "Hotel Uruguay Brasil",
+        name: "Hotel Uruguay",
         address: "Sarandí 440, Rivera",
         stars: 4,
         address_url: "https://hoteluruguaybrasil.com",
