@@ -10,7 +10,8 @@ const { getHotelsHandler,
     putHotelHandler, 
     deleteHotelHandler,
     getHotelsDeletedHandler,
-    restoreHotelHandler} = require('../handlers/hotelsHandlers');
+    restoreHotelHandler,
+    getAllHotels} = require('../handlers/hotelsHandlers');
 
 //Endpoints
 hotelsRouter.get('/', getHotelsHandler)
@@ -21,5 +22,6 @@ hotelsRouter.put("/:id", verifyToken, verifyAdmin, validateHotel, putHotelHandle
 hotelsRouter.delete("/:id", verifyToken, verifyAdmin, deleteHotelHandler)
 hotelsRouter.get("/deleted", verifyToken, verifyAdmin, getHotelsDeletedHandler)
 hotelsRouter.put("/restore/:id", verifyToken, verifyAdmin, restoreHotelHandler)
+hotelsRouter.get("/all", verifyToken, verifyAdmin, getAllHotels)
 
 module.exports = hotelsRouter

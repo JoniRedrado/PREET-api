@@ -351,6 +351,21 @@ const restoreHotel = async (id) => {
 
     return restoreH;
   };
+
+const getHotelsDashboard = async (name) => {
+    let where = {}
+    if (name) {
+        where.name = {
+            [Op.iLike]: `%${name}%`
+        }
+    }
+    console.log(where);
+    const hotels = await Hotel.findAll({
+        where
+    })
+
+    return hotels
+}
 module.exports = {
     getHotels,
     getHotelById,
@@ -359,5 +374,6 @@ module.exports = {
     putHotel,
     deleteHotel,
     getHotelsDeleted,
-    restoreHotel
+    restoreHotel,
+    getHotelsDashboard
 }
