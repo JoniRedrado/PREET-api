@@ -60,13 +60,13 @@ const getHotels = async (query) => {
     where.hotel = {
         ...(name && isCountry < 0 && {name: {[Op.iLike]: `%${name}%`}}), 
         ...(name && isCountry >= 0 && {countryId: isCountry+1}),
-        ...(!name && country && {countryId: country}),
-        ...(!name && stars && {stars}),
+        ...(/*!name &&*/ country && {countryId: country}),
+        ...(/*!name &&*/ stars && {stars}),
     }
 
     where.room = {
         ...(type && {type}),
-        ...(!name && minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] }}),
+        ...(/*!name && */minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] }}),
         ...({id: {
             [Op.notIn]: bookedRooms.map(booking => booking.roomId)
           }}),
