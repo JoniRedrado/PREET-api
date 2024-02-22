@@ -95,9 +95,9 @@ const restoreHotelHandler = async (req, res)=>{
 };
 
 const getAllHotels = async (req, res)=>{
-    const {name} = req.query
+    
     try {
-        const hotels = await getHotelsDashboard(name)
+        const hotels = await getHotelsDashboard(req.query)
         res.status(200).json(hotels)
     } catch (error) {
         res.status(500).json({error: error.message})

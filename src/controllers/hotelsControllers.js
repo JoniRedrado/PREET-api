@@ -352,19 +352,55 @@ const restoreHotel = async (id) => {
     return restoreH;
   };
 
-const getHotelsDashboard = async (name) => {
-    let where = {}
-    if (name) {
-        where.name = {
-            [Op.iLike]: `%${name}%`
-        }
-    }
-    console.log(where);
-    const hotels = await Hotel.findAll({
-        where
-    })
+const getHotelsDashboard = async ({name, page = 1, size = 10, pagination = false }) => {
 
-    return hotels
+    let where = {hotel:{}};
+    where.hotel = {
+        ...(name && {name: {[Op.iLike]: `%${name}%`}}), 
+    }
+
+    if(pagination){
+        const options = {
+            limit: Number(size),
+            offset: ( page - 1 ) * Number(size),
+            order: [['id', 'ASC']],
+            include: [
+                {   model: Country,
+                    as: 'country',
+                    attributes: ['name'],
+                },
+                {
+                    model: HotelImages,
+                    as: 'image',
+                    attributes: ['image'] },
+            ],
+            distinct: true,
+            attributes: {exclude: ['createdAt', 'updatedAt', 'deletedAt', ]},
+            where: where.hotel
+        }
+        const { count, rows } = await Hotel.findAndCountAll(options);
+        return {count, rows}
+    } else {
+        const options = {
+            order: [['id', 'ASC']],
+            include: [
+                {   model: Country,
+                    as: 'country',
+                    attributes: ['name'],
+                },
+                {
+                    model: HotelImages,
+                    as: 'image',
+                    attributes: ['image'] },
+            ],
+            distinct: true,
+            attributes: {exclude: ['createdAt', 'updatedAt', 'deletedAt', ]},
+            where: where.hotel
+        }
+
+        const hotels = await Hotel.findAll(options)
+        return hotels
+    }
 }
 module.exports = {
     getHotels,
