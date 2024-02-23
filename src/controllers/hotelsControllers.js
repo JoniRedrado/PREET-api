@@ -1,9 +1,18 @@
-const { Hotel, Country, Room, HotelImages, Booking, RoomImages, Feedback} = require('../../db.js');
-const countries = require('../utils/constants/countries.js');
-const  {Op, literal} = require ("sequelize");
+const {
+    Hotel,
+    Country,
+    Room,
+    HotelImages,
+    Booking,
+    RoomImages,
+    Feedback,
+} = require("../../db.js");
+const countries = require("../utils/constants/countries.js");
+const { Op, literal } = require("sequelize");
 
 const getHotels = async (query) => {
-    const { page = 1, 
+    const {
+        page = 1,
         size = 6,
         stars,
         type,
@@ -11,289 +20,354 @@ const getHotels = async (query) => {
         minPrice = 1,
         maxPrice = 10000,
         country,
-        orderBy = 'name',
-        direction = 'ASC',
+        orderBy = "name",
+        direction = "ASC",
         startDate,
         endDate,
-        guest
-    } = query
+        guest,
+    } = query;
 
-    const normalizedCountries = name ? countries.map(dataCountry => 
-        dataCountry.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")) : null;
-    const compareName = name ? name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
-    const isCountry = normalizedCountries?.findIndex(dataCountry => dataCountry === compareName);
-    
-    let entryDate
-    let finishDate
+    const normalizedCountries = name
+        ? countries.map((dataCountry) =>
+              dataCountry.name
+                  .toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "")
+          )
+        : null;
+    const compareName = name
+        ? name
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+        : "";
+    const isCountry = normalizedCountries?.findIndex(
+        (dataCountry) => dataCountry === compareName
+    );
 
-    if (startDate === "" && endDate === ""){
+    let entryDate;
+    let finishDate;
 
-        entryDate = new Date()
-        finishDate = new Date()
+    if (startDate === "" && endDate === "") {
+        entryDate = new Date();
+        finishDate = new Date();
     } else if (startDate === "") {
-        entryDate = new Date()
+        entryDate = new Date();
     } else if (endDate === "") {
-        finishDate = new Date()
+        finishDate = new Date();
     } else {
-        entryDate = startDate
-        finishDate = endDate
+        entryDate = startDate;
+        finishDate = endDate;
     }
-    
 
     let bookedRooms = await Booking.findAll({
-        attributes: ['roomId'],
+        attributes: ["roomId"],
         where: {
             [Op.or]: {
-              dateFinal: { [Op.between]:[entryDate, finishDate] },
-              dateInit: { [Op.between]:[entryDate, finishDate] },
-              [Op.and]: {
-                dateInit: {[Op.lte]: entryDate},
-                dateFinal: {[Op.gte]: finishDate}
-              },
+                dateFinal: { [Op.between]: [entryDate, finishDate] },
+                dateInit: { [Op.between]: [entryDate, finishDate] },
+                [Op.and]: {
+                    dateInit: { [Op.lte]: entryDate },
+                    dateFinal: { [Op.gte]: finishDate },
+                },
             },
         },
-      });
-    
+    });
+
     //console.log(bookedRooms);
-    
-    let where = {hotel:{}, room:{}, country:{}};
+
+    let where = { hotel: {}, room: {}, country: {} };
     where.hotel = {
-        ...(name && isCountry < 0 && {name: {[Op.iLike]: `%${name}%`}}), 
-        ...(name && isCountry >= 0 && {countryId: isCountry+1}),
-        ...(/*!name &&*/ country && {countryId: country}),
-        ...(/*!name &&*/ stars && {stars}),
-    }
+        ...(name && isCountry < 0 && { name: { [Op.iLike]: `%${name}%` } }),
+        ...(name && isCountry >= 0 && { countryId: isCountry + 1 }),
+        .../*!name &&*/ (country && { countryId: country }),
+        .../*!name &&*/ (stars && { stars }),
+    };
 
     where.room = {
-        ...(type && {type}),
-        ...(/*!name && */minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] }}),
-        ...({id: {
-            [Op.notIn]: bookedRooms.map(booking => booking.roomId)
-          }}),
-        ...(guest && {guest})
-    }
-    
-   const options = {
-       limit: Number(size),
-       offset: ( page - 1 ) * Number(size),
-       order: [[orderBy === '' ? 'name' : orderBy, direction === '' ? 'ASC' : direction]],
-       include: [
-            {   model: Country,
-                as: 'country',
-                attributes: ['name'],
+        ...(type && { type }),
+        .../*!name && */ (minPrice &&
+            maxPrice && { price: { [Op.between]: [minPrice, maxPrice] } }),
+        ...{
+            id: {
+                [Op.notIn]: bookedRooms.map((booking) => booking.roomId),
             },
+        },
+        ...(guest && { guest }),
+    };
+
+    const options = {
+        limit: Number(size),
+        offset: (page - 1) * Number(size),
+        order: [
+            [
+                orderBy === "" ? "name" : orderBy,
+                direction === "" ? "ASC" : direction,
+            ],
+        ],
+        include: [
+            { model: Country, as: "country", attributes: ["name"] },
             {
                 model: HotelImages,
-                as: 'image',
-                attributes: ['image'] },
-            {   model: Room,
-                as: 'rooms',
-                attributes: ['id', 'type', 'price'],
-                order: [['type', 'ASC']],
-                where: where.room }
+                as: "image",
+                attributes: ["image"],
+            },
+            {
+                model: Room,
+                as: "rooms",
+                attributes: ["id", "type", "price"],
+                order: [["type", "ASC"]],
+                where: where.room,
+            },
         ],
         distinct: true,
-        attributes: {exclude: ['createdAt', 'updatedAt', 'deletedAt', ]},
-        where: where.hotel
-    }
-    
+        attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+        where: where.hotel,
+    };
+
     const { count, rows } = await Hotel.findAndCountAll(options);
 
     const hotels = {
         total: count,
-        Hotel: rows.map(hotel => {
+        Hotel: rows.map((hotel) => {
             const idRooms = [];
-            const minPrice = {price: hotel?.rooms[0]?.price, type:hotel?.rooms[0]?.type};
-            const maxPrice = {...minPrice};
+            const minPrice = {
+                price: hotel?.rooms[0]?.price,
+                type: hotel?.rooms[0]?.type,
+            };
+            const maxPrice = { ...minPrice };
 
-            hotel.rooms.forEach(room => {
+            hotel.rooms.forEach((room) => {
                 idRooms.push(room.id);
-                if(room.price < minPrice.price){
+                if (room.price < minPrice.price) {
                     minPrice.price = room.price;
                     minPrice.type = room.type;
                 }
-                if(room.price > maxPrice.price){
+                if (room.price > maxPrice.price) {
                     maxPrice.price = room.price;
                     maxPrice.type = room.type;
                 }
             });
-            
-            return { ...hotel?.toJSON(), image: hotel?.image[0].image, rooms: [minPrice, maxPrice], idRooms};
-        })
-    }
-    
-    return hotels
-}
 
-const getHotelById = async(id, params) => {
-    const {        
+            return {
+                ...hotel?.toJSON(),
+                image: hotel?.image[0].image,
+                rooms: [minPrice, maxPrice],
+                idRooms,
+            };
+        }),
+    };
+
+    return hotels;
+};
+
+const getHotelById = async (id, params) => {
+    const {
         type,
         minPrice = 1,
         maxPrice = 10000,
         startDate = new Date(),
         endDate = new Date(),
-        guest 
+        guest,
     } = params;
 
     let where = {};
-    
+
     const entryDate = new Date(startDate);
     const finishDate = new Date(endDate);
-    
+
     let bookedRooms = await Booking.findAll({
-        attributes: ['roomId'],
+        attributes: ["roomId"],
         where: {
             [Op.or]: {
-                dateFinal: { [Op.between]:[entryDate, finishDate] },
-                dateInit: { [Op.between]:[entryDate, finishDate] },
+                dateFinal: { [Op.between]: [entryDate, finishDate] },
+                dateInit: { [Op.between]: [entryDate, finishDate] },
                 [Op.and]: {
-                    dateInit: {[Op.lte]: entryDate},
-                    dateFinal: {[Op.gte]: finishDate}
+                    dateInit: { [Op.lte]: entryDate },
+                    dateFinal: { [Op.gte]: finishDate },
                 },
             },
         },
     });
 
     where = {
-        ...(type && {type}),
-        ...(minPrice && maxPrice && {price: { [Op.between]: [minPrice, maxPrice] }}),
-        ...(guest && {guest}),
-        ...({id: {
-            [Op.notIn]: bookedRooms.map(booking => booking.roomId)
-          }}),
+        ...(type && { type }),
+        ...(minPrice &&
+            maxPrice && { price: { [Op.between]: [minPrice, maxPrice] } }),
+        ...(guest && { guest }),
+        ...{
+            id: {
+                [Op.notIn]: bookedRooms.map((booking) => booking.roomId),
+            },
+        },
     };
 
     const hotel = await Hotel.findByPk(id, {
-        include: [{
+        include: [
+            {
                 model: Country,
-                as: 'country',
-                attributes: ['name'],
+                as: "country",
+                attributes: ["name"],
             },
             {
                 model: HotelImages,
-                as: 'image',
-                attributes:['image']
+                as: "image",
+                attributes: ["image"],
             },
             {
                 model: Room,
-                as: 'rooms',
-                attributes: ['id', 'type', 'numeration', 'price', 'guest', 'description'],
-                include: [{
-                    model: RoomImages,
-                    as: 'image',
-                    attributes: ['image']
-                }],
-                where
-            }
-        ]
+                as: "rooms",
+                attributes: [
+                    "id",
+                    "type",
+                    "numeration",
+                    "price",
+                    "guest",
+                    "description",
+                ],
+                include: [
+                    {
+                        model: RoomImages,
+                        as: "image",
+                        attributes: ["image"],
+                    },
+                ],
+                where,
+            },
+        ],
     });
 
     const ranking = await Feedback.findAll({
-        attributes: [[literal('ROUND(AVG(score), 2)'), 'total']],
-        where:{hotelId: id},
-        raw: true
+        attributes: [[literal("ROUND(AVG(score), 2)"), "total"]],
+        where: { hotelId: id },
+        raw: true,
     });
 
     if (!hotel) {
         const onlyHotel = await Hotel.findByPk(id, {
-            include: [{
-                model: Country,
-                as: 'country',
-                attributes: ['name'],
-            },
-            {
-                model: HotelImages,
-                as: 'image',
-                attributes:['image']
-            }
-        ],
+            include: [
+                { model: Country, as: "country", attributes: ["name"] },
+                {
+                    model: HotelImages,
+                    as: "image",
+                    attributes: ["image"],
+                    required: false,
+                },
+            ],
         });
-        return onlyHotel;
+        const hotelData = onlyHotel.toJSON();
+        hotelData.image = hotelData.image.map((img) => img.image);
+        return hotelData;
     }
 
     const hotelJSON = hotel.toJSON();
-    const hotelImages = hotelJSON.image.map(img => img.image);
-    const rooms = hotelJSON.rooms.map(room => ({
+    const hotelImages = hotelJSON.image.map((img) => img.image);
+    const rooms = hotelJSON.rooms.map((room) => ({
         ...room,
-        image: room.image.map(img => img.image)
+        image: room.image.map((img) => img.image),
     }));
 
-    return { 
+    return {
         ...hotelJSON,
         ranking: ranking[0].total,
         image: hotelImages,
-        rooms: rooms
+        rooms: rooms,
     };
 };
 
 const getHotelRanging = async () => {
     const rankingHotels = await Hotel.findAll({
-        order: [['ranking', 'DESC']],
-        attributes:{exclude:['createdAt', 'updatedAt', 'deletedAt']},
-        include:[ 
-            {   model: HotelImages,
-                as: 'image',
-                attributes: ['image'],
-                order:[['createdAt', 'ASC']],
-                limit: 1 // solo trae la imagen mas antigua
-            }
+        order: [["ranking", "DESC"]],
+        attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+        include: [
+            {
+                model: HotelImages,
+                as: "image",
+                attributes: ["image"],
+                order: [["createdAt", "ASC"]],
+                limit: 1, // solo trae la imagen mas antigua
+            },
         ],
-        limit: 5
-    })
+        limit: 5,
+    });
 
-    return rankingHotels.map(hotel => ({...hotel?.toJSON(), image: hotel?.image[0]?.image}))
-}
+    return rankingHotels.map((hotel) => ({
+        ...hotel?.toJSON(),
+        image: hotel?.image[0]?.image,
+    }));
+};
 
-const postHotel = async (hotel)=>{
-    const { name, address, address_url, stars, email, image, countryId } = hotel
+const postHotel = async (hotel) => {
+    const { name, address, address_url, stars, email, image, countryId } =
+        hotel;
 
     const images = Array.isArray(image) ? image : [image];
     //Buscar por nombre el pais del hotel
 
-    const hotelCountry = await Country.findOne({ where: { name: countryId} })
+    const hotelCountry = await Country.findOne({ where: { name: countryId } });
 
     //Formatear los datos para que cumpla con el modelo de la DB
-    const hotelData = { name, address, address_url, stars, email, countryId: hotelCountry.dataValues.id }
+    const hotelData = {
+        name,
+        address,
+        address_url,
+        stars,
+        email,
+        countryId: hotelCountry.dataValues.id,
+    };
     //crear el hotel
     const newHotel = await Hotel.create(hotelData);
-    await HotelImages.bulkCreate(images.map(img => ({hotelId: newHotel.id, image: img})));
+    await HotelImages.bulkCreate(
+        images.map((img) => ({ hotelId: newHotel.id, image: img }))
+    );
 
-    return { id: newHotel.id, name: newHotel.name }/*hotel creado*/
-}
+    return { id: newHotel.id, name: newHotel.name }; /*hotel creado*/
+};
 
 const putHotel = async (id, updatedHotelData) => {
     const hotelToUpdate = await Hotel.findByPk(id);
-    if (!hotelToUpdate) throw new Error('Hotel not found');
+    if (!hotelToUpdate) throw new Error("Hotel not found");
 
-    const { name, address, address_url, stars, email, image, countryId } = updatedHotelData;
+    const { name, address, address_url, stars, email, image, countryId } =
+        updatedHotelData;
     const images = Array.isArray(image) ? image : [image];
 
     let updatedCountryId = countryId;
-    if (countryId && typeof countryId !== 'number') {
+    if (countryId && typeof countryId !== "number") {
         // Si countryId es un nombre de país, busca el ID correspondiente
-        const updatedCountry = await Country.findOne({ where: { name: countryId } });
+        const updatedCountry = await Country.findOne({
+            where: { name: countryId },
+        });
         updatedCountryId = updatedCountry ? updatedCountry.id : countryId;
     }
 
-    const imagesHotel = (await HotelImages.findAll({
-        where: { hotelId: id }, 
-        attributes: ['image'], 
-        raw: true
-    })).map(img => img.image);
+    const imagesHotel = (
+        await HotelImages.findAll({
+            where: { hotelId: id },
+            attributes: ["image"],
+            raw: true,
+        })
+    ).map((img) => img.image);
 
-    const imagesDelete = [ ...new Set(imagesHotel.filter(img => !images.includes(img))) ];
-    const imagesAdd = images.filter(img => !imagesHotel.includes(img));
-    
+    const imagesDelete = [
+        ...new Set(imagesHotel.filter((img) => !images.includes(img))),
+    ];
+    const imagesAdd = images.filter((img) => !imagesHotel.includes(img));
+
     // Elimina las imagenes no incluidas en el arreglo
-    if(imagesDelete.length > 0) await HotelImages.destroy({
-        where: {
-            hotelId: id,
-            image:{ [Op.in]: imagesDelete }
-        }
-    });
+    if (imagesDelete.length > 0)
+        await HotelImages.destroy({
+            where: {
+                hotelId: id,
+                image: { [Op.in]: imagesDelete },
+            },
+        });
 
     // Crea las imagenes nuevas
-    if(images.length > 0) await HotelImages.bulkCreate(imagesAdd.map(img => ({hotelId: id, image:img})));
+    if (images.length > 0)
+        await HotelImages.bulkCreate(
+            imagesAdd.map((img) => ({ hotelId: id, image: img }))
+        );
 
     const updatedHotel = await hotelToUpdate.update({
         name,
@@ -309,99 +383,97 @@ const putHotel = async (id, updatedHotelData) => {
 
 const deleteHotel = async (id) => {
     const hotelToDelete = await Hotel.findByPk(id);
-    const deletedHotel = await hotelToDelete.destroy()
+    const deletedHotel = await hotelToDelete.destroy();
 
     return deletedHotel;
-}
+};
 
 const getHotelsDeleted = async (query) => {
-
-    const { page = 1, 
-        size = 10,
-    } = query
+    const { page = 1, size = 10 } = query;
 
     const options = {
         limit: Number(size),
-        offset: ( page - 1 ) * Number(size),
+        offset: (page - 1) * Number(size),
         paranoid: false,
-        include: [{ model: Country, attributes: ['name'] },
-        { model: HotelImages, as: 'image', attributes: ['image']},
-    ],
-        where: {deletedAt: { [Op.not]: null }},	
-    }
+        include: [
+            { model: Country, attributes: ["name"] },
+            { model: HotelImages, as: "image", attributes: ["image"] },
+        ],
+        where: { deletedAt: { [Op.not]: null } },
+    };
 
-    if(query.name) {
+    if (query.name) {
         options.where.name = {
-            [Op.iLike]: `%${query.name}%`
-        }
+            [Op.iLike]: `%${query.name}%`,
+        };
     }
 
-    const { count, rows } = await Hotel.findAndCountAll(options)
+    const { count, rows } = await Hotel.findAndCountAll(options);
     const deleteHotels = {
         total: count,
-        hotels: rows
-    }
+        hotels: rows,
+    };
 
-    return deleteHotels
-}
+    return deleteHotels;
+};
 const restoreHotel = async (id) => {
     const hotel = await Hotel.findByPk(id, { paranoid: false });
-      
+
     const restoreH = await hotel.restore();
 
     return restoreH;
-  };
+};
 
-const getHotelsDashboard = async ({name, page = 1, size = 10, pagination = false }) => {
-
-    let where = {hotel:{}};
+const getHotelsDashboard = async ({
+    name,
+    page = 1,
+    size = 10,
+    pagination = false,
+}) => {
+    let where = { hotel: {} };
     where.hotel = {
-        ...(name && {name: {[Op.iLike]: `%${name}%`}}), 
-    }
+        ...(name && { name: { [Op.iLike]: `%${name}%` } }),
+    };
 
-    if(pagination){
+    if (pagination) {
         const options = {
             limit: Number(size),
-            offset: ( page - 1 ) * Number(size),
-            order: [['id', 'ASC']],
+            offset: (page - 1) * Number(size),
+            order: [["id", "ASC"]],
             include: [
-                {   model: Country,
-                    as: 'country',
-                    attributes: ['name'],
-                },
+                { model: Country, as: "country", attributes: ["name"] },
                 {
                     model: HotelImages,
-                    as: 'image',
-                    attributes: ['image'] },
+                    as: "image",
+                    attributes: ["image"],
+                },
             ],
             distinct: true,
-            attributes: {exclude: ['createdAt', 'updatedAt', 'deletedAt', ]},
-            where: where.hotel
-        }
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+            where: where.hotel,
+        };
         const { count, rows } = await Hotel.findAndCountAll(options);
-        return {count, rows}
+        return { count, rows };
     } else {
         const options = {
-            order: [['id', 'ASC']],
+            order: [["id", "ASC"]],
             include: [
-                {   model: Country,
-                    as: 'country',
-                    attributes: ['name'],
-                },
+                { model: Country, as: "country", attributes: ["name"] },
                 {
                     model: HotelImages,
-                    as: 'image',
-                    attributes: ['image'] },
+                    as: "image",
+                    attributes: ["image"],
+                },
             ],
             distinct: true,
-            attributes: {exclude: ['createdAt', 'updatedAt', 'deletedAt', ]},
-            where: where.hotel
-        }
+            attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+            where: where.hotel,
+        };
 
-        const hotels = await Hotel.findAll(options)
-        return hotels
+        const hotels = await Hotel.findAll(options);
+        return hotels;
     }
-}
+};
 module.exports = {
     getHotels,
     getHotelById,
@@ -411,5 +483,5 @@ module.exports = {
     deleteHotel,
     getHotelsDeleted,
     restoreHotel,
-    getHotelsDashboard
-}
+    getHotelsDashboard,
+};

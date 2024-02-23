@@ -52,7 +52,11 @@ const getRoomNumeration = async (numeration) => {
 }
 
 const getRoomId = async (id) => {
-    let room = await Room.findByPk(id);
+    let room = await Room.findByPk(id, {
+      include: [
+              { model: RoomImages, as: 'image', attributes: ['image']},
+    ],
+    });
     return room
 }
 
