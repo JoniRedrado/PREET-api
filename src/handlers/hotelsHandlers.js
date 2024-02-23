@@ -23,7 +23,7 @@ const getHotelIdHandler = async (req, res) => {
     const { id } = req.params;
 
     try{
-        const hotel = await getHotelById(id, req.body);
+        const hotel = await getHotelById(id, req.query);
         res.status(200).json(hotel);
     }catch(error){
         res.status(400).json({error: error.message});
