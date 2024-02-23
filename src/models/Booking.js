@@ -17,7 +17,7 @@ module.exports = (sequelize) => {
     },
     pay: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     commission: {
       type: DataTypes.DOUBLE,
