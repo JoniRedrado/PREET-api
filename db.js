@@ -1,7 +1,7 @@
 require('dotenv').config();
-const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
+const { Sequelize } = require('sequelize');
 const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
 
 const dbConnection= process.env.DB_URL || `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/PREET`
@@ -12,6 +12,7 @@ const sequelize = new Sequelize(
       native: false,
    }
 );
+
 const basename = path.basename(__filename);
 
 const modelDefiners = [];
