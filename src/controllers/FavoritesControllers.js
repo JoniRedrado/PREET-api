@@ -1,3 +1,4 @@
+const { where } = require('sequelize');
 const { Favorite, Hotel, User, HotelImages, Country} = require('../../db.js');
 
 const getFavorites = async (query) => {
@@ -69,11 +70,10 @@ const postFavorite = async (hotelId, id) => {
         return newFavorite;
     }
 }
-const deleteFavorite = async (id, userId, userRol) => {
-    const favoriteToDelete = await Favorite.findByPk(id)
-    if (favoriteToDelete.userId !== userId && userRol !== 'admin') {
-        throw new Error('User is not authorized to delete this favorite');
-    }
+const deleteFavorite = async (hotelId, userId) => {
+
+    const favoriteToDelete = await Favorite.findOne({where: {hotelId, userId}})
+
     const deletedFavorite = await favoriteToDelete.destroy()
     return deletedFavorite
 }
