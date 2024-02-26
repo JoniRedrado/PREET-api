@@ -27,7 +27,9 @@ const getBookingsUser = async (id, query) => {
             {model: RoomImages, as: 'image', attributes: ['image'],}
     ]
         }
-      ]
+        
+      ],
+      order: [['createdAt', 'DESC']] 
     }
     const {count, rows} = await Booking.findAndCountAll(options)
     let bookings = {
