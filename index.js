@@ -5,7 +5,7 @@ const httpServer = require('./src/webSocket/webSocket.js');
 const findOrCreateData = require('./src/utils/dataDefaultPostgres.js');
 
 conn.sync({ 
-  //force: false
+  force: true
   //alter: true
   }).then(() => {
   findOrCreateData();
