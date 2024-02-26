@@ -35,7 +35,7 @@ const getFeedbacksHotel = async (query, id) => {
     where: { hotelId: id },
     include: [{
       model: User,
-      attributes: ['name', "last_name", "nationality"]
+      attributes: ['name', "last_name", "nationality", "profile_picture"],
     }],
     order: [[Sequelize.literal('GREATEST("feedback"."updatedAt", "feedback"."createdAt")'), 'DESC']],
   });
