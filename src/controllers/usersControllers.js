@@ -62,7 +62,7 @@ const getUsers = async (query) => {
 const getUserProfile = async (id) => {
     try {
         const user = await User.findByPk(id, {
-            attributes: {exclude:["id", "password", "createdAt", "updatedAt", "deletedAt", "rol", "countryId", "profile_picture", "email"]}
+            attributes: {exclude:["id", "password", "createdAt", "updatedAt", "deletedAt", "countryId", "email"]}
         });
         if (!user) {
             throw new Error("User not found.");
