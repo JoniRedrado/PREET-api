@@ -1,0 +1,233 @@
+{
+    "description": "Preet es una empresa que ofrece servicios de alojamiento en hoteles de America del sur, y en su pagina web permite visualizar y realizar las reservas de los hoteles",
+    "structure": {
+      "Home": {
+        "description": "Pagina principal que se despliga al entrar al dominio web",
+        "structure": {
+          "header": {
+            "description": "Parte superior de la pagina web",
+            "structure": {
+              "navbar": {
+                "description": "Barra en la parte superior que contiene botones que dirigen a otras rutas de la pagina",
+                "structure": {
+                  "botton_Preet": "Boton con el logo de la pagina que esta presente en toda la aplicacion y al presionar dirige a la pagina de inicio",
+                  "botton_mode": "Boton con un icono de media luna que cambia la paleta de colores de la pagina web, modo claro por defecto o modo oscuro",
+                  "botton_language": "Boton con un icono de globo terraqueo que sirve para cambiar el idioma de la pagina, se puede intercalar entre ingles y español",
+                  "botton_register": "Botton con incono de persona y texto 'Registrate' que se muestra solo cuando no se ha echo un inicio de sesion, direcciona a la pagina de registro",
+                  "botton_SignIn": "Boton con icono de candado y texto 'Iniciar sesion' que se muestra solo cuando no se ha echo un inicio de sesion, direcciona a la pagina de acceso",
+                  "botton_navigate": {
+                    "description": "Boton ubicado en la parte superior derecha de la pantalla que solo es visible para ususarios logeados, que despliega en el lado derecho un menu con varios iconos. Este menu esta presente en toda la aplcacion",
+                    "structure": {
+                      "botton_Home": "Boton con un icono de casa y el texto 'Home' que direcciona a la pagina principal",
+                      "botton_Manage_Account": "Boton con icono de persona y el texto 'Configuracion de cuenta' que direcciona a la pagina de settings",
+                      "botton_Reservation_history": "Boton con icono de reloj y el texto 'Historial de reserva' que direcciona a la pagina de reservations, donde se pueden ver las reservas hoteleras que ha echo el ususario",
+                      "botton_Favorites": "Boton con icono de estrella y el texto 'Favoritos' y direcciona a la pagina de favorites",
+                      "botton_Close": "Boton con icono de flecha a la izquierda y el texto 'Cerrar menu' que oculta el menu de navegacion",
+                      "botton_LogOut": "Boton con icono de flecha a la derecha y texto 'Cerrar sesion' que cierra la sesion del presente usuario"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "searchBar": {
+            "description": "Barra que permite realizar busquedas por nombre de hotel o pais, requiere fecha inicial, fecha final y numero de huespedes",
+            "structure": {
+              "input": "Campo de entrada de texto donde se coloca el nombre o parte del nombre del hotel ó el pais donde se requiere hacer la busqueda",
+              "date_CheckIn": "Campo de entrada de fecha donde se selecciona la fecha a partir de la cual se quiere buscar la reserva",
+              "date_CheckOut": "Campo de entrada de fecha donde se selecciona la fecha limite que se quiere buscar la reserva",
+              "input_guest": "Campo de entrada numerico donde se coloca el numero de huespedes que se desea para reserva, el numero uno por defecto",
+              "botton_Search": "Boton con texto 'Buscar' que al presionar direcciona a la pagina de Search donde se mostraran los resultados de la busqueda realizada"
+            }
+          },
+          "destinations": "Grupo de imagenes alusivas a un pais cada una, con el nombre del pais correspondiente e icono de la bandera del pais en la parte superior izuierda de la imagen, cada imagen se puede presionar y direccionar a la pagina de Search con el resultado de los hoteles del pais seleccionado en la fecha incial y final conrespondiente al dia actual",
+          "carousel": {
+            "description": "Carrusel de imagenes donde se muestran los hoteles con el mayor ranking de calificacion dejado por los usuarios",
+            "structure": {
+              "botton_left": "Boton ubicado al lado izquierdo del carrusel que permite pasar en direccion contraria a las manecillas del relos los rankings de los hotele",
+              "botton_right": "Realiza la misma funcion del boton_left pero en direccion de las manecillas del reloj",
+              "image": "Imagen relacionada al hotel que se esta mostrando en el carrusel ubicada en la parte izquierda del carrusel",
+              "info_hotel": {
+                "description": "Segmento del carrusel ubicado a la derecha que muestra la informacion del hotel: nombre, numero de estrellas y direccion",
+                "structure": {
+                  "botton_booking": "Boton con el texto 'reserva' que direcciona a la pagina de detail del hotel"
+                }
+              }
+            }
+          },
+          "footer": {
+            "description": "Pie de pagina de la aplicacion web que muesta el correo electronico de contacto y los derechos reservados",
+            "botton_Preet": "El mismo boton del navBar del header"
+          }
+        }
+      },
+      "settings": {
+        "description": "Pagina de configuracion donde se puede modificar la informacion del perfil del usuario",
+        "structure": {
+          "name": {
+            "description": "etiqueta 'Name' que contiene el nombre del usuario",
+            "structure": {
+              "botton_edit": "Boton con texto 'Edit' que al presionar habilita el campo 'Name' para su edicion. Este boton desaparece al ser presionado",
+              "botton_cancelar": "Boton que se hace visible al presionar el boton 'Edit' y permite cancelar la edicion del campo. Este boton desaparece al ser presionado",
+              "botton_save": "Boton que se hace visible al presionar el boton 'Edit' y permite guardar los cambios realizados en el campo 'Name'. Este boton desaparece al ser presionado"
+            }
+          },
+          "LastName": {
+            "description": "etiqueta 'Last name' que contiene el apellido",
+            "structure": {
+              "botton_edit": "Boton con texto 'Edit' que al presionar habilita el campo 'Last name' para su edicion. Este boton desaparece al ser presionado",
+              "botton_cancelar": "Boton que se hace visible al presionar el boton 'Edit' y permite cancelar la edicion del campo. Este boton desaparece al ser presionado",
+              "botton_save": "Boton que se hace visible al presionar el boton 'Edit' y permite guardar los cambios realizados en el campo 'Last name'.Este boton desaparece al ser presionado"
+            }
+          },
+          "BirthDate": {
+            "description": "etiqueta 'Birth date' que contiene la fecha de nacimiento",
+            "structure": {
+              "botton_edit": "Boton con texto 'Edit' que al presionar habilita el campo 'Birth date' para su edicion. Este boton desaparece al ser presionado",
+              "botton_cancelar": "Boton que se hace visible al presionar el boton 'Edit' y permite cancelar la edicion del campo. Este boton desaparece al ser presionado",
+              "botton_save": "Boton que se hace visible al presionar el boton 'Edit' y permite guardar los cambios realizados en el campo 'Birth date'.Este boton desaparece al ser presionado"
+            }
+          },
+          "Gender": {
+            "description": "etiqueta 'Gender' que contiene  el genero",
+            "structure": {
+              "botton_edit": "Boton con texto 'Edit' que al presionar habilita el campo 'Gender' para su edicion. Este boton desaparece al ser presionado",
+              "botton_cancelar": "Boton que se hace visible al presionar el boton 'Edit' y permite cancelar la edicion del campo. Este boton desaparece al ser presionado",
+              "botton_save": "Boton que se hace visible al presionar el boton 'Edit' y permite guardar los cambios realizados en el campo 'Gender'.Este boton desaparece al ser presionado"
+            }
+          },
+          "phone": {
+            "description": "etiqueta 'Phone number' con el numero de telefono",
+            "structure": {
+              "botton_edit": "Boton con texto 'Edit' que al presionar habilita el campo 'Phone number' para su edicion. Este boton desaparece al ser presionado",
+              "botton_cancelar": "Boton que se hace visible al presionar el boton 'Edit' y permite cancelar la edicion del campo. Este boton desaparece al ser presionado",
+              "botton_save": "Boton que se hace visible al presionar el boton 'Edit' y permite guardar los cambios realizados en el campo 'Phone number'.Este boton desaparece al ser presionado"
+            }
+          },
+          "Nationality": {
+            "description": "etiqueta 'Nationality' que contiene la nacionalidad",
+            "structure": {
+              "botton_edit": "Boton con texto 'Edit' que al presionar habilita el campo 'Nationality' para su edicion. Este boton desaparece al ser presionado",
+              "botton_cancelar": "Boton que se hace visible al presionar el boton 'Edit' y permite cancelar la edicion del campo. Este boton desaparece al ser presionado",
+              "botton_save": "Boton que se hace visible al presionar el boton 'Edit' y permite guardar los cambios realizados en el campo 'Nationality'.Este boton desaparece al ser presionado"
+            }
+          }
+        }
+      },
+      "reservations": {
+        "description": "Pagina donde se visualizan cada una de las reservas que ha realizado el usuario",
+        "structure": {
+          "cards": {
+            "description": "Tarjetas qque se muestran una debajo de otra y contienen la informacion de reserva. Una tareta por cada reserva realizada",
+            "structure": {
+              "image": "Imagen de la habitacion que se reservo, ubicada al lado izquierdo de la tarjeta",
+              "information": {
+                "data": "Seccion en a parte derecha de la tarjeta que muestra: nombre del hotel, tipo de habitacion, fecha de inicio y final de la reserva, el total de noches y el costo de la reserva",
+                "botton_detail": "Boton ubicado debajo de data que direcciona a la pagina de bookingDetail donde se muestra el detalle de la reserva",
+                "ranking": "Campo con 5 estrellas que permite darle una calificacion al hotel. 1 estrella puntaje minimo y 5 estrellas puntaje maximo. Este campo no se muestra cuando ya existe una evaluacion echa a la reservacion",
+                "comment": "Campo de texto debajo del campo ranking, donde se puede dejar una opinion sobre la estadia. Este campo no se muestra cuando ya existe una evaluacion echa a la reservacion",
+                "botton_send": "Boton con texto 'enviar' que permite guarda o enviar el puntaje y el coentario realizado. Este boton no se muestra cuando ya existe una evaluacion echa a la reservacion"
+              }
+            }
+          }
+        }
+      },
+      "bookingDetail": {
+        "description": "Pagina donde se muestra el detalle de una reserva. Del usuario se muestra: nombre, email, importe, fecha inicial y final, noches y referencia de pago. Del otel se muestra: nombre, tipo de habitacion, huespedes, descipcion y foto de la habitacion."
+      },
+      "favorites": {
+        "description": "Pagina donde se muestra varias cards en las que se muestran cada uno de los hoteles que el usuario a seleccionado como favoritos",
+        "structure": {
+          "card": "Segmento que muestra informacion del hotel: Imagen, nombre, numero de estrellas y pais. al dar click en la card se direcciona a la pagina detail, donde se muestra la informacion del hotel seleccionado",
+          "botton_disLike": "Boton que esta ubicado en la parte superior derecha de la imagen del hotel, que al ser presionado el hotel es eliminado de los favoritos y por lo tanto la card referente a ese hotel"
+        }
+      },
+      "Search": {
+        "description": "Pagina donde se muestan los resultados de la busqueda de hoteles realizados desbe la barra de busqueda o desde la seccion de destinos de la pagina principal",
+        "structure": {
+          "filterBar": {
+            "description": "Barra de filtros que permite filtrar los resultados mostrados",
+            "structure": {
+              "guest": "Input donde el ususario puede el numero de huespedes",
+              "check_in": "Input de fecha que permite ingresar la fecha de inicio de la reserva",
+              "check_out": "Input de fecha que permite ingresar la fecha final de la reserva",
+              "country": "Input de tipo select que permite seleccionar el pais",
+              "starts": "Input que permite seleccionar el numero de estrellas del hotel, hasta un maxiomo de 5 estrellas",
+              "price": "Dos campos tipo input, uno para igresar el precio minimo y el otro el precio maximo",
+              "order": "Campo de tipo select donde se puede seleccionar el tipo de ordenamiento de los resultados. Permite seleccionar entre pais, estrellas o precio",
+              "direction": "Permite seleccionar entre dos direcciones del ordenamiento: ascendente o descendente",
+              "botton_filter": "Boton con el texto 'Aplicar filtros' que al presionar aplica los filtros editados y carga los nuevos datos en la pagina",
+              "botton_restore": "Boton con el texto 'Restaurar' que al presionar restablece los datos de la pagina a los datos inicales anulando los filtros que se hallan aplicado"
+            }
+          },
+          "card": {
+            "desciption": "Seccion de la pagina donde se muestra la informacion de un hotel que hace parte de los resultados de la busqueda. Cada card se muestra una debajo de la otra y el la pagina se muestra hasta un numero maximo de 6 cards",
+            "structure": {
+              "image": {
+                "description": "Imagen ubicada en la parte izquierda de la card y muestra una imagen del hotel",
+                "botton_favorite": "icono en forma de corazon en la parte superior derecha de la imagen que permite visualizar si el hotel es favorito del ususario: si el corazon tiene relleno blanco quiere decir que no es favorito, si esta relleno de azul quiere decir que es favorito. Se puede intercalar el estado de favorito dando click en el icono"
+              },
+              "data": {
+                "description": "Seccion de la card ubicada a la derecha que contiene botones, links e informacion del hotel, como: nombre, estrellas, pais, precio, ranking en el puntaje, numero de comentarios",
+                "structure": {
+                  "booking": "Boton con el texto 'reserva' que direcciona a la pagina de Detail donde se muestra el la informacion del hotel seleccionado",
+                  "link_map": "Link de color azul con el texto 'ver mapa' que despliega una ventana modal donde se muestra un mapa de google con la ubicacion del hotel"
+                }
+              }
+            }
+          },
+          "pagination": {
+            "description": "Seccion ubicada debajo de la ultima card que muestra el numero de paginas restantes. Cada pagina muestra hasta un maximo de 6 cards",
+            "structure": {
+              "botton_prev": "Boton que al presionar direcciona a la pagina anterior, si la pagina es la numero uno este boton se muestra como inactivo",
+              "botton_next": "Boton que al presionar direcciona a la pagina siguiente, si la pigina es la ultima este boton se muestra como inactivo",
+              "pages": "Campo de texto que muestra la pagina actual y el numero de paginas totales"
+            }
+          }
+        }
+      },
+      "detail": {
+        "description": "Pagina donde se muestra la informacion de un hotel",
+        "structure": {
+          "filterBar": {
+            "description": "Barra de filtros, donde se puede filtrar la habitaciones del hotel",
+            "botton_checkIn": "Campo de fecha, que permite modificar la fecha incial de la reserva",
+            "botton_checkOut": "Campo de fecha que permite mmodifica la fecha final de la reserva",
+            "price": "Dos campos numericos que permite ingresar el precio minimo y el precio maximo",
+            "guest": "Campo que permite seleccionar el numero de huespedes",
+            "botton_filter": "Boton con el texto 'Aplicar filtro' que al presionar aplica los filtros editados y actualiza la informacion de las haitaciones del hotel",
+            "botton_restore": "Boton con el texto 'Restaurar' que al presionar restaura los datos de las habitaciones"
+          },
+          "botton_back": "Boton ubicado en la parte superior izquierda de la pagina que permite retroceder a la pagina anterior",
+          "botton_favorite": "Boton en forma de icono de corazon que permite agregar o quitar el hotel de favoritos del ususario",
+          "image": "Imagen que muestra la imagen del hotel",
+          "title": "Nombre del hotel ubicado sobre la imagen del hotel",
+          "information": "Seccion ubicada debao de la imagen que muestra informacion del hotel: ranking de estrellas, puntuacion del hotel, direccion, pais, sitio web",
+          "rooms": "Input de tipo select que permite seleccionar las habitaciones disponiles en el hotel. Al seleccionar una habitacion se abre una ventana modal (modal_room) con la informacion de la habitacion",
+          "reviews": {
+            "description": "Seccion ubicada debajo de los datos del hotel, donde se muestra las puntuaciones y comentarios de los usuarios que han usado los servicios del hotel",
+            "structure": {
+              "card": "Seccion que muestra informacion sobre la reseña de un usuario: Nombre del ususario, pais de origen del ususario, puntaje dado al hotel, comentario del ususario. las cards se muestran una deajo de otra y se visualizan un maximo de 5 cards por pagina",
+              "pagination": {
+                "description": "Seccion ubicada debajo de la ultima card que muestra el numero de paginas restantes. Cada pagina muestra hasta un maximo de 5 cards",
+                "structure": {
+                  "botton_prev": "Boton que al presionar direcciona a la pagina anterior, si la pagina es la numero uno este boton se muestra como inactivo",
+                  "botton_next": "Boton que al presionar direcciona a la pagina siguiente, si la pigina es la ultima este boton se muestra como inactivo",
+                  "pages": "Campo de texto que muestra la pagina actual y el numero de paginas totales"
+                }
+              }
+            }
+          }
+        }
+      },
+      "modal_room": {
+        "description": "Ventana modal que muestra la informacion de una habitacion de un hotel",
+        "structure": {
+          "image": "Imagen de la habitacion que se muestra en la parte superior de la ventana",
+          "botton_back": "Boton ubicado en la parte superior izquierda de la imagen de la habitacion que permite regresar a la pagina anterior",
+          "information": "Informacion de la habitacion que se muestra debajo de la imagen: Tipo de habitacion, descripcion de lo que ofrece la haitacion y precio de la haitacion",
+          "botton_booking": "Boton con el texto 'Reserva' y el icono de paypal que direcciona al ususario a una pagina de PayPal para realizar el pago y reserva de la haitacion en las fechas seleccionadas"
+        }
+      }
+    }
+}

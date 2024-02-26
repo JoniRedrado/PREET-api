@@ -4,18 +4,24 @@ const event_ChatMessages = require('./eventChatMessage.js');
 const event_CloseConnections = require('./eventCloseConnection.js');
 const getChatsByUser = require('../../mongoDB/controllers/getChatsByUser.js');
 
+const { getThread } = require('../../utils/ChatOpenAI.js');
+
 const onConnection = (io) => {
     io.on('connection', (socket) => {
         const token = socket.handshake.auth.token   
         const auth = socketAuth(token);
 
-        event_CloseConnections(socket);
-
         if(auth){
             socket.userId = auth
             
             event_CloseWindow(socket);
-            event_ChatMessages(socket, io);
+
+            getThread()
+            .then(threadCreate =>{
+                event_ChatMessages(socket, threadCreate, io);
+                event_CloseConnections(socket, threadCreate);
+            }).catch(error => console.log(error.message))
+            
 
             getChatsByUser(auth).then(data => {
                 console.log(data);
