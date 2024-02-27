@@ -1,10 +1,9 @@
 const socketAuth = require('../authSocket.js');
+const { getThread } = require('../../utils/ChatOpenAI.js');
 const event_CloseWindow = require('./eventCloseWindow.js');
 const event_ChatMessages = require('./eventChatMessage.js');
 const event_CloseConnections = require('./eventCloseConnection.js');
 const getChatsByUser = require('../../mongoDB/controllers/getChatsByUser.js');
-
-const { getThread } = require('../../utils/ChatOpenAI.js');
 
 const onConnection = (io) => {
     io.on('connection', (socket) => {
