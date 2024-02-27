@@ -59,7 +59,7 @@ const sendMessage = async (thread, message) => {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             running++;
-            if(running > 10){
+            if(running > 10 && runStatus.status !== 'completed'){
                 await openai.beta.threads.runs.cancel(thread.id, run.id);
                 return "No puedo responder a la pregunta, porfavor formulela de otra forma";
             }

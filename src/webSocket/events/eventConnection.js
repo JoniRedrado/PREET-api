@@ -22,12 +22,13 @@ const onConnection = (io) => {
             }).catch(error => console.log(error.message))
             
 
-            getChatsByUser(auth).then(data => {
+            io.emit('set_Chats', { record: [], chat: [] });
+            /*getChatsByUser(auth).then(data => {
                 console.log(data);
                 io.emit('set_Chats', data);
             }).catch(error => {
                 io.emit('error_Chat', error.message);
-            })
+            })*/
 
             console.log(`a user has conected: ${socket.id} - ${socket.userId}`);   
         }else{
