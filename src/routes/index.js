@@ -11,6 +11,7 @@ const feedbackRouter = require('./feedbackRouter')
 const favoritesRouter = require('./favoritesRouter')
 const metricsRouter = require('./metricsRouter')
 const excelRouter = require('./excelRouter')
+const verifyToken = require('./verifyToken');
 
 // Configurar los routers
 router.use("/hotels", hotelsRouter)
@@ -23,5 +24,6 @@ router.use("/payment", paymentRouter)
 router.use("/favorites", favoritesRouter)
 router.use("/metrics", metricsRouter)
 router.use("/excel", excelRouter)
+router.use("/verify", verifyToken)
 
 module.exports = router;
